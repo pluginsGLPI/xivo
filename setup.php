@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_XIVO_VERSION', '0.0.4');
+define('PLUGIN_XIVO_VERSION', '0.0.6');
 
 /**
  * Init hooks of the plugin.
@@ -43,8 +43,9 @@ function plugin_init_xivo() {
    Plugin::registerClass('PluginXivoConfig', ['addtabon' => 'Config']);
    $PLUGIN_HOOKS['config_page']['xivo'] = 'front/config.form.php';
 
-   // css
+   // css & js
    $PLUGIN_HOOKS['add_css']['xivo'] = 'xivo.css';
+   $PLUGIN_HOOKS['add_javascript']['xivo'] = 'xivo.js';
 
 }
 
@@ -101,4 +102,21 @@ function plugin_xivo_check_config($verbose = false) {
       _e('Installed / not configured', 'xivo');
    }
    return false;
+}
+
+
+function plugin_xivo_recursive_remove_empty($haystack) {
+   foreach ($haystack as $key => $value) {
+      if (is_array($value)) {
+         if (count($value) == 0) {
+            unset($haystack[$key]);
+         } else {
+            $haystack[$key] = plugin_xivo_recursive_remove_empty($haystack[$key]);
+         }
+      } else if ($haystack[$key] === "") {
+         unset($haystack[$key]);
+      }
+   }
+
+   return $haystack;
 }

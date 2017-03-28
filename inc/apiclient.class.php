@@ -4,9 +4,11 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Exception\GuzzleException;
+
 class PluginXivoAPIClient extends CommonGLPI {
    private $api_config      = [];
-   private $connected       = false;
    private $auth_token      = '';
    private $current_port    = 0;
    private $current_version = 0;
@@ -23,47 +25,6 @@ class PluginXivoAPIClient extends CommonGLPI {
    }
 
 
-   function connect() {
-      // we use Xivo-auth api
-      $this->useXivoAuth();
-
-      // send connect with http query
-      $data = $this->httpQuery('token', [
-         'auth' => [
-            $this->api_config['api_username'],
-            $this->api_config['api_password'],
-         ],
-         'verify' => boolval($this->api_config['api_ssl_check']),
-         'json' => [
-            'backend'    => 'xivo_user',
-            'expiration' => 600,
-         ]
-      ], 'POST');
-
-      if (is_array($data)) {
-         if (isset($data['token'])) {
-            $this->auth_token = $data['data']['token'];
-         }
-      }
-
-      return $data;
-   }
-
-
-   function disconnect() {
-      // we use Xivo-auth api
-      $this->useXivoAuth();
-
-      // send disconnect with http query
-      $data = $this->httpQuery('token', [
-         'verify' => boolval($this->api_config['api_ssl_check']),
-         'json' => [
-            'token' => $this->auth_token,
-         ]
-      ], 'DELETE');
-   }
-
-
    function useXivoAuth() {
       $this->current_port    = 9497;
       $this->current_version = 0.1;
@@ -77,11 +38,81 @@ class PluginXivoAPIClient extends CommonGLPI {
 
 
    function status() {
-
+      return [
+         __('Api access', 'xivo')        => !empty($this->auth_token),
+         __('Get phone devices', 'xivo') => boolval($this->getDevices([
+            'query' => [
+               'limit' => 30
+            ]
+         ])),
+      ];
    }
 
 
-   function getDevices() {
+   function connect() {
+      // we use Xivo-auth api
+      $this->useXivoAuth();
+
+      // send connect with http query
+      $data = $this->httpQuery('token', [
+         'auth' => [
+            $this->api_config['api_username'],
+            $this->api_config['api_password'],
+         ],
+         'json' => [
+            'backend'    => 'xivo_service',
+            'expiration' => HOUR_TIMESTAMP,
+         ]
+      ], 'POST');
+
+      if (is_array($data)) {
+         if (isset($data['data']['token'])) {
+            $this->auth_token = $data['data']['token'];
+         }
+      }
+
+      return $data;
+   }
+
+
+   function disconnect() {
+      return;
+      // we use Xivo-auth api
+      $this->useXivoAuth();
+
+      // send disconnect with http query
+      $data = $this->httpQuery('token', [
+         'verify' => boolval($this->api_config['api_ssl_check']),
+         'json' => [
+            'token' => $this->auth_token,
+         ]
+      ], 'DELETE');
+   }
+
+
+   function getDevices($params = []) {
+      return $this->getList('devices', $params);
+   }
+
+   function getLines($params = []) {
+      return $this->getList('lines', $params);
+   }
+
+   function getList($endpoint = '', $params = []) {
+      // declare default params
+      $default_params = [
+         'query' => [
+            'limit'     => 50,
+            'direction' => 'asc',
+            'offset'    => 0,
+            'order'     => '',
+            'search'    => '',
+         ]
+      ];
+
+      // merge default params
+      $params = array_replace_recursive($default_params, $params);
+
       // check connection
       if (empty($this->auth_token)) {
          $this->connect();
@@ -90,13 +121,8 @@ class PluginXivoAPIClient extends CommonGLPI {
       // we use Xivo-confd api
       $this->useXivoConfd();
 
-      // send connect with http query
-      $data = $this->httpQuery('devices', [
-         'verify' => boolval($this->api_config['api_ssl_check']),
-         'headers' => [
-            'X-Auth-Token' => $this->auth_token,
-         ]
-      ], 'GET');
+      // get devices with http query
+      $data = $this->httpQuery($endpoint, $params, 'GET');
 
       return $data;
    }
@@ -110,14 +136,17 @@ class PluginXivoAPIClient extends CommonGLPI {
       return trim($this->api_config['api_url'], '/').":{$this->current_port}/{$this->current_version}/";
    }
 
-   function httpQuery($resource = '', $http_params = array(), $method = 'GET') {
+   function httpQuery($resource = '', $params = array(), $method = 'GET') {
       global $CFG_GLPI;
 
       // declare default params
       $default_params = [
+         '_with_metadata'  => false,
          'allow_redirects' => false,
          'timeout'         => 5,
          'connect_timeout' => 5,
+         'debug'           => false,
+         'verify'          => boolval($this->api_config['api_ssl_check']),
          'query'           => [], // url parameter
          'body'            => '', // raw data to send in body
          'json'            => '', // json data to send
@@ -125,7 +154,7 @@ class PluginXivoAPIClient extends CommonGLPI {
                                'Accept'        => 'application/json'],
       ];
       // if connected, append auth token
-      if ($this->connected) {
+      if (!empty($this->auth_token)) {
          $default_params['headers']['X-Auth-Token'] = $this->auth_token;
       }
       // append proxy params if exists
@@ -141,24 +170,21 @@ class PluginXivoAPIClient extends CommonGLPI {
          ];
       }
       // merge default params
-      $http_params = array_merge_recursive($default_params, $http_params);
-
+      $params = array_replace_recursive($default_params, $params);
       //remove empty values
-      $http_params = array_filter($http_params, function($value) {
-         return $value !== "";
-      });
+      $params = plugin_xivo_recursive_remove_empty($params);
 
       // init guzzle
-      $http_client = new \GuzzleHttp\Client(['base_uri' => $this->getAPIBaseUri()]);
+      $http_client = new GuzzleHttp\Client(['base_uri' => $this->getAPIBaseUri()]);
 
       // send http request
       try {
          $response = $http_client->request($method,
                                            $resource,
-                                           $http_params);
+                                           $params);
       } catch (GuzzleException $e) {
          $debug = ["XIVO API error"];
-         $debug = [$http_params];
+         $debug[] = $params;
          $debug[] = Psr7\str($e->getRequest());
          if ($e->hasResponse()) {
             $debug[] = Psr7\str($e->getResponse());
@@ -168,9 +194,9 @@ class PluginXivoAPIClient extends CommonGLPI {
       }
 
       // parse http response
-      $http_code        = $response->getStatusCode();
-      $reason_phrase    = $response->getReasonPhrase();
-      $protocol_version = $response->getProtocolVersion();
+      $http_code     = $response->getStatusCode();
+      $reason_phrase = $response->getReasonPhrase();
+      $headers       = $response->getHeaders();
 
       // check http errors
       if (intval($http_code) > 400) {
@@ -184,7 +210,16 @@ class PluginXivoAPIClient extends CommonGLPI {
       // check xivo error
       $xivo_api_error = false;
 
-      return json_decode($json, true);
+      $data =  json_decode($json, true);
+
+      //append metadata
+      if ($params['_with_metadata']) {
+         $data['_headers']   = $headers;
+         $data['_http_code'] = $http_code;
+      }
+
+
+      return $data;
    }
 
 }

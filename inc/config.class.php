@@ -39,6 +39,8 @@ class PluginXivoConfig extends Config {
 
    static function showForConfig(Config $config,
                                      $withtemplate=0) {
+      global $CFG_GLPI;
+
       if (!self::canView()) {
          return false;
       }
@@ -50,22 +52,33 @@ class PluginXivoConfig extends Config {
       }
       echo "<div class='center' id='tabsbody'>";
 
-      echo "<h1>".__("Configuration of XIVO connection")."</h1>";
+      echo "<h1>".__("Configuration of XIVO integration")."</h1>";
 
+      echo self::showField([
+         'inputtype'   => 'yesno',
+         'label'       => __("Import phone devices", 'xivo'),
+         'name'        => 'import_devices',
+         'value'       => $current_config['import_devices'],
+         'on_change'   => '$("#import_devices").toggleFromValue(this.value);',
+      ]);
+
+      $style = "";
+      if (!$current_config['import_devices']) {
+         $style = "display: none;";
+      }
+      echo "<div id='import_devices' class='xivo_config_block' style='$style'>";
       echo self::showField([
          'label'       => __("API url", 'xivo'),
          'name'        => 'api_url',
          'value'       => $current_config['api_url'],
          'placeholder' => 'https://...',
       ]);
-
       echo self::showField([
          'label'       => __("API username", 'xivo'),
          'name'        => 'api_username',
          'value'       => $current_config['api_username'],
          'style'       => 'width:100px;',
       ]);
-
       echo self::showField([
          'inputtype'   => 'password',
          'label'       => __("API password", 'xivo'),
@@ -73,13 +86,31 @@ class PluginXivoConfig extends Config {
          'value'       => $current_config['api_password'],
          'style'       => 'width:100px;',
       ]);
-
       echo self::showField([
          'inputtype'   => 'yesno',
          'label'       => __("API check SSL", 'xivo'),
          'name'        => 'api_ssl_check',
          'value'       => $current_config['api_ssl_check'],
       ]);
+      echo self::showField([
+         'inputtype'   => 'yesno',
+         'label'       => __("Don't import devices with empty serial number", 'xivo'),
+         'name'        => 'del_empty_sn',
+         'value'       => $current_config['del_empty_sn'],
+      ]);
+      echo self::showField([
+         'inputtype'   => 'yesno',
+         'label'       => __("Don't import devices with empty mac", 'xivo'),
+         'name'        => 'del_empty_mac',
+         'value'       => $current_config['del_empty_mac'],
+      ]);
+      echo self::showField([
+         'inputtype'   => 'yesno',
+         'label'       => __("Don't import 'not_configured' devices", 'xivo'),
+         'name'        => 'del_notconfig',
+         'value'       => $current_config['del_notconfig'],
+      ]);
+      echo "</div>";
 
       if ($canedit) {
          echo Html::hidden('config_class', ['value' => __CLASS__]);
@@ -94,14 +125,29 @@ class PluginXivoConfig extends Config {
 
       if (self::isValid()) {
          echo "<h1>".__("API XIVO status")."</h1>";
-         $apiclient = new PluginXivoAPIClient;
+         $apiclient    = new PluginXivoAPIClient;
          $data_connect = $apiclient->connect();
+         $all_status   = $apiclient->status();
+
+         echo "<ul>";
+         foreach($all_status as $status_label => $status) {
+            $color_png = "redbutton.png";
+            if ($status) {
+               $color_png = "greenbutton.png";
+            }
+            echo "<li>";
+            echo Html::image($CFG_GLPI['url_base']."/pics/$color_png");
+            echo "&nbsp;".$status_label;
+            echo "</li>";
+         }
+         echo "</ul>";
 
          if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+            echo "<h1>".__("DEBUG")."</h1>";
 
             // display token
             if (isset($data_connect['data']['token'])) {
-               echo "<h2>".__("Auth yoken", 'xivo')."</h2>";
+               echo "<h2>".__("Auth token", 'xivo')."</h2>";
                echo $data_connect['data']['token'];
             }
 
@@ -114,9 +160,6 @@ class PluginXivoConfig extends Config {
                }
                echo "</ul>";
             }
-
-            $data_devices = $apiclient->getDevices();
-            Html::printCleanArray($data_devices);
          }
       }
       echo "</div>"; // .xivo_config
@@ -130,10 +173,11 @@ class PluginXivoConfig extends Config {
          'name'        => '',
          'value'       => '',
          'placeholder' => '',
-         'style'       => 'width:90%;',
-         'id'          => "xivoconfig_field_$rand",
-         'class'       => "xivo_input",
-         'required'    => "required",
+         'style'       => 'width:50%;',
+         'id'          => 'xivoconfig_field_$rand',
+         'class'       => 'xivo_input',
+         'required'    => 'required',
+         'on_change'   => ''
       ];
       $options         = array_merge($default_options, $options);
 
@@ -185,17 +229,19 @@ class PluginXivoConfig extends Config {
     * @return boolean True on success
     */
    static function install(Migration $migration) {
-      global $CFG_GLPI;
-
       $current_config = self::getConfig();
 
       // fill config table with default values if missing
       foreach ([
          // api access
-         'api_url'       => '',
-         'api_username'  => '',
-         'api_password'  => '',
-         'api_ssl_check' => 1,
+         'import_devices' => 0,
+         'api_url'        => '',
+         'api_username'   => '',
+         'api_password'   => '',
+         'api_ssl_check'  => 1,
+         'del_empty_sn'   => 1,
+         'del_empty_mac'  => 1,
+         'del_notconfig'  => 1,
       ] as $key => $value) {
          if (!isset($current_config[$key])) {
             Config::setConfigurationValues('plugin:xivo', array($key => $value));
@@ -209,8 +255,6 @@ class PluginXivoConfig extends Config {
     * @return boolean True on success
     */
    static function uninstall() {
-      global $DB;
-
       $config = new Config();
       $config->deleteByCriteria(['context' => 'xivo']);
 

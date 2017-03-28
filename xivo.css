@@ -24,17 +24,24 @@
    text-align: left;
 }
 
-.xivo_field .xivo_input {
+.xivo_field .xivo_input,
+.xivo_field .select2-container {
    position: absolute;
    top: 0;
+   left: 10px;
+   border-radius: 0;
    left: 0;
    z-index: 10;
+   height: 25px;
+   padding: 0 5px;
+}
+.xivo_field .xivo_input {
    background-color: transparent;
    border: 0 solid #CCC;
    border-bottom-width: 2px;
-   border-radius: 0;
-   height: 25px;
-   padding: 0 5px;
+}
+.xivo_field .select2-container {
+   padding: inherit;
 }
 
 /* strangely, we can't do this with comma ...*/
@@ -56,7 +63,7 @@
    position: absolute;
    top: 5px;
    left: 5px;
-   color: #AAA;
+   color: #686868;
    z-index: 5;
    transition: 0.1s ease-in;
 }
@@ -77,4 +84,10 @@
 
 .xivo_config .submit {
    margin: 10px auto;
+}
+
+.xivo_config_block {
+   background-color: #F3F3F3;
+   padding: 10px;
+   margin-top: -15px;
 }
