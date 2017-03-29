@@ -135,7 +135,7 @@ class PluginXivoPhone_Line extends CommonDBRelation {
              || empty($phones_name)) {
             $phones_name = sprintf(__('%1$s (%2$s)'), $phones_name, $phones_id);
          }
-         echo "<td class='center'><a href='".PluginXivoLine::getFormURLWithID($phones_id)."'>".
+         echo "<td class='center'><a href='".Phone::getFormURLWithID($phones_id)."'>".
               $phones_name."</a></td>";
          echo "<td class='center'>".Dropdown::getDropdownName("glpi_entities",
                                                               $data['entities_id'])."</td>";
@@ -261,6 +261,7 @@ class PluginXivoPhone_Line extends CommonDBRelation {
          echo "<td class='center'><a href='".PluginXivoLine::getFormURLWithID($lines_id)."'>".
               $lines_name."</a></td>";
          echo "<td class='center'>".Dropdown::getDropdownName("glpi_entities", $data['entities_id'])."</td>";
+         echo "<td class='center'>".$data['provisioning_code']."</td>";
          echo "<td class='center'>".$data['caller_id_num']."</td>";
          echo "<td class='center'>".$data['caller_id_name']."</td>";
          echo "</tr>";
