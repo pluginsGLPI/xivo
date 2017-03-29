@@ -72,3 +72,17 @@ function plugin_xivo_uninstall() {
    }
    return true ;
 }
+
+function plugin_xivo_getAddSearchOptions($itemtype) {
+   if (isset($_SESSION['glpiactiveentities'])
+      && is_array($_SESSION['glpiactiveentities'])
+      && count($_SESSION['glpiactiveentities']) > 0) {
+
+      switch ($itemtype) {
+         case 'Phone':
+            return PluginXivoLine::getAddSearchOptions($itemtype);
+      }
+   }
+
+   return null;
+}

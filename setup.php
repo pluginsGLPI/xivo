@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_XIVO_VERSION', '0.0.6');
+define('PLUGIN_XIVO_VERSION', '0.0.9');
 
 /**
  * Init hooks of the plugin.
@@ -43,9 +43,30 @@ function plugin_init_xivo() {
    Plugin::registerClass('PluginXivoConfig', ['addtabon' => 'Config']);
    $PLUGIN_HOOKS['config_page']['xivo'] = 'front/config.form.php';
 
+   // additional tabs
+   Plugin::registerClass('PluginXivoPhone_Line',
+                         ['addtabon' => 'Phone']);
+
    // css & js
    $PLUGIN_HOOKS['add_css']['xivo'] = 'xivo.css';
    $PLUGIN_HOOKS['add_javascript']['xivo'] = 'xivo.js';
+
+   // standard hooks
+   $PLUGIN_HOOKS['item_purge']['xivo'] = [
+      'Phone' => ['PluginXivoPhone', 'phonePurged']
+   ];
+
+   // display autoinventory in phones
+   $PLUGIN_HOOKS['autoinventory_information']['xivo'] = [
+      'Phone' =>  ['PluginXivoPhone', 'displayAutoInventory'],
+   ];
+
+   // add menu hook
+   $PLUGIN_HOOKS['menu_toadd']['xivo'] = [
+      // insert into 'plugin menu'
+      'assets' => 'PluginXivoLine'
+   ];
+
 
 }
 
@@ -119,4 +140,18 @@ function plugin_xivo_recursive_remove_empty($haystack) {
    }
 
    return $haystack;
+}
+
+function xivoGetIdByField($itemtype = "", $field = "", $value = "") {
+   global $DB;
+
+   $query = "SELECT `id`
+             FROM `".$itemtype::getTable()."`
+             WHERE `$field` = '".addslashes($value)."'";
+   $result = $DB->query($query);
+
+   if ($DB->numrows($result) == 1) {
+      return $DB->result($result, 0, 'id');
+   }
+   return false;
 }

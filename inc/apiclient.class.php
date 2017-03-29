@@ -98,6 +98,10 @@ class PluginXivoAPIClient extends CommonGLPI {
       return $this->getList('lines', $params);
    }
 
+   function getUsers($params = []) {
+      return $this->getList('users', $params);
+   }
+
    function getList($endpoint = '', $params = []) {
       // declare default params
       $default_params = [
@@ -125,6 +129,34 @@ class PluginXivoAPIClient extends CommonGLPI {
       $data = $this->httpQuery($endpoint, $params, 'GET');
 
       return $data;
+   }
+
+   function getSingle($endpoint = '', $id = '') {
+      // check connection
+      if (empty($this->auth_token)) {
+         $this->connect();
+      }
+
+      // we use Xivo-confd api
+      $this->useXivoConfd();
+
+      // get devices with http query
+      $data = $this->httpQuery("$endpoint/$id", [], 'GET');
+
+      return $data;
+   }
+
+   function getSingleDevice($id) {
+      return $this->getSingle('devices', $id);
+   }
+
+   function getSingleDeviceLines($id) {
+      $lines_items = $this->getList("devices/$id/lines")['items'];
+      $lines = [];
+      foreach($lines_items as $item) {
+         $lines[] = $this->getSingle('lines', $item['line_id']);
+      }
+      return $lines;
    }
 
    /**
