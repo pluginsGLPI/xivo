@@ -33,7 +33,25 @@ class PluginXivoInventory extends CommonGLPI {
       // retrieve lines
       $lines = self::paginate('Lines');
 
+      // retrieve users
+      $users = self::paginate('Users');
+
+      // build an association between call_id (present in lines) and username (ldap)
+      $caller_id_list = [];
+      foreach ($users as $user) {
+         if (!empty($user['username'])) {
+            $caller_id_name = trim($user['caller_id'], '"');
+            $caller_id_list[$caller_id_name] = $user['username'];
+         }
+      }
+
+      // import lines
       foreach($lines as &$line) {
+         //check if we can retrive the ldap username
+         if (isset($caller_id_list[$line['caller_id_name']])) {
+            $line['username'] = $caller_id_list[$line['caller_id_name']];
+         }
+
          // add or update assets
          $plugin_xivo_lines_id         = PluginXivoLine::importSingle($line);
          $line['plugin_xivo_lines_id'] = $plugin_xivo_lines_id;
