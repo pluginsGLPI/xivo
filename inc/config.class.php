@@ -94,22 +94,27 @@ class PluginXivoConfig extends Config {
       ]);
       echo self::showField([
          'inputtype'   => 'yesno',
-         'label'       => __("Don't import devices with empty serial number", 'xivo'),
-         'name'        => 'del_empty_sn',
-         'value'       => $current_config['del_empty_sn'],
+         'label'       => __("Import devices with empty serial number", 'xivo'),
+         'name'        => 'import_empty_sn',
+         'value'       => $current_config['import_empty_sn'],
       ]);
       echo self::showField([
          'inputtype'   => 'yesno',
-         'label'       => __("Don't import devices with empty mac", 'xivo'),
-         'name'        => 'del_empty_mac',
-         'value'       => $current_config['del_empty_mac'],
+         'label'       => __("Import devices with empty mac", 'xivo'),
+         'name'        => 'import_empty_mac',
+         'value'       => $current_config['import_empty_mac'],
       ]);
       echo self::showField([
          'inputtype'   => 'yesno',
-         'label'       => __("Don't import 'not_configured' devices", 'xivo'),
-         'name'        => 'del_notconfig',
-         'value'       => $current_config['del_notconfig'],
+         'label'       => __("Import 'not_configured' devices", 'xivo'),
+         'name'        => 'import_notconfig',
+         'value'       => $current_config['import_notconfig'],
       ]);
+
+      if (self::isValid()) {
+         echo Html::link(__("Force synchronization"), self::getFormURL()."?forcesync");
+      }
+
       echo "</div>";
 
       if ($canedit) {
@@ -196,8 +201,8 @@ class PluginXivoConfig extends Config {
             break;
 
          case 'password':
-            $out.=  "<input type= password' name='fakefield' style='display:none;'>";
-            $out.=  "<input type= password'";
+            $out.=  "<input type='password' name='fakefield' style='display:none;'>";
+            $out.=  "<input type='password'";
             foreach($options as $key => $value) {
                $out.= "$key='$value' ";
             }
@@ -234,14 +239,14 @@ class PluginXivoConfig extends Config {
       // fill config table with default values if missing
       foreach ([
          // api access
-         'import_devices' => 0,
-         'api_url'        => '',
-         'api_username'   => '',
-         'api_password'   => '',
-         'api_ssl_check'  => 1,
-         'del_empty_sn'   => 1,
-         'del_empty_mac'  => 1,
-         'del_notconfig'  => 1,
+         'import_devices'   => 0,
+         'api_url'          => '',
+         'api_username'     => '',
+         'api_password'     => '',
+         'api_ssl_check'    => 1,
+         'import_empty_sn'  => 0,
+         'import_empty_mac' => 0,
+         'import_notconfig' => 0,
       ] as $key => $value) {
          if (!isset($current_config[$key])) {
             Config::setConfigurationValues('plugin:xivo', array($key => $value));
@@ -256,7 +261,7 @@ class PluginXivoConfig extends Config {
     */
    static function uninstall() {
       $config = new Config();
-      $config->deleteByCriteria(['context' => 'xivo']);
+      $config->deleteByCriteria(['context' => 'plugin:xivo']);
 
       return true;
    }

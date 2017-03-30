@@ -44,17 +44,17 @@ class PluginXivoInventory extends CommonGLPI {
 
       foreach($devices as $index => &$device) {
          // remove devices with missing mandatory informations
-         if ($xivoconfig['del_empty_sn']
+         if (!$xivoconfig['import_empty_sn']
              && empty($device['sn'])) {
             unset($devices[$index]);
             continue;
          }
-          if ($xivoconfig['del_empty_mac']
-             && empty($device['sn'])) {
+          if (!$xivoconfig['import_empty_mac']
+             && empty($device['mac'])) {
             unset($devices[$index]);
             continue;
          }
-         if ($xivoconfig['del_notconfig']
+         if (!$xivoconfig['import_notconfig']
              && $device['status'] == self::NOT_CONFIGURED) {
             unset($devices[$index]);
             continue;

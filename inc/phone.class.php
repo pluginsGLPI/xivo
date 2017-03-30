@@ -137,6 +137,7 @@ class PluginXivoPhone extends CommonDBTM {
                   AND net.`items_id` = phone.`id`
                 WHERE phone.`serial` = '{$device['sn']}'
                   AND phone.`serial` IS NOT NULL
+                  AND phone.`serial` != ''
                   OR net.`mac` = '{$device['mac']}'
                   OR xivo.`xivo_id` = '{$device['id']}'";
       $result = $DB->query($query);
