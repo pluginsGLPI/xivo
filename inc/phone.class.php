@@ -8,7 +8,8 @@ class PluginXivoPhone extends CommonDBTM {
    static $rightname = 'phone';
 
    static function importSingle($device = []) {
-      if (!isset($device['id'])) {
+      if (!isset($device['id'])
+          || !PluginXivoConfig::isValid(true)) {
          return false;
       }
 
