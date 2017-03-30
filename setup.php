@@ -46,6 +46,8 @@ function plugin_init_xivo() {
    // additional tabs
    Plugin::registerClass('PluginXivoPhone_Line',
                          ['addtabon' => 'Phone']);
+   Plugin::registerClass('PluginXivoLine',
+                         ['linkuser_types' => 'Line']);
 
    // css & js
    $PLUGIN_HOOKS['add_css']['xivo'] = 'xivo.css';
