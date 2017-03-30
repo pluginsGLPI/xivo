@@ -220,11 +220,21 @@ class PluginXivoConfig extends Config {
       return $out;
    }
 
-   static function isValid() {
+   static function isValid($with_api = false) {
       $current_config = self::getConfig();
-      return  (!empty($current_config['api_url'])
-               && !empty($current_config['api_username'])
-               && !empty($current_config['api_password']));
+      $valid_config =  (!empty($current_config['api_url'])
+                        && !empty($current_config['api_username'])
+                        && !empty($current_config['api_password']));
+
+      $valid_api = true;
+      if ($with_api) {
+         $apiclient = new PluginXivoAPIClient;
+         $apiclient->connect();
+         $statuses = $apiclient->status();
+         $valid_api = !in_array(false, $apiclient->status());
+      }
+
+      return ($valid_config && $valid_api);
    }
 
    /**

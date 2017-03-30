@@ -22,6 +22,11 @@ class PluginXivoInventory extends CommonGLPI {
       $totallines    = 0;
       $phone_lines   = [];
 
+      // check if api config is valid
+      if (!PluginXivoConfig::isValid(true)) {
+         return false;
+      }
+
       // retrieve devices
       $devices = self::paginate('Devices');
 

@@ -132,6 +132,11 @@ class PluginXivoPhone extends CommonDBTM {
    }
 
    static function forceSync($xivo_id = "") {
+      // check if api config is valid
+      if (!PluginXivoConfig::isValid(true)) {
+         return false;
+      }
+
       $apiclient       = new PluginXivoAPIClient;
       $device          = $apiclient->getSingleDevice($xivo_id);
       $device['lines'] = $apiclient->getSingleDeviceLines($xivo_id);
