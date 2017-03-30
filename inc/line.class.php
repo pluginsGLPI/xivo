@@ -48,6 +48,9 @@ class PluginXivoLine extends CommonDBTM {
       $tabs = array();
       $this->addDefaultFormTab($tabs)
            ->addStandardTab('PluginXivoPhone_Line', $tabs, $options)
+           ->addStandardTab('Contract_Item', $tabs, $options)
+           ->addStandardTab('Infocom', $tabs, $options)
+           ->addStandardTab('Document_Item', $tabs, $options)
            ->addStandardTab('Notepad', $tabs, $options)
            ->addStandardTab('Log', $tabs, $options);
 
