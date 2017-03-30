@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_XIVO_VERSION', '0.0.9');
+define('PLUGIN_XIVO_VERSION', '0.1.0');
 
 /**
  * Init hooks of the plugin.

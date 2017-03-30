@@ -13,9 +13,10 @@ class PluginXivoLine extends CommonDBTM {
    }
 
    static function importSingle($line = []) {
-      $myline   = new self;
-      $lines_id = xivoGetIdByField(__CLASS__, 'line_id', $line['id']);
-      $input    = [
+      $xivoconfig = PluginXivoConfig::getConfig();
+      $myline     = new self;
+      $lines_id   = xivoGetIdByField(__CLASS__, 'line_id', $line['id']);
+      $input      = [
          'protocol'               => $line['protocol'],
          'name'                   => $line['name'],
          'provisioning_extension' => $line['provisioning_extension'],
@@ -35,6 +36,7 @@ class PluginXivoLine extends CommonDBTM {
       }
 
       if (!$lines_id) {
+         $input['entities_id'] = $xivoconfig['default_entity'];
          $lines_id = $myline->add($input);
       } else {
          $input['id'] = $lines_id;

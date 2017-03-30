@@ -72,7 +72,8 @@
    border-color: #5897fb;
 }
 
-.xivo_field select ~ .xivo_label,
+.xivo_field .select2-container ~ .xivo_label,
+.xivo_field .no-wrap ~ .xivo_label,
 .xivo_field .xivo_input:focus ~ .xivo_label,
 .xivo_field .xivo_input:valid ~ .xivo_label {
    top: -15px;

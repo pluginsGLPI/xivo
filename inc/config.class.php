@@ -110,6 +110,13 @@ class PluginXivoConfig extends Config {
          'name'        => 'import_notconfig',
          'value'       => $current_config['import_notconfig'],
       ]);
+      echo self::showField([
+         'inputtype'   => 'dropdown',
+         'itemtype'    => 'Entity',
+         'label'       => __("Default entity", 'xivo'),
+         'name'        => 'default_entity',
+         'value'       => $current_config['default_entity'],
+      ]);
 
       if (self::isValid()) {
          echo Html::link(__("Force synchronization"), self::getFormURL()."?forcesync");
@@ -174,6 +181,7 @@ class PluginXivoConfig extends Config {
       $rand            = mt_rand();
       $default_options = [
          'inputtype'   => 'input',
+         'itemtype'    => '',
          'label'       => '',
          'name'        => '',
          'value'       => '',
@@ -189,8 +197,6 @@ class PluginXivoConfig extends Config {
       $out = "";
       $out.= "<div class='xivo_field'>";
 
-
-      // display an hidden field to prevent chrome autofill
 
       // call the field according to its type
       switch($options['inputtype']) {
@@ -208,9 +214,15 @@ class PluginXivoConfig extends Config {
             }
             $out.= ">";
             break;
+
          case 'yesno':
             $options['display'] = false;
             $out.= Dropdown::showYesNo($options['name'], $options['value'], -1, $options);
+            break;
+
+         case 'dropdown':
+            $options['display'] = false;
+            $out.= Dropdown::show($options['itemtype'], $options);
             break;
       }
 
@@ -257,6 +269,7 @@ class PluginXivoConfig extends Config {
          'import_empty_sn'  => 0,
          'import_empty_mac' => 0,
          'import_notconfig' => 0,
+         'default_entity'   => 0,
       ] as $key => $value) {
          if (!isset($current_config[$key])) {
             Config::setConfigurationValues('plugin:xivo', array($key => $value));

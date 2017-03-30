@@ -13,6 +13,7 @@ class PluginXivoPhone extends CommonDBTM {
       $model        = new PhoneModel;
       $manufacturer = new Manufacturer;
       $networkport  = new NetworkPort();
+      $xivoconfig   = PluginXivoConfig::getConfig();
 
       $manufacturers_id = $manufacturer->import(['name' => $device['vendor']]);
       $phonemodels_id   = $model->import(['name' => $device['model']]);
@@ -61,10 +62,11 @@ class PluginXivoPhone extends CommonDBTM {
 
       if (!$phones_id) {
          // add phone
+         $input['entities_id'] = $xivoconfig['default_entity'];
          $phones_id = $phone->add($input);
 
          // add a line in object table (to store xivo id)
-         $input_xivophone['phones_id'] = $phones_id;
+         $input_xivophone['phones_id']   = $phones_id;
          $xivophone->add($input_xivophone);
       } else {
          //update phone
