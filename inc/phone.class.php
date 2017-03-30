@@ -93,12 +93,14 @@ class PluginXivoPhone extends CommonDBTM {
             $networkport->add($net_input);
          } else {
             $netport = end($found_netports);
-            $net_input['id'] = $netport['id'];
-            $net_input['NetworkName_id'] = $netport['networknames'][0]['id'];
-            $net_input['NetworkName__ipaddresses'] = [
-               $netport['networknames'][0]['ipaddresses'][0]['id'] => $device['ip']
-            ];
-            $networkport->update($net_input);
+            if (isset($netport['networknames'])) {
+               $net_input['id'] = $netport['id'];
+               $net_input['NetworkName_id'] = $netport['networknames'][0]['id'];
+               $net_input['NetworkName__ipaddresses'] = [
+                  $netport['networknames'][0]['ipaddresses'][0]['id'] => $device['ip']
+               ];
+               $networkport->update($net_input);
+            }
          }
       }
 
