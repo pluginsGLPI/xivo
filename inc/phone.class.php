@@ -54,6 +54,9 @@ class PluginXivoPhone extends CommonDBTM {
          $input_xivophone['line_name']         = $last_line['protocol']."/".
                                                  $last_line['name'];
          $input_xivophone['provisioning_code'] = $last_line['provisioning_code'];
+         if (isset($last_line['glpi_users_id'])) {
+            $input['users_id'] = $last_line['glpi_users_id'];
+         }
       }
 
       if (!$phones_id) {

@@ -48,8 +48,9 @@ class PluginXivoInventory extends CommonGLPI {
       // import lines
       foreach($lines as &$line) {
          //check if we can retrive the ldap username
+         $line['glpi_users_id'] = 0;
          if (isset($caller_id_list[$line['caller_id_name']])) {
-            $line['username'] = $caller_id_list[$line['caller_id_name']];
+            $line['glpi_users_id'] = User::getIdByName($caller_id_list[$line['caller_id_name']]);
          }
 
          // add or update assets

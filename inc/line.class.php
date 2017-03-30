@@ -28,7 +28,7 @@ class PluginXivoLine extends CommonDBTM {
          'device_slot'            => $line['device_slot'],
          'caller_id_num'          => $line['caller_id_num'],
          'caller_id_name'         => $line['caller_id_name'],
-         'users_id'               => $users_id,
+         'users_id'               => $line['glpi_users_id'],
          'context'                => $line['context'],
          'position'               => $line['position'],
          'registrar'              => $line['registrar'],
