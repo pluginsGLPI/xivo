@@ -13,11 +13,6 @@ class PluginXivoLine extends CommonDBTM {
    }
 
    static function importSingle($line = []) {
-      $users_id = 0;
-      if (isset($line['username'])) {
-         $users_id = User::getIdByName($line['username']);
-      }
-
       $myline   = new self;
       $lines_id = xivoGetIdByField(__CLASS__, 'line_id', $line['id']);
       $input    = [
@@ -28,13 +23,16 @@ class PluginXivoLine extends CommonDBTM {
          'device_slot'            => $line['device_slot'],
          'caller_id_num'          => $line['caller_id_num'],
          'caller_id_name'         => $line['caller_id_name'],
-         'users_id'               => $line['glpi_users_id'],
          'context'                => $line['context'],
          'position'               => $line['position'],
          'registrar'              => $line['registrar'],
          'line_id'                => $line['id'],
          'date_mod'               => $_SESSION["glpi_currenttime"],
       ];
+
+      if (isset($line['glpi_users_id'])) {
+         $input['users_id'] = $line['glpi_users_id'];
+      }
 
       if (!$lines_id) {
          $lines_id = $myline->add($input);
