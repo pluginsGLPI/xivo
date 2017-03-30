@@ -38,11 +38,45 @@ class PluginXivoAPIClient extends CommonGLPI {
 
 
    function status() {
+      $device = $this->getDevices([
+         'query' => [
+            'limit' => 1
+         ]
+      ]);
+      $device_id = is_array($device) ? end($device['items'])['id'] : false;
+      $line = $this->getLines([
+         'query' => [
+            'limit' => 1
+         ]
+      ]);
+      $line_id = is_array($line) ? end($line['items'])['id'] : false;
+
       return [
          __('Api access', 'xivo')        => !empty($this->auth_token),
-         __('Get phone devices', 'xivo') => boolval($this->getDevices([
+         __('Get phone devices', 'xivo')." (confd.devices.read)"
+            => is_array($device),
+         __('Get single device', 'xivo')." (confd.devices.#.read)"
+             => is_array($this->getSingleDevice($device_id, [
             'query' => [
-               'limit' => 30
+               'limit' => 1
+            ]
+         ])) && is_array($this->getSingleDeviceLines($device_id, [
+            'query' => [
+               'limit' => 1
+            ]
+         ])),
+         __('Get lines', 'xivo')." (confd.lines.read)"
+             => is_array($line),
+         __('Get single line', 'xivo')." (confd.lines.#.read)"
+             => is_array($this->getSingleLine($line_id, [
+            'query' => [
+               'limit' => 1
+            ]
+         ])),
+         __('Get users', 'xivo')." (confd.users.read)"
+             => is_array($this->getUsers([
+            'query' => [
+               'limit' => 1
             ]
          ])),
       ];
@@ -150,11 +184,18 @@ class PluginXivoAPIClient extends CommonGLPI {
       return $this->getSingle('devices', $id);
    }
 
+   function getSingleLine($id) {
+      return $this->getSingle('lines', $id);
+   }
+
    function getSingleDeviceLines($id) {
       $lines_items = $this->getList("devices/$id/lines")['items'];
+      if (!is_array($lines_items)) {
+         return false;
+      }
       $lines = [];
       foreach($lines_items as $item) {
-         $lines[] = $this->getSingle('lines', $item['line_id']);
+         $lines[] = $this->getSingleLine($item['line_id']);
       }
       return $lines;
    }
@@ -215,13 +256,15 @@ class PluginXivoAPIClient extends CommonGLPI {
                                            $resource,
                                            $params);
       } catch (GuzzleException $e) {
-         $debug = ["XIVO API error"];
-         $debug[] = $params;
-         $debug[] = Psr7\str($e->getRequest());
-         if ($e->hasResponse()) {
-            $debug[] = Psr7\str($e->getResponse());
+         if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+            $debug = ["XIVO API error"];
+            $debug[] = $params;
+            $debug[] = Psr7\str($e->getRequest());
+            if ($e->hasResponse()) {
+               $debug[] = Psr7\str($e->getResponse());
+            }
+            Toolbox::logDebug($debug);
          }
-         Toolbox::logDebug($debug);
          return false;
       }
 
@@ -238,9 +281,6 @@ class PluginXivoAPIClient extends CommonGLPI {
       // cast body as string, guzzle return strems
       $json        = (string) $response->getBody();
       $prelude_res = json_decode($json, true);
-
-      // check xivo error
-      $xivo_api_error = false;
 
       $data =  json_decode($json, true);
 

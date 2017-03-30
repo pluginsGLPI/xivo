@@ -8,6 +8,10 @@ class PluginXivoPhone extends CommonDBTM {
    static $rightname = 'phone';
 
    static function importSingle($device = []) {
+      if (!isset($device['id'])) {
+         return false;
+      }
+
       $phone        = new Phone;
       $xivophone    = new self;
       $model        = new PhoneModel;
@@ -23,8 +27,10 @@ class PluginXivoPhone extends CommonDBTM {
       $contact_num      = '';
       if ($number_line) {
          $last_line   = end($device['lines']);
-         $contact     = $last_line['caller_id_name'];
-         $contact_num = $last_line['caller_id_num'];
+         if (isset($last_line['caller_id_name'])) {
+            $contact     = $last_line['caller_id_name'];
+            $contact_num = $last_line['caller_id_num'];
+         }
       }
 
       $input = [
@@ -51,7 +57,7 @@ class PluginXivoPhone extends CommonDBTM {
          'date_mod'          => $_SESSION["glpi_currenttime"],
       ];
 
-      if ($number_line) {
+      if ($number_line && isset($last_line['protocol'])) {
          $input_xivophone['line_name']         = $last_line['protocol']."/".
                                                  $last_line['name'];
          $input_xivophone['provisioning_code'] = $last_line['provisioning_code'];
