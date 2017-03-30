@@ -77,8 +77,7 @@ class PluginXivoPhone extends CommonDBTM {
 
       // import network ports
       if (!empty($device['mac'])) {
-         $found_netports = $networkport->find("`itemtype` = 'Phone'
-                                               AND `items_id` = '$phones_id'");
+         $found_netports = self::getFullNetworkPort($phones_id);
          $net_input = [
             'items_id'                    => $phones_id,
             'itemtype'                    => 'Phone',
@@ -93,17 +92,43 @@ class PluginXivoPhone extends CommonDBTM {
          if (count($found_netports) == 0){
             $networkport->add($net_input);
          } else {
-            $current_netport = array_shift($found_netports);
-            $net_input['id'] = $current_netport['id'];
-            unset($net_input['NetworkName_name']);
-            unset($net_input['NetworkName__ipaddresses']);
-            $networkport->update($net_input);         }
+            $netport = end($found_netports);
+            $net_input['id'] = $netport['id'];
+            $net_input['NetworkName_id'] = $netport['networknames'][0]['id'];
+            $net_input['NetworkName__ipaddresses'] = [
+               $netport['networknames'][0]['ipaddresses'][0]['id'] => $device['ip']
+            ];
+            $networkport->update($net_input);
+         }
       }
 
       // import line of this phones
       PluginXivoPhone_Line::importAll($device['lines'], $phones_id);
 
       return $phones_id;
+   }
+
+   static function getFullNetworkPort($phones_id) {
+      $networkport_inst = new NetworkPort();
+      $networkname_inst = new NetworkName();
+      $ipaddress_inst   = new IPAddress();
+      $found_networkports = $networkport_inst->find("`itemtype` = 'Phone'
+                                                     AND `items_id` = '$phones_id'");
+
+      foreach($found_networkports as $networkports_id => &$networkport) {
+         $found_networknames = $networkname_inst->find("`itemtype` = 'NetworkPort'
+                                                        AND `items_id` = '$networkports_id'");
+
+         foreach($found_networknames as $networknames_id => &$networkname) {
+            $found_ipaddresses = $ipaddress_inst->find("`itemtype` = 'NetworkName'
+                                                         AND `items_id` = '$networknames_id'");
+
+            $networkname['ipaddresses'] = array_values($found_ipaddresses);
+            $networkport['networknames'][] = $networkname;
+         }
+      }
+
+      return $found_networkports;
    }
 
    static function forceSync($xivo_id = "") {
