@@ -28,6 +28,10 @@
 
 define('PLUGIN_XIVO_VERSION', '0.1.0');
 
+if (!defined("PLUGINXIVO_DIR")) {
+   define("PLUGINXIVO_DIR", GLPI_ROOT . "/plugins/xivo");
+}
+
 /**
  * Init hooks of the plugin.
  * REQUIRED
@@ -38,6 +42,9 @@ function plugin_init_xivo() {
    global $PLUGIN_HOOKS;
 
    $PLUGIN_HOOKS['csrf_compliant']['xivo'] = true;
+
+   // add autload for vendor
+   include_once(PLUGINXIVO_DIR . "/vendor/autoload.php");
 
    // config page
    Plugin::registerClass('PluginXivoConfig', ['addtabon' => 'Config']);
