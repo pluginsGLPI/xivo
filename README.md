@@ -6,7 +6,7 @@ GLPI Integration with [XIVO](https://www.xivo.solutions/) or [WAZO](http://wazo.
 
 ## Features
 
-Here is the list of currently working features:
+Here is the list of currently working/planned features:
 
 - [x] Phones inventory
 - [x] Lines inventory
