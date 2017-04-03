@@ -1,5 +1,3 @@
-# Xivo/Wazo GLPI plugin
-
 ![Logo GLPI](./img/glpi.png) 
 
 ![Logo XIVO](./img/xivo.png) 
