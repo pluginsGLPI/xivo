@@ -56,11 +56,13 @@ class PluginXivoConfig extends Config {
       echo "<h1>".__("Configuration of XIVO integration")."</h1>";
 
       echo self::showField([
-         'inputtype'   => 'yesno',
-         'label'       => __("Import phone devices", 'xivo'),
-         'name'        => 'import_devices',
-         'value'       => $current_config['import_devices'],
-         'on_change'   => '$("#import_devices").toggleFromValue(this.value);',
+         'inputtype' => 'yesno',
+         'label'     => __("Import phone devices", 'xivo'),
+         'attrs'     => [
+            'name'      => 'import_devices',
+            'value'     => $current_config['import_devices'],
+            'on_change' => '$("#import_devices").toggleFromValue(this.value);',
+         ]
       ]);
 
       $style = "";
