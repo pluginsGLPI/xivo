@@ -214,10 +214,11 @@ class PluginXivoPhone extends CommonDBTM {
                   AND phone.`serial` IS NOT NULL
                   AND phone.`serial` != ''
                   OR net.`mac` = '{$device['mac']}'
-                  OR xivo.`xivo_id` = '{$device['id']}'";
+                  OR xivo.`xivo_id` = '{$device['id']}'
+                ORDER BY phone.`id` ASC";
       $result = $DB->query($query);
 
-      if ($DB->numrows($result) == 1) {
+      if ($DB->numrows($result) >= 1) {
          return $DB->result($result, 0, 'id');
       }
       return false;
