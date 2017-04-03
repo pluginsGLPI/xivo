@@ -42,7 +42,7 @@ msgstr "Code d'approvisionnement"
 
 #: inc/line.class.php:96 inc/line.class.php:191
 msgid "Device slot"
-msgstr ""
+msgstr "\"Slot\" du téléphone"
 
 #: inc/line.class.php:100 inc/line.class.php:198
 msgid "Position"
