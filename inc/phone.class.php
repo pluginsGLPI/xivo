@@ -240,26 +240,28 @@ class PluginXivoPhone extends CommonDBTM {
    static function displayAutoInventory(Phone $phone) {
       $xivophone     = new self;
       $xivophones_id = xivoGetIdByField(__CLASS__, 'phones_id', $phone->getID());
-      $xivophone->getFromDB($xivophones_id);
-      $form_url      = self::getFormURL();
+      if ($xivophones_id) {
+         $xivophone->getFromDB($xivophones_id);
+         $form_url      = self::getFormURL();
 
-      echo '<div class="xivo_config">';
-      echo '<h1>'.__('XIVO informations', 'xivo').'</h1>';
-      echo "<ul>";
-      echo "<li><strong>".__("Xivo ID", 'xivo')."</strong>: ".
-           $xivophone->fields['xivo_id']."</li>";
-      echo "<li><strong>".__("Template", 'xivo')."</strong>: ".
-           $xivophone->fields['template']."</li>";
-      echo "<li>";
-      echo "<strong>".__("Last synchronisation", 'xivo')."</strong>: ".
-           Html::convDateTime($xivophone->fields['date_mod'])."</li>";
-      echo "</ul>";
+         echo '<div class="xivo_config">';
+         echo '<h1>'.__('XIVO informations', 'xivo').'</h1>';
+         echo "<ul>";
+         echo "<li><strong>".__("Xivo ID", 'xivo')."</strong>: ".
+              $xivophone->fields['xivo_id']."</li>";
+         echo "<li><strong>".__("Template", 'xivo')."</strong>: ".
+              $xivophone->fields['template']."</li>";
+         echo "<li>";
+         echo "<strong>".__("Last synchronisation", 'xivo')."</strong>: ".
+              Html::convDateTime($xivophone->fields['date_mod'])."</li>";
+         echo "</ul>";
 
-      echo "<br>";
-      echo Html::link(__("Force synchronization"), "$form_url?forcesync&xivo_id=".
-                                                   $xivophone->fields['xivo_id']);
+         echo "<br>";
+         echo Html::link(__("Force synchronization"), "$form_url?forcesync&xivo_id=".
+                                                      $xivophone->fields['xivo_id']);
 
-      echo "</div>";
+         echo "</div>";
+      }
 
       return TRUE;
    }
