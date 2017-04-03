@@ -1,6 +1,21 @@
 # xivo GLPI plugin
 
-Add your plugin description here.
+GLPI Integration with [XIVO](https://www.xivo.solutions/) or [WAZO](http://wazo.community/)
+
+**[DOWNLOAD the plugin](https://github.com/pluginsGLPI/xivo/releases)**
+
+## Features
+
+Here is the list of currently working features:
+
+- [x] Phones inventory
+- [x] Lines inventory
+- [ ] Users presence
+- [ ] Auto-open tickets or users form
+- [ ] Call logs
+- [ ] Directory
+
+Please contact [Teclib'](http://www.teclib-group.com) by [mail](http://www.teclib-group.com/contact/) or phone (01 79 97 02 78) if you want informations for developing futures one.
 
 ## Contributing
 
