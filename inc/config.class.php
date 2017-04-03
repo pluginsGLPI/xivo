@@ -12,6 +12,7 @@ class PluginXivoConfig extends Config {
 
    /**
     * Return the current config of the plugin store in the glpi config table
+    *
     * @return array config with keys => values
     */
    static function getConfig() {
@@ -68,54 +69,70 @@ class PluginXivoConfig extends Config {
       }
       echo "<div id='import_devices' class='xivo_config_block' style='$style'>";
       echo self::showField([
-         'label'       => __("API url", 'xivo'),
-         'name'        => 'api_url',
-         'value'       => $current_config['api_url'],
-         'placeholder' => 'https://...',
+         'label' => __("API url", 'xivo'),
+         'name'  => 'api_url',
+         'attrs' => [
+            'value'       => $current_config['api_url'],
+            'placeholder' => 'https://...',
+         ]
       ]);
       echo self::showField([
-         'label'       => __("API username", 'xivo'),
-         'name'        => 'api_username',
-         'value'       => $current_config['api_username'],
-         'style'       => 'width:100px;',
+         'label' => __("API username", 'xivo'),
+         'name'  => 'api_username',
+         'attrs' => [
+            'value' => $current_config['api_username'],
+            'style' => 'width:100px;',
+         ]
       ]);
       echo self::showField([
-         'inputtype'   => 'password',
-         'label'       => __("API password", 'xivo'),
-         'name'        => 'api_password',
-         'value'       => $current_config['api_password'],
-         'style'       => 'width:100px;',
+         'inputtype' => 'password',
+         'label'     => __("API password", 'xivo'),
+         'attrs'     => [
+            'name'  => 'api_password',
+            'value' => $current_config['api_password'],
+            'style' => 'width:100px;',
+         ]
       ]);
       echo self::showField([
-         'inputtype'   => 'yesno',
-         'label'       => __("API check SSL", 'xivo'),
-         'name'        => 'api_ssl_check',
-         'value'       => $current_config['api_ssl_check'],
+         'inputtype' => 'yesno',
+         'label'     => __("API check SSL", 'xivo'),
+         'attrs'     => [
+            'name'  => 'api_ssl_check',
+            'value' => $current_config['api_ssl_check'],
+         ]
       ]);
       echo self::showField([
-         'inputtype'   => 'yesno',
-         'label'       => __("Import devices with empty serial number", 'xivo'),
-         'name'        => 'import_empty_sn',
-         'value'       => $current_config['import_empty_sn'],
+         'inputtype' => 'yesno',
+         'label'     => __("Import devices with empty serial number", 'xivo'),
+         'attrs'     => [
+            'name'  => 'import_empty_sn',
+            'value' => $current_config['import_empty_sn'],
+         ]
       ]);
       echo self::showField([
-         'inputtype'   => 'yesno',
-         'label'       => __("Import devices with empty mac", 'xivo'),
-         'name'        => 'import_empty_mac',
-         'value'       => $current_config['import_empty_mac'],
+         'inputtype' => 'yesno',
+         'label'     => __("Import devices with empty mac", 'xivo'),
+         'attrs'     => [
+            'name'  => 'import_empty_mac',
+            'value' => $current_config['import_empty_mac'],
+         ]
       ]);
       echo self::showField([
-         'inputtype'   => 'yesno',
-         'label'       => __("Import 'not_configured' devices", 'xivo'),
-         'name'        => 'import_notconfig',
-         'value'       => $current_config['import_notconfig'],
+         'inputtype' => 'yesno',
+         'label'     => __("Import 'not_configured' devices", 'xivo'),
+         'attrs'     => [
+            'name'  => 'import_notconfig',
+            'value' => $current_config['import_notconfig'],
+         ]
       ]);
       echo self::showField([
-         'inputtype'   => 'dropdown',
-         'itemtype'    => 'Entity',
-         'label'       => __("Default entity", 'xivo'),
-         'name'        => 'default_entity',
-         'value'       => $current_config['default_entity'],
+         'inputtype' => 'dropdown',
+         'itemtype'  => 'Entity',
+         'label'     => __("Default entity", 'xivo'),
+         'attrs' => [
+            'name'  => 'default_entity',
+            'value' => $current_config['default_entity'],
+         ]
       ]);
 
       if (self::isValid()) {
@@ -177,22 +194,39 @@ class PluginXivoConfig extends Config {
       echo "</div>"; // .xivo_config
    }
 
+   /**
+    * Show a single config field
+    * Generic method who call the different GLPI function to display a field
+    *
+    * @param  array  $options a list of options:
+    *                            - inputtype (string), can be
+    *                               * text
+    *                               * password
+    *                               * yesno
+    *                               * dropdown
+    *                            - itemtype (only for input=dropdown)
+    *                            - label, <label> tag to append to the field
+    *                            - attrs, an array containing html attributes
+    * @return string the html
+    */
    static function showField($options = []) {
       $rand            = mt_rand();
       $default_options = [
-         'inputtype'   => 'input',
-         'itemtype'    => '',
-         'label'       => '',
-         'name'        => '',
-         'value'       => '',
-         'placeholder' => '',
-         'style'       => 'width:50%;',
-         'id'          => 'xivoconfig_field_$rand',
-         'class'       => 'xivo_input',
-         'required'    => 'required',
-         'on_change'   => ''
+         'inputtype' => 'text',
+         'itemtype'  => '',
+         'label'     => '',
+         'attrs'     => [
+            'name'        => '',
+            'value'       => '',
+            'placeholder' => '',
+            'style'       => 'width:50%;',
+            'id'          => "xivoconfig_field_$rand",
+            'class'       => 'xivo_input',
+            'required'    => 'required',
+            'on_change'   => ''
+         ]
       ];
-      $options         = array_merge($default_options, $options);
+      $options = array_replace_recursive($default_options, $options);
 
       $out = "";
       $out.= "<div class='xivo_field'>";
@@ -201,37 +235,43 @@ class PluginXivoConfig extends Config {
       // call the field according to its type
       switch($options['inputtype']) {
          default:
-         case 'input':
+         case 'text':
             $out.= Html::input('fakefield', ['style' => 'display:none;']);
-            $out.= Html::input($options['name'], $options);
+            $out.= Html::input($options['attrs']['name'], $options['attrs']);
             break;
 
          case 'password':
             $out.=  "<input type='password' name='fakefield' style='display:none;'>";
             $out.=  "<input type='password'";
-            foreach($options as $key => $value) {
+            foreach($options['attrs'] as $key => $value) {
                $out.= "$key='$value' ";
             }
             $out.= ">";
             break;
 
          case 'yesno':
-            $options['display'] = false;
-            $out.= Dropdown::showYesNo($options['name'], $options['value'], -1, $options);
+            $options['attrs']['display'] = false;
+            $out.= Dropdown::showYesNo($options['attrs']['name'], $options['attrs']['value'], -1, $options['attrs']);
             break;
 
          case 'dropdown':
-            $options['display'] = false;
-            $out.= Dropdown::show($options['itemtype'], $options);
+            $options['attrs']['display'] = false;
+            $out.= Dropdown::show($options['itemtype'], $options['attrs']);
             break;
       }
 
-      $out.= "<label class='xivo_label' for='{$options['id']}'>{$options['label']}</label>";
+      $out.= "<label class='xivo_label' for='{$options['attrs']['id']}'>
+              {$options['label']}</label>";
       $out.= "</div>";
 
       return $out;
    }
 
+   /**
+    * Check if current saved config is valid
+    * @param  boolean $with_api also check api status
+    * @return boolean
+    */
    static function isValid($with_api = false) {
       $current_config = self::getConfig();
       $valid_config =  (!empty($current_config['api_url'])

@@ -7,6 +7,12 @@ if (!defined('GLPI_ROOT')) {
 class PluginXivoPhone extends CommonDBTM {
    static $rightname = 'phone';
 
+   /**
+    * Import a single device (phone) into GLPI
+    *
+    * @param  array  $device the device to import
+    * @return mixed the phone id (integer) or false
+    */
    static function importSingle($device = []) {
       if (!isset($device['id'])
           || !PluginXivoConfig::isValid(true)) {
@@ -124,7 +130,13 @@ class PluginXivoPhone extends CommonDBTM {
       return $phones_id;
    }
 
-   static function getFullNetworkPort($phones_id) {
+   /**
+    * Retrieve the tree of netports (with name and ipaddresses) for a glpi phone
+    *
+    * @param  integer $phones_id the phone id
+    * @return array              the netport tree
+    */
+   static function getFullNetworkPort($phones_id = 0) {
       $networkport_inst = new NetworkPort();
       $networkname_inst = new NetworkName();
       $ipaddress_inst   = new IPAddress();
@@ -147,6 +159,12 @@ class PluginXivoPhone extends CommonDBTM {
       return $found_networkports;
    }
 
+   /**
+    * Trigger a synchronisation for a single phone
+    *
+    * @param  string $xivo_id the device id known in XIVO
+    * @return boolean
+    */
    static function forceSync($xivo_id = "") {
       // check if api config is valid
       if (!PluginXivoConfig::isValid(true)) {
@@ -168,7 +186,16 @@ class PluginXivoPhone extends CommonDBTM {
       return self::importSingle($device);
    }
 
-   static function getPhoneID($device) {
+   /**
+    * Retrieve the GLPI by a device array, try to find by
+    *  - serial number
+    *  - mac address
+    *  - xivo id
+    *
+    * @param  array $device the device from xivo api
+    * @return mixed         the phone id (integer) or false
+    */
+   static function getPhoneID($device = []) {
       global $DB;
 
       $phonetable = Phone::getTable();
@@ -194,11 +221,23 @@ class PluginXivoPhone extends CommonDBTM {
       return false;
    }
 
+   /**
+    * Purge its dependencies when a GLPI Phone is purged
+    *
+    * @param  Phone  $phone the purged phone
+    * @return boolean
+    */
    static function phonePurged(Phone $phone) {
       $xivophone = new self;
-      $xivophone->deleteByCriteria(['phones_id' => $phone->getID()]);
+      return $xivophone->deleteByCriteria(['phones_id' => $phone->getID()]);
    }
 
+   /**
+    * Display on phone form additional informations
+    *
+    * @param  Phone  $phone
+    * @return boolean
+    */
    static function displayAutoInventory(Phone $phone) {
       $xivophone     = new self;
       $xivophones_id = xivoGetIdByField(__CLASS__, 'phones_id', $phone->getID());

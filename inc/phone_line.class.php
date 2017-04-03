@@ -298,6 +298,12 @@ class PluginXivoPhone_Line extends CommonDBRelation {
    }
 
 
+   /**
+    * Import a single phone_line relation
+    *
+    * @param  array  $phone_line the relation to import
+    * @return mixed the relation id (integer) or false
+    */
    static function importSingle($phone_line = []) {
       $my_phone_line = new self;
       $phone         = new Phone;

@@ -16,8 +16,19 @@ class PluginXivoInventory extends CommonGLPI {
       return [];
    }
 
+   /**
+    * Execute a full inventory synchronisation
+    * Import from xivo api:
+    *    - Phones
+    *    - Lines
+    *    - Association with users
+    *
+    * @param  CronTask $crontask
+    * @return boolean
+    */
    static function cronXivoimport(CronTask $crontask) {
       $xivoconfig    = PluginXivoConfig::getConfig();
+      $apiclient     = new PluginXivoAPIClient;
       $totaldevices  = 0;
       $totallines    = 0;
       $phone_lines   = [];
@@ -28,13 +39,13 @@ class PluginXivoInventory extends CommonGLPI {
       }
 
       // retrieve devices
-      $devices = self::paginate('Devices');
+      $devices = $apiclient->paginate('Devices');
 
       // retrieve lines
-      $lines = self::paginate('Lines');
+      $lines = $apiclient->paginate('Lines');
 
       // retrieve users
-      $users = self::paginate('Users');
+      $users = $apiclient->paginate('Users');
 
       // build an association between call_id (present in lines) and username (ldap)
       $caller_id_list = [];
@@ -112,28 +123,6 @@ class PluginXivoInventory extends CommonGLPI {
       } else {
          return false;
       }
-   }
-
-   static function paginate($function = "Devices") {
-      $apiclient = new PluginXivoAPIClient;
-      $offset    = 0;
-      $limit     = 200;
-      $devices   = [];
-
-      do {
-         $page = $apiclient->{"get$function"}([
-            'query' => [
-               'offset'         => $offset,
-               'limit'          => $limit,
-            ],
-            '_with_metadata' => true
-         ]);
-
-         $devices = array_merge($devices, $page['items']);
-         $offset+= $limit;
-      } while($offset < $page['total']);
-
-      return $devices;
    }
 
    /**

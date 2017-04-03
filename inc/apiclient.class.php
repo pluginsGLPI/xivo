@@ -21,22 +21,37 @@ class PluginXivoAPIClient extends CommonGLPI {
 
    function __destruct() {
       //destroy current token
-      //$this->disconnect();
+      $this->disconnect();
    }
 
 
+   /**
+    * Use Xivo Auth backend
+    *
+    * @return nothing (set private properties)
+    */
    function useXivoAuth() {
       $this->current_port    = 9497;
       $this->current_version = 0.1;
    }
 
 
+   /**
+    * Use Xivo confd backend
+    *
+    * @return nothing (set private properties)
+    */
    function useXivoConfd() {
       $this->current_port    = 9486;
       $this->current_version = 1.1;
    }
 
 
+   /**
+    * Check with Xivo API the mandatory actions
+    *
+    * @return array of [label -> boolean]
+    */
    function status() {
       $device = $this->getDevices([
          'query' => [
@@ -83,6 +98,12 @@ class PluginXivoAPIClient extends CommonGLPI {
    }
 
 
+   /**
+    * Attempt an http connection on xivo api
+    * if suceed, set auth_token private properties
+    *
+    * @return array data returned by the api
+    */
    function connect() {
       // we use Xivo-auth api
       $this->useXivoAuth();
@@ -109,13 +130,18 @@ class PluginXivoAPIClient extends CommonGLPI {
    }
 
 
+   /**
+    * Destroy session on xivo api (auth endpoint)
+    *
+    * @return array data returned by the api
+    */
    function disconnect() {
       return;
       // we use Xivo-auth api
       $this->useXivoAuth();
 
       // send disconnect with http query
-      $data = $this->httpQuery('token', [
+      return $this->httpQuery('token', [
          'verify' => boolval($this->api_config['api_ssl_check']),
          'json' => [
             'token' => $this->auth_token,
@@ -124,18 +150,43 @@ class PluginXivoAPIClient extends CommonGLPI {
    }
 
 
+   /**
+    * Retrieve list of devices (phones) in xivo api
+    *
+    * @param  array  $params http params (@see self::httpQuery params)
+    * @return array  data returned by the api
+    */
    function getDevices($params = []) {
       return $this->getList('devices', $params);
    }
 
+   /**
+    * Retrieve list of lines in xivo api
+    *
+    * @param  array  $params http params (@see self::httpQuery params)
+    * @return array  data returned by the api
+    */
    function getLines($params = []) {
       return $this->getList('lines', $params);
    }
 
+   /**
+    * Retrieve list of users in xivo api
+    *
+    * @param  array  $params http params (@see self::httpQuery params)
+    * @return array  data returned by the api
+    */
    function getUsers($params = []) {
       return $this->getList('users', $params);
    }
 
+   /**
+    * Retrieve a list from a specified endpoint
+    *
+    * @param  string $endpoint the resource to retrieve (ex: devices, users, etc)
+    * @param  array  $params http params (@see self::httpQuery params)
+    * @return array  data returned by the api
+    */
    function getList($endpoint = '', $params = []) {
       // declare default params
       $default_params = [
@@ -165,6 +216,45 @@ class PluginXivoAPIClient extends CommonGLPI {
       return $data;
    }
 
+
+   /**
+    * Paginate function getList to avoid a big http query
+    *
+    * @param  string $function function to use, will be prefixed by get (ex: getDevice, getUsers, etc)
+    * @return array  data returned by the api
+    */
+   function paginate($function = "Devices") {
+      $offset = 0;
+      $limit  = 200;
+      $items  = [];
+
+      if (!method_exists($this, "get$function")) {
+         return false;
+      }
+
+      do {
+         $page = $this->{"get$function"}([
+            'query' => [
+               'offset'         => $offset,
+               'limit'          => $limit,
+            ],
+            '_with_metadata' => true
+         ]);
+
+         $items = array_merge($items, $page['items']);
+         $offset+= $limit;
+      } while($offset < $page['total']);
+
+      return $items;
+   }
+
+   /**
+    * Retrieve a single resource with xivo api
+    *
+    * @param  string $endpoint the resource to retrieve (ex: devices, users, etc)
+    * @param  string $id       the id to retrive in xivo api
+    * @return array  data returned by the api
+    */
    function getSingle($endpoint = '', $id = '') {
       // check connection
       if (empty($this->auth_token)) {
@@ -180,15 +270,33 @@ class PluginXivoAPIClient extends CommonGLPI {
       return $data;
    }
 
-   function getSingleDevice($id) {
+   /**
+    * Get a single device (phone) with xivo api
+    *
+    * @param  string $id the xivo id of the device
+    * @return array  data returned by the api
+    */
+   function getSingleDevice($id = "") {
       return $this->getSingle('devices', $id);
    }
 
-   function getSingleLine($id) {
+   /**
+    * Get a single line with xivo api
+    *
+    * @param  string $id the xivo id of the line
+    * @return array  data returned by the api
+    */
+   function getSingleLine($id = "") {
       return $this->getSingle('lines', $id);
    }
 
-   function getSingleDeviceLines($id) {
+   /**
+    * Get lines of a single device (phone) with xivo api
+    *
+    * @param  string $id the xivo id of the device
+    * @return array  data returned by the api
+    */
+   function getSingleDeviceLines($id = "") {
       $lines_items = $this->getList("devices/$id/lines")['items'];
       if (!is_array($lines_items)) {
          return false;
@@ -201,7 +309,7 @@ class PluginXivoAPIClient extends CommonGLPI {
    }
 
    /**
-    * Return the XIVO API base uri
+    * Return the XIVO API base uri constructed from config
     *
     * @return string the uri
     */
@@ -209,6 +317,25 @@ class PluginXivoAPIClient extends CommonGLPI {
       return trim($this->api_config['api_url'], '/').":{$this->current_port}/{$this->current_version}/";
    }
 
+   /**
+    * Send an http query to the xivo api
+    *
+    * @param  string $resource the endpoint to use
+    * @param  array  $params   an array containg these possible options:
+    *                             - _with_metadata (bool, default false)
+    *                             - allow_redirects (bool, default false)
+    *                             - timeout (int, default 5)
+    *                             - connect_timeout (int, default 5)
+    *                             - connect_timeout (int, default 5)
+    *                             - debug (bool, default false)
+    *                             - verify (bool, default based on plugin config), check ssl certificate
+    *                             - query (array) url parameters
+    *                             - body (string) raw data to send in body
+    *                             - json (array) array to pass into the body chich will be json_encoded
+    *                             - json (headers) http headers
+    * @param  string $method   Http verb (ex: GET, POST, etc)
+    * @return array  data returned by the api
+    */
    function httpQuery($resource = '', $params = array(), $method = 'GET') {
       global $CFG_GLPI;
 
@@ -222,7 +349,7 @@ class PluginXivoAPIClient extends CommonGLPI {
          'verify'          => boolval($this->api_config['api_ssl_check']),
          'query'           => [], // url parameter
          'body'            => '', // raw data to send in body
-         'json'            => '', // json data to send
+         'json'            => [], // json data to send
          'headers'         => ['content-type'  => 'application/json',
                                'Accept'        => 'application/json'],
       ];

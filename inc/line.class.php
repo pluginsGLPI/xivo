@@ -12,6 +12,12 @@ class PluginXivoLine extends CommonDBTM {
       return _n("Line", "Lines", $nb);
    }
 
+   /**
+    * Import a single line into GLPI
+    *
+    * @param  array  $line the line to import
+    * @return mixed the line id (integer) or false
+    */
    static function importSingle($line = []) {
       $xivoconfig = PluginXivoConfig::getConfig();
       $myline     = new self;
