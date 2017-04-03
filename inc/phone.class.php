@@ -27,7 +27,6 @@ class PluginXivoPhone extends CommonDBTM {
 
       $manufacturers_id = $manufacturer->import(['name' => $device['vendor']]);
       $phonemodels_id   = $model->import(['name' => $device['model']]);
-      $entities_id      = 0;
       $number_line      = count($device['lines']);
       $contact          = '';
       $contact_num      = '';
@@ -46,7 +45,6 @@ class PluginXivoPhone extends CommonDBTM {
          'serial'           => $device['sn'],
          'manufacturers_id' => $manufacturers_id,
          'phonemodels_id'   => $phonemodels_id,
-         'entities_id'      => $entities_id,
          'contact'          => $contact,
          'contact_num'      => $contact_num,
          'number_line'      => $number_line,
