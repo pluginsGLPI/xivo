@@ -37,7 +37,7 @@ if (isset($_POST["add"])) {
    // display form
    Html::header(PluginXivoLine::getTypeName(),
              $_SERVER['PHP_SELF'],
-             "assets",
+             "management",
              "pluginxivoline");
    $line->display(['id' => $ID]);
    Html::footer();

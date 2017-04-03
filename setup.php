@@ -85,7 +85,7 @@ function plugin_init_xivo() {
    // add menu hook
    $PLUGIN_HOOKS['menu_toadd']['xivo'] = [
       // insert into 'plugin menu'
-      'assets' => 'PluginXivoLine'
+      'management' => 'PluginXivoLine'
    ];
 }
 
