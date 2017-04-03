@@ -1,4 +1,6 @@
-# xivo GLPI plugin
+![Logo GLPI](./pics/glpi.png) ![Logo XIVO](./pics/xivo.gif) ![Logo WAZO](./pics/wazo.png)
+
+# Xivo/Wazo GLPI plugin
 
 GLPI Integration with [XIVO](https://www.xivo.solutions/) or [WAZO](http://wazo.community/)
 
