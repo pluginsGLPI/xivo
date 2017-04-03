@@ -43,6 +43,14 @@ function plugin_init_xivo() {
 
    $PLUGIN_HOOKS['csrf_compliant']['xivo'] = true;
 
+   // don't load hooks if plugin not enabled (or glpi not logged)
+   $plugin = new Plugin();
+   if (!$plugin->isInstalled('xivo')
+       || !$plugin->isActivated('xivo')
+       || !Session::getLoginUserID() ) {
+      return true;
+   }
+
    // add autload for vendor
    include_once(PLUGINXIVO_DIR . "/vendor/autoload.php");
 
@@ -77,8 +85,6 @@ function plugin_init_xivo() {
       // insert into 'plugin menu'
       'assets' => 'PluginXivoLine'
    ];
-
-
 }
 
 
