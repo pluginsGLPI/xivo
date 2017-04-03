@@ -52,7 +52,6 @@ class PluginXivoConfig extends Config {
       if ($canedit) {
          echo "<form name='form' action='".Toolbox::getItemTypeFormURL("Config")."' method='post'>";
       }
-      echo "<div class='center' id='tabsbody'>";
 
       echo "<h1>".__("Configuration of XIVO integration")."</h1>";
 
@@ -152,7 +151,6 @@ class PluginXivoConfig extends Config {
          ]);
       }
 
-      echo "</div>"; // #tabsbody
       Html::closeForm();
 
       if (self::isValid()) {
