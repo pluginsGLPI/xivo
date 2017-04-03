@@ -38,6 +38,9 @@ class PluginXivoInventory extends CommonGLPI {
          return false;
       }
 
+      // track execution time
+      $time_start = microtime(true);
+
       // retrieve devices
       $devices = $apiclient->paginate('Devices');
 
@@ -114,9 +117,15 @@ class PluginXivoInventory extends CommonGLPI {
                                     $totaldevices, 'xivo')."\n",
                                 $totaldevices));
       }
-
-
       $totalimported = $totaldevices + $totallines;
+
+      // end track of execution time
+      $time_end = microtime(true);
+      $totaltime = $time_end - $time_start;
+      if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
+         Toolbox::logDebug("XIVO import (time + number)", round($totaltime, 2), $totalimported);
+      }
+
       $crontask->setVolume($totalimported);
       if ($totalimported) {
          return true;

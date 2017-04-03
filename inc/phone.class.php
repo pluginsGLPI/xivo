@@ -14,8 +14,7 @@ class PluginXivoPhone extends CommonDBTM {
     * @return mixed the phone id (integer) or false
     */
    static function importSingle($device = []) {
-      if (!isset($device['id'])
-          || !PluginXivoConfig::isValid(true)) {
+      if (!isset($device['id'])) {
          return false;
       }
 

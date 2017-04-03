@@ -45,6 +45,7 @@ class PluginXivoConfig extends Config {
       if (!self::canView()) {
          return false;
       }
+
       $current_config = self::getConfig();
       $canedit        = Session::haveRight(self::$rightname, UPDATE);
       echo "<div class='xivo_config'>";
