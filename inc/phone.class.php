@@ -88,8 +88,13 @@ class PluginXivoPhone extends CommonDBTM {
 
          // add line in object table (to store xivo id)
          $current_id = xivoGetIdByField(__CLASS__, 'xivo_id', $device['id']);
-         $input_xivophone['id'] = $current_id;
-         $xivophone->update($input_xivophone);
+         if ($current_id) {
+            $input_xivophone['id'] = $current_id;
+            $xivophone->update($input_xivophone);
+         } else {
+            $input_xivophone['phones_id']   = $phones_id;
+            $xivophone->add($input_xivophone);
+         }
       }
 
       // import network ports
