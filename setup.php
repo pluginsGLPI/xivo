@@ -51,7 +51,7 @@ function plugin_init_xivo() {
       return true;
    }
 
-   // add autload for vendor
+   // add autoload for vendor
    include_once(PLUGINXIVO_DIR . "/vendor/autoload.php");
 
    // config page
