@@ -61,6 +61,8 @@ function plugin_init_xivo() {
    // additional tabs
    Plugin::registerClass('PluginXivoPhone_Line',
                          ['addtabon' => 'Phone']);
+
+   // add Line to GLPI types
    Plugin::registerClass('PluginXivoLine',
                          ['linkuser_types' => 'Line',
                           'contract_types' => 'Line',
