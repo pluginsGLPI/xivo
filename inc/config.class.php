@@ -72,16 +72,16 @@ class PluginXivoConfig extends Config {
       echo "<div id='import_devices' class='xivo_config_block' style='$style'>";
       echo self::showField([
          'label' => __("API url", 'xivo'),
-         'name'  => 'api_url',
          'attrs' => [
+            'name'  => 'api_url',
             'value'       => $current_config['api_url'],
             'placeholder' => 'https://...',
          ]
       ]);
       echo self::showField([
          'label' => __("API username", 'xivo'),
-         'name'  => 'api_username',
          'attrs' => [
+            'name'  => 'api_username',
             'value' => $current_config['api_username'],
             'style' => 'width:100px;',
          ]
