@@ -9,7 +9,7 @@ class PluginXivoLine extends CommonDBTM {
    public $dohistory = true;
 
    static function getTypeName($nb = 0) {
-      return _n("Line", "Lines", $nb);
+      return _n("Line", "Lines", $nb, 'xivo');
    }
 
    /**
