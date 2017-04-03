@@ -25,8 +25,8 @@ class PluginXivoPhone extends CommonDBTM {
       $networkport  = new NetworkPort();
       $xivoconfig   = PluginXivoConfig::getConfig();
 
-      $manufacturers_id = $manufacturer->import(['name' => $device['vendor']]);
-      $phonemodels_id   = $model->import(['name' => $device['model']]);
+      $manufacturers_id = $manufacturer->importExternal($device['vendor']);
+      $phonemodels_id   = $model->importExternal($device['model']);
       $number_line      = count($device['lines']);
       $contact          = '';
       $contact_num      = '';
@@ -213,7 +213,7 @@ class PluginXivoPhone extends CommonDBTM {
                 WHERE phone.`serial` = '{$device['sn']}'
                   AND phone.`serial` IS NOT NULL
                   AND phone.`serial` != ''
-                  OR net.`mac` = '{$device['mac']}'
+                  OR net.` mac` = '{$device['mac']}'
                   OR xivo.`xivo_id` = '{$device['id']}'
                 ORDER BY phone.`id` ASC";
       $result = $DB->query($query);
