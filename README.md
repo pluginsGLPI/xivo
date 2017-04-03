@@ -23,7 +23,7 @@ Please contact [Teclib'](http://www.teclib-group.com) by [mail](http://www.tecli
 
 ## Screenshots
 
-<a href="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_lines.png?raw=true" style="width: 250px;"><img src="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_lines.png?raw=true" alt="inventory of line"/></a>
+<img src="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_lines.png?raw=true" alt="inventory of line"  style="width: 250px;"/>
 
 ## Contributing
 
