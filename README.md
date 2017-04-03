@@ -23,7 +23,7 @@ Please contact [Teclib'](http://www.teclib-group.com) by [mail](http://www.tecli
 
 ## Contributing
 
-* Open a ticket for each bug/feature so it can be discussed
+* Open an [issue](./issues/new) for each bug/feature so it can be discussed
 * Follow [development guidelines](http://glpi-developer-documentation.readthedocs.io/en/latest/plugins.html)
 * Refer to [GitFlow](http://git-flow.readthedocs.io/) process for branching
 * Work on a new branch on your own fork
