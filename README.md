@@ -21,6 +21,10 @@ Here is the list of currently working/planned features:
 
 Please contact [Teclib'](http://www.teclib-group.com) by [mail](http://www.teclib-group.com/contact/) or phone (+33 1 79 97 02 78) if you want informations for developing futures one.
 
+## Screenshots
+
+<a href="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_lines.png?raw=true" style="width: 250px;"><img src="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_lines.png?raw=true" alt="inventory of line"/></a>
+
 ## Contributing
 
 * Open an [issue](https://github.com/pluginsGLPI/xivo/issues/new) for each bug/feature so it can be discussed
