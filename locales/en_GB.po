@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-03 16:52+0200\n"
+"POT-Creation-Date: 2017-04-04 09:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: alexandre delaunay <delaunay.alexandre@gmail.com>, 2017\n"
 "Language-Team: English (United Kingdom) (https://www.transifex.com/teclib/teams/28042/en_GB/)\n"
@@ -80,27 +80,27 @@ msgstr "Add a phone"
 msgid "Add a line"
 msgstr "Add a line"
 
-#: inc/apiclient.class.php:70
+#: inc/apiclient.class.php:71
 msgid "Api access"
 msgstr "Api access"
 
-#: inc/apiclient.class.php:71
+#: inc/apiclient.class.php:72
 msgid "Get phone devices"
 msgstr "Get phone devices"
 
-#: inc/apiclient.class.php:73
+#: inc/apiclient.class.php:74
 msgid "Get single device"
 msgstr "Get single device"
 
-#: inc/apiclient.class.php:83
+#: inc/apiclient.class.php:84
 msgid "Get lines"
 msgstr "Get lines"
 
-#: inc/apiclient.class.php:85
+#: inc/apiclient.class.php:86
 msgid "Get single line"
 msgstr "Get single line"
 
-#: inc/apiclient.class.php:91
+#: inc/apiclient.class.php:92
 msgid "Get users"
 msgstr "Get users"
 
@@ -144,11 +144,19 @@ msgstr "Import 'not_configured' devices"
 msgid "Default entity"
 msgstr "Default entity"
 
-#: inc/config.class.php:180
+#: inc/config.class.php:157
+msgid "API XIVO status"
+msgstr "API XIVO status"
+
+#: inc/config.class.php:178
+msgid "Last Error"
+msgstr "Last Error"
+
+#: inc/config.class.php:188
 msgid "Auth token"
 msgstr "Auth token"
 
-#: inc/config.class.php:186
+#: inc/config.class.php:194
 msgid "ACL"
 msgstr "ACL"
 
@@ -170,18 +178,18 @@ msgid_plural "%1$d phones imported"
 msgstr[0] "%1$d phone imported"
 msgstr[1] "%1$d phones imported"
 
-#: inc/phone.class.php:247
+#: inc/phone.class.php:251
 msgid "XIVO informations"
 msgstr "XIVO informations"
 
-#: inc/phone.class.php:249
+#: inc/phone.class.php:255
 msgid "Xivo ID"
 msgstr "Xivo ID"
 
-#: inc/phone.class.php:251
+#: inc/phone.class.php:257
 msgid "Template"
 msgstr "Template"
 
-#: inc/phone.class.php:254
+#: inc/phone.class.php:262
 msgid "Last synchronisation"
 msgstr "Last synchronisation"

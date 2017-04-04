@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-03 16:52+0200\n"
+"POT-Creation-Date: 2017-04-04 09:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: alexandre delaunay <delaunay.alexandre@gmail.com>, 2017\n"
 "Language-Team: French (France) (https://www.transifex.com/teclib/teams/28042/fr_FR/)\n"
@@ -80,27 +80,27 @@ msgstr "Ajouter un téléphone"
 msgid "Add a line"
 msgstr "Ajouter une ligne"
 
-#: inc/apiclient.class.php:70
+#: inc/apiclient.class.php:71
 msgid "Api access"
 msgstr "Accès à l'API"
 
-#: inc/apiclient.class.php:71
+#: inc/apiclient.class.php:72
 msgid "Get phone devices"
 msgstr "Récuperer les téléphones"
 
-#: inc/apiclient.class.php:73
+#: inc/apiclient.class.php:74
 msgid "Get single device"
 msgstr "Récuperer un téléphone seul"
 
-#: inc/apiclient.class.php:83
+#: inc/apiclient.class.php:84
 msgid "Get lines"
 msgstr "Récupérer les lignes"
 
-#: inc/apiclient.class.php:85
+#: inc/apiclient.class.php:86
 msgid "Get single line"
 msgstr "Récupérer une ligne seule"
 
-#: inc/apiclient.class.php:91
+#: inc/apiclient.class.php:92
 msgid "Get users"
 msgstr "Récupérer les utilisateurs"
 
@@ -144,11 +144,19 @@ msgstr "Récupérer les téléphones 'not_configured'"
 msgid "Default entity"
 msgstr "Entité par défaut"
 
-#: inc/config.class.php:180
+#: inc/config.class.php:157
+msgid "API XIVO status"
+msgstr "Status de l'API Xivo"
+
+#: inc/config.class.php:178
+msgid "Last Error"
+msgstr "Dernière erreur"
+
+#: inc/config.class.php:188
 msgid "Auth token"
 msgstr "Jeton d'authentification"
 
-#: inc/config.class.php:186
+#: inc/config.class.php:194
 msgid "ACL"
 msgstr "Droits"
 
@@ -170,18 +178,18 @@ msgid_plural "%1$d phones imported"
 msgstr[0] "%1$d téléphone importé"
 msgstr[1] "%1$d téléphones importés"
 
-#: inc/phone.class.php:247
+#: inc/phone.class.php:251
 msgid "XIVO informations"
 msgstr "Informations XIVO"
 
-#: inc/phone.class.php:249
+#: inc/phone.class.php:255
 msgid "Xivo ID"
 msgstr "ID XIVO"
 
-#: inc/phone.class.php:251
+#: inc/phone.class.php:257
 msgid "Template"
 msgstr "Modele de configuration"
 
-#: inc/phone.class.php:254
+#: inc/phone.class.php:262
 msgid "Last synchronisation"
 msgstr "Dernière synchronisation"
