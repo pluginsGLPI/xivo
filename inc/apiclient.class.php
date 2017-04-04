@@ -12,6 +12,7 @@ class PluginXivoAPIClient extends CommonGLPI {
    private $auth_token      = '';
    private $current_port    = 0;
    private $current_version = 0;
+   private $last_error      = [];
 
    function __construct() {
       // retrieve plugin config
@@ -383,14 +384,17 @@ class PluginXivoAPIClient extends CommonGLPI {
                                            $resource,
                                            $params);
       } catch (GuzzleException $e) {
+         $this->last_error = [
+            'title'     => "XIVO API error",
+            'exception' => $e->getMessage(),
+            'params'    => $params,
+            'request'   => Psr7\str($e->getRequest()),
+         ];
+         if ($e->hasResponse()) {
+            $this->last_error['response'] = Psr7\str($e->getResponse());
+         }
          if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
-            $debug = ["XIVO API error"];
-            $debug[] = $params;
-            $debug[] = Psr7\str($e->getRequest());
-            if ($e->hasResponse()) {
-               $debug[] = Psr7\str($e->getResponse());
-            }
-            Toolbox::logDebug($debug);
+            Toolbox::logDebug($this->last_error);
          }
          return false;
       }
@@ -419,6 +423,15 @@ class PluginXivoAPIClient extends CommonGLPI {
 
 
       return $data;
+   }
+
+   /**
+    * Return the error encountered with an http query
+    *
+    * @return array the error
+    */
+   function getLastError() {
+      return $this->last_error;
    }
 
 }

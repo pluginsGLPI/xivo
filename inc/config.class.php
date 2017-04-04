@@ -154,16 +154,18 @@ class PluginXivoConfig extends Config {
       Html::closeForm();
 
       if (self::isValid()) {
-         echo "<h1>".__("API XIVO status")."</h1>";
+         echo "<h1>".__("API XIVO status", 'xivo')."</h1>";
          $apiclient    = new PluginXivoAPIClient;
          $data_connect = $apiclient->connect();
          $all_status   = $apiclient->status();
 
          echo "<ul>";
+         $error = false;
          foreach($all_status as $status_label => $status) {
-            $color_png = "redbutton.png";
-            if ($status) {
-               $color_png = "greenbutton.png";
+            $color_png = "greenbutton.png";
+            if (!$status) {
+               $color_png = "redbutton.png";
+               $error = true;
             }
             echo "<li>";
             echo Html::image($CFG_GLPI['url_base']."/pics/$color_png");
@@ -171,6 +173,12 @@ class PluginXivoConfig extends Config {
             echo "</li>";
          }
          echo "</ul>";
+
+         if ($error) {
+            echo "<h1>".__("Last Error", 'xivo')."</h1>";
+            $error = $apiclient->getLastError();
+            echo $error['exception'];
+         }
 
          if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
             echo "<h1>".__("DEBUG")."</h1>";
