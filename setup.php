@@ -43,6 +43,9 @@ function plugin_init_xivo() {
 
    $PLUGIN_HOOKS['csrf_compliant']['xivo'] = true;
 
+   // add autoload for vendor
+   include_once(PLUGINXIVO_DIR . "/vendor/autoload.php");
+
    // don't load hooks if plugin not enabled (or glpi not logged)
    $plugin = new Plugin();
    if (!$plugin->isInstalled('xivo')
@@ -50,9 +53,6 @@ function plugin_init_xivo() {
        || !Session::getLoginUserID() ) {
       return true;
    }
-
-   // add autoload for vendor
-   include_once(PLUGINXIVO_DIR . "/vendor/autoload.php");
 
    // config page
    Plugin::registerClass('PluginXivoConfig', ['addtabon' => 'Config']);
