@@ -21,6 +21,18 @@ Here is the list of currently working/planned features:
 
 Please contact [Teclib'](http://www.teclib-group.com) by [mail](http://www.teclib-group.com/contact/) or phone (+33 1 79 97 02 78) if you want informations for developing futures one.
 
+## Configuration
+
+### Inventory
+
+We need a webservices user with these minimal acl:
+
+- confd.users.read
+- confd.devices.#.read
+- confd.lines.#.read
+- confd.devices.read
+- confd.lines.read
+
 ## Screenshots
 
 <img src="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_phones.png?raw=true" alt="inventory of phones"  style="width: 250px;"/>
