@@ -1,19 +1,41 @@
 <root>
    <name>xivo</name>
    <key>xivo</key>
-   <!-- stable, beta, development, alpha, ... -->
    <state>stable</state>
-   <logo>https://raw.githubusercontent.com/pluginsGLPI/xivo/master/{LNAME}.png</logo>
+   <logo>https://github.com/pluginsGLPI/xivo/raw/master/img/xivo.png</logo>
    <description>
       <short>
-         <!-- Add as many lang tag you want -->
-         <en>xivo GLPI plugin.</en>
-         <fr>Plugin GLPI xivo</fr>
+         <en>Connector for GLPI with XIVO or WAZO</en>
+         <fr>Connecteur GLPI avec XIVO ou WAZO</fr>
       </short>
       <long>
-         <!-- Add as many lang tag you want -->
-         <en>A long description for xivo GLPI plugin.</en>
-         <fr>Un description longue pour le plugin GLPI xivo</fr>
+         <en>Connector for GLPI with XIVO or WAZO
+
+Here is the list of currently working/planned features:
+
+* [x] Phones inventory
+* [x] Lines inventory
+* [ ] Users presence
+* [ ] Auto-open tickets or users form
+* [ ] Click2call
+* [ ] Call logs
+* [ ] Directory
+
+Please contact Teclib' by mail (info@glpi-project.org) or phone (+33 1 79 97 02 78) if you want informations for developing futures one.
+         </en>
+         <fr>Connecteur GLPI avec XIVO ou WAZO
+
+Voici une list des fonctionnalités courantes / planifiées:
+
+* [x] Inventaire des téléphones
+* [x] Inventaire des lignes
+* [ ] Présence des utilisateurs
+* [ ] Auto ouverture des formulaires des tickets ou des utilisateurs
+* [ ] Appel sur clic
+* [ ] Historique des appels
+* [ ] Annuaire
+
+Merci de contacter Teclib par mail (info@glpi-project.org) ou par téléphone (01 79 97 02 78) pour toutes informations sur les développements futurs.</fr>
       </long>
    </description>
    <homepage>https://github.com/pluginsGLPI/xivo</homepage>
@@ -21,37 +43,38 @@
    <issues>https://github.com/pluginsGLPI/xivo/issues</issues>
    <readme>https://github.com/pluginsGLPI/xivo/blob/master/README.md</readme>
    <authors>
-      <!-- Add as many author tag you want -->
       <author>Teclib'</author>
+      <author>Alexandre Delaunay</author>
    </authors>
    <versions>
-      <!-- Add as many version tag you want -->
       <version>
-         <num>0.0.1</num>
-         <!-- Add as many compatibility tag you want -->
-         <compatibility>9.1.2</compatibility>
-         <compatibility>9.1.1</compatibility>
+         <num>1.0.0</num>
          <compatibility>9.1</compatibility>
+         <compatibility>0.90</compatibility>
       </version>
    </versions>
    <langs>
-      <!-- Add as many lang tag you want -->
       <lang>en_GB</lang>
       <lang>fr_FR</lang>
+      <lang>es_AR</lang>
    </langs>
    <license>GPL V3+</license>
-   <!--tags>
+   <tags>
       <en>
-         <tag>One tag</tag>
-         <tag>Another tag</tag>
+         <tag>Inventory</tag>
+         <tag>Import</tag>
+         <tag>Phones</tag>
+         <tag>Lines</tag>
       </en>
       <fr>
-         <tag>Un tag</tag>
-         <tag>Un autre tag</tag>
+         <tag>Inventaire</tag>
+         <tag>Import</tag>
+         <tag>Téléphone</tag>
+         <tag>Lignes</tag>
       </fr>
-   </tags-->
-   <!--screenshots>
-      <screenshot>https://github.com/pluginsGLPI/fields/raw/master/screenshot.png</screenshot>
-      <screenshot>https://github.com/pluginsGLPI/fields/raw/master/screenshot2.png</screenshot>
-   </screenshots-->
+   </tags>
+   <screenshots>
+      <screenshot>https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_lines.png?raw=true</screenshot>
+      <screenshot>https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_phones.png?raw=true</screenshot>
+   </screenshots>
 </root>

@@ -16,6 +16,7 @@ Here is the list of currently working/planned features:
 - [x] Lines inventory
 - [ ] Users presence
 - [ ] Auto-open tickets or users form
+- [ ] Click2Call
 - [ ] Call logs
 - [ ] Directory
 
