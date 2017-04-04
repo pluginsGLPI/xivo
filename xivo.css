@@ -4,7 +4,8 @@
    margin: 0 auto;
 }
 
-.xivo_config h1 {
+.xivo_config h1,
+.xivo_title {
    font-size: 12px;
    font-weight: bold;
    text-align: center;

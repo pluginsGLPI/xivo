@@ -248,33 +248,38 @@ class PluginXivoPhone extends CommonDBTM {
          $xivophone->getFromDB($xivophones_id);
          $form_url      = self::getFormURL();
 
-         echo '<div class="xivo_config">';
-         echo '<h1>'.__('XIVO informations', 'xivo').'</h1>';
-         echo "<ul>";
-         echo "<li><strong>".__("Xivo ID", 'xivo')."</strong>: ".
-              $xivophone->fields['xivo_id']."</li>";
-         echo "<li><strong>".__("Template", 'xivo')."</strong>: ".
-              $xivophone->fields['template']."</li>";
-         echo "<li>";
-         echo "<strong>".__("Last synchronisation", 'xivo')."</strong>: ".
-              Html::convDateTime($xivophone->fields['date_mod'])."</li>";
-         echo "</ul>";
+         echo "<h1 class='xivo_title'>".__('XIVO informations', 'xivo')."</h1>";
+         echo "</td></tr>";
 
-         echo "<br>";
-         echo Html::link(__("Force synchronization"), "$form_url?forcesync&xivo_id=".
-                                                      $xivophone->fields['xivo_id']);
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>".__("Xivo ID", 'xivo')."</td>".
+              "<td>".$xivophone->fields['xivo_id']."</td>";
+         echo "<td>".__("Template", 'xivo')."</td>".
+              "<td>".$xivophone->fields['template']."</td>";
+         echo "</tr>";
 
-         echo "</div>";
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>".__("Last synchronisation", 'xivo')."</td>".
+              "<td>".Html::convDateTime($xivophone->fields['date_mod'])."</td>";
+         echo "</tr>";
+
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo Html::link(__("Force synchronization"),
+                         "$form_url?forcesync&xivo_id=".$xivophone->fields['xivo_id'],
+                         ['class' => 'vsubmit']);
+         echo "</td>";
+         echo "</tr>";
       }
 
-      return TRUE;
+      return true;
    }
 
    /**
     * Database table installation for the item type
     *
     * @param Migration $migration
-    * @return boolean True on success
+    * @return boolean true on success
     */
    static function install(Migration $migration) {
       global $DB;
