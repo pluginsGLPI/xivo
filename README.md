@@ -24,6 +24,8 @@ Please contact [Teclib'](http://www.teclib-group.com) by [mail](http://www.tecli
 
 ## Configuration
 
+This plugin was tested with a xivo version 16.12 and should working correctly for versions above 16.04
+
 ### Inventory
 
 We need a webservices user with these minimal acl:
