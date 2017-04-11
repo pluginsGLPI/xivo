@@ -36,11 +36,6 @@ We need a webservices user with these minimal acl:
 - confd.devices.read
 - confd.lines.read
 
-## Screenshots
-
-<img src="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_phones.png?raw=true" alt="inventory of phones"  style="width: 250px;"/>
-<img src="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_lines.png?raw=true" alt="inventory of lines"  style="width: 250px;"/>
-
 ## Contributing
 
 * Open an [issue](https://github.com/pluginsGLPI/xivo/issues/new) for each bug/feature so it can be discussed
@@ -48,3 +43,8 @@ We need a webservices user with these minimal acl:
 * Refer to [GitFlow](http://git-flow.readthedocs.io/) process for branching
 * Work on a new branch on your own fork
 * Open a PR that will be reviewed by a developer
+
+## Screenshots
+
+<img src="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_phones.png?raw=true" alt="inventory of phones"  style="width: 250px;"/>
+<img src="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_lines.png?raw=true" alt="inventory of lines"  style="width: 250px;"/>
