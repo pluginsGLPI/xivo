@@ -146,7 +146,7 @@ class PluginXivoConfig extends Config {
       if ($canedit) {
          echo Html::hidden('config_class', ['value' => __CLASS__]);
          echo Html::hidden('config_context', ['value' => 'plugin:xivo']);
-         echo Html::submit(_sx('button','Save'), [
+         echo Html::submit(_sx('button', 'Save'), [
             'name' => 'update'
          ]);
       }
@@ -161,7 +161,7 @@ class PluginXivoConfig extends Config {
 
          echo "<ul>";
          $error = false;
-         foreach($all_status as $status_label => $status) {
+         foreach ($all_status as $status_label => $status) {
             $color_png = "greenbutton.png";
             if (!$status) {
                $color_png = "redbutton.png";
@@ -193,7 +193,7 @@ class PluginXivoConfig extends Config {
             if (isset($data_connect['data']['acls'])) {
                echo "<h2>".__("ACL", 'xivo')." (".count($data_connect['data']['acls']).")</h2>";
                echo "<ul>";
-               foreach($data_connect['data']['acls'] as $right) {
+               foreach ($data_connect['data']['acls'] as $right) {
                   echo "<li>$right</li>";
                }
                echo "</ul>";
@@ -240,9 +240,8 @@ class PluginXivoConfig extends Config {
       $out = "";
       $out.= "<div class='xivo_field'>";
 
-
       // call the field according to its type
-      switch($options['inputtype']) {
+      switch ($options['inputtype']) {
          default:
          case 'text':
             $out.= Html::input('fakefield', ['style' => 'display:none;']);
@@ -252,7 +251,7 @@ class PluginXivoConfig extends Config {
          case 'password':
             $out.=  "<input type='password' name='fakefield' style='display:none;'>";
             $out.=  "<input type='password'";
-            foreach($options['attrs'] as $key => $value) {
+            foreach ($options['attrs'] as $key => $value) {
                $out.= "$key='$value' ";
             }
             $out.= ">";

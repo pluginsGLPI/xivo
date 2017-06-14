@@ -14,11 +14,11 @@ class PluginXivoPhone_Line extends CommonDBRelation {
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
       switch ($item->getType()) {
          case "PluginXivoLine":
-            $nb = countElementsInTable(self::getTable(),  "`plugin_xivo_lines_id` = ".$item->getID()
+            $nb = countElementsInTable(self::getTable(), "`plugin_xivo_lines_id` = ".$item->getID()
             );
             return self::createTabEntry(Phone::getTypeName($nb), $nb);
          case "Phone":
-            $nb = countElementsInTable(self::getTable(),  "`phones_id` = ".$item->getID()
+            $nb = countElementsInTable(self::getTable(), "`phones_id` = ".$item->getID()
             );
             return self::createTabEntry(PluginXivoLine::getTypeName($nb), $nb);
       }
@@ -62,7 +62,7 @@ class PluginXivoPhone_Line extends CommonDBRelation {
                 LEFT JOIN `glpi_phones`
                   ON `glpi_phones`.`id` = `glpi_plugin_xivo_phones_lines`.`phones_id`
                 WHERE `glpi_plugin_xivo_phones_lines`.`plugin_xivo_lines_id` = $lines_id
-                  ".getEntitiesRestrictRequest(" AND","glpi_phones",'','',true). "
+                  ".getEntitiesRestrictRequest(" AND", "glpi_phones", '', '', true). "
                 ORDER BY `glpi_phones`.`name`
                 ";
 
@@ -183,7 +183,7 @@ class PluginXivoPhone_Line extends CommonDBRelation {
                 LEFT JOIN `glpi_phones`
                   ON `glpi_phones`.`id` = `glpi_plugin_xivo_phones_lines`.`phones_id`
                 WHERE `glpi_plugin_xivo_phones_lines`.`phones_id` = $phones_id
-                  ".getEntitiesRestrictRequest(" AND","glpi_phones",'','',true). "
+                  ".getEntitiesRestrictRequest(" AND", "glpi_phones", '', '', true). "
                 ORDER BY `glpi_plugin_xivo_lines`.`name`
                 ";
 
@@ -285,14 +285,14 @@ class PluginXivoPhone_Line extends CommonDBRelation {
       $current_lines = $my_phone_line->find("`phones_id` = $phones_id");
 
       // import all relations
-      foreach($phone_lines as $phone_line) {
+      foreach ($phone_lines as $phone_line) {
          $phone_line['phones_id'] = $phones_id;
          $id = self::importSingle($phone_line);
          unset($current_lines[$id]);
       }
 
       // remove old lines
-      foreach($current_lines as $id => $current_line) {
+      foreach ($current_lines as $id => $current_line) {
          $my_phone_line->delete(['id' => $id]);
       }
    }
