@@ -109,7 +109,7 @@ class PluginXivoPhone extends CommonDBTM {
             'NetworkName__ipaddresses'    => ['-1' => $device['ip']],
             '_create_children'            => true
          ];
-         if (count($found_netports) == 0){
+         if (count($found_netports) == 0) {
             $networkport->add($net_input);
          } else {
             $netport = end($found_netports);
@@ -145,11 +145,11 @@ class PluginXivoPhone extends CommonDBTM {
       $found_networkports = $networkport_inst->find("`itemtype` = 'Phone'
                                                      AND `items_id` = '$phones_id'");
 
-      foreach($found_networkports as $networkports_id => &$networkport) {
+      foreach ($found_networkports as $networkports_id => &$networkport) {
          $found_networknames = $networkname_inst->find("`itemtype` = 'NetworkPort'
                                                         AND `items_id` = '$networkports_id'");
 
-         foreach($found_networknames as $networknames_id => &$networkname) {
+         foreach ($found_networknames as $networknames_id => &$networkname) {
             $found_ipaddresses = $ipaddress_inst->find("`itemtype` = 'NetworkName'
                                                          AND `items_id` = '$networknames_id'");
 
@@ -178,7 +178,7 @@ class PluginXivoPhone extends CommonDBTM {
       $device['lines'] = $apiclient->getSingleDeviceLines($xivo_id);
 
       // import lines
-      foreach($device['lines'] as &$line) {
+      foreach ($device['lines'] as &$line) {
          // add or update assets
          $plugin_xivo_lines_id         = PluginXivoLine::importSingle($line);
          $line['plugin_xivo_lines_id'] = $plugin_xivo_lines_id;

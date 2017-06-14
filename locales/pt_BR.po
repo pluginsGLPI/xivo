@@ -10,101 +10,99 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-04-04 09:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Alexey Petukhov <lexx015@gmail.com>, 2017\n"
-"Language-Team: Russian (Russia) (https://www.transifex.com/teclib/teams/28042/ru_RU/)\n"
+"Last-Translator: polar147 <andrei_simoni@hotmail.com>, 2017\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/teclib/teams/28042/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ru_RU\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: setup.php:142
 msgid "Installed / not configured"
-msgstr "Установлен / не сконфигурирован"
+msgstr "Instalado / não configurado"
 
 #: inc/line.class.php:12
 msgid "Line"
 msgid_plural "Lines"
-msgstr[0] "Линия"
-msgstr[1] "Линий"
-msgstr[2] "Линий"
-msgstr[3] "Линий"
+msgstr[0] "Linha"
+msgstr[1] "Linhas"
 
 #: inc/line.class.php:78 inc/line.class.php:170 inc/phone_line.class.php:237
 msgid "Protocol"
-msgstr "Протокол"
+msgstr "Protocolo"
 
 #: inc/line.class.php:85 inc/line.class.php:177
 msgid "Provisioning extension"
-msgstr "Дополнительный код инициализации"
+msgstr "Provisioning extension"
 
 #: inc/line.class.php:89 inc/line.class.php:184 inc/phone_line.class.php:240
 msgid "Provisioning code"
-msgstr "Код инициализации"
+msgstr "Provisioning code"
 
 #: inc/line.class.php:96 inc/line.class.php:191
 msgid "Device slot"
-msgstr "Слот устройства"
+msgstr "Slot de dispositivo"
 
 #: inc/line.class.php:100 inc/line.class.php:198
 msgid "Position"
-msgstr "Расположение"
+msgstr "Posição"
 
 #: inc/line.class.php:107 inc/line.class.php:205 inc/phone_line.class.php:241
 msgid "Caller num"
-msgstr "Номер звонящего"
+msgstr "Número de quem liga"
 
 #: inc/line.class.php:121 inc/line.class.php:212 inc/phone_line.class.php:242
 msgid "Caller name"
-msgstr "Имя звонящего"
+msgstr "Nome de quem liga"
 
 #: inc/line.class.php:135 inc/line.class.php:227
 msgid "Registrar"
-msgstr "Регистратор"
+msgstr "Registrar"
 
 #: inc/line.class.php:142 inc/line.class.php:234
 msgid "Xivo line_id"
-msgstr "Xivo идентификатор линии"
+msgstr "Xivo line_id"
 
 #: inc/line.class.php:241
 msgid "Associated phones"
-msgstr "Связанные телефоны"
+msgstr "Telefones associados"
 
 #: inc/line.class.php:297
 msgid "Associated lines"
-msgstr "Связанные линии"
+msgstr "Linhas associadas"
 
 #: inc/phone_line.class.php:83
 msgid "Add a phone"
-msgstr "Добавит телефон"
+msgstr "Adicionar telefone"
 
 #: inc/phone_line.class.php:204
 msgid "Add a line"
-msgstr "Добавить линию"
+msgstr "Adicionar linha"
 
 #: inc/apiclient.class.php:71
 msgid "Api access"
-msgstr "API доступ"
+msgstr "Acesso para a API"
 
 #: inc/apiclient.class.php:72
 msgid "Get phone devices"
-msgstr "Получить телефоны"
+msgstr "Listar aparelhos telefônicos"
 
 #: inc/apiclient.class.php:74
 msgid "Get single device"
-msgstr "Получить одно устройство"
+msgstr "Listar um único dispositivo"
 
 #: inc/apiclient.class.php:84
 msgid "Get lines"
-msgstr "Получить линии"
+msgstr "Listar linhas"
 
 #: inc/apiclient.class.php:86
 msgid "Get single line"
-msgstr "Получить одну линию"
+msgstr "Listar uma única linha telefônica"
 
 #: inc/apiclient.class.php:92
 msgid "Get users"
-msgstr "Получить пользователей"
+msgstr "Listar usuários"
 
 #: inc/config.class.php:10
 msgid "Xivo"
@@ -112,51 +110,51 @@ msgstr "Xivo"
 
 #: inc/config.class.php:60
 msgid "Import phone devices"
-msgstr "Импортировать телефонные устройства"
+msgstr "Importar dispositivos de telefone"
 
 #: inc/config.class.php:74
 msgid "API url"
-msgstr "API url"
+msgstr "URL da API"
 
 #: inc/config.class.php:82
 msgid "API username"
-msgstr "API пользователь"
+msgstr "Usuário da API"
 
 #: inc/config.class.php:91
 msgid "API password"
-msgstr "API пароль"
+msgstr "Senha da API"
 
 #: inc/config.class.php:100
 msgid "API check SSL"
-msgstr "API проверка SSL"
+msgstr "API check SSL"
 
 #: inc/config.class.php:108
 msgid "Import devices with empty serial number"
-msgstr "Импортировать устройства с пустым серийным номером"
+msgstr "Importar dispositivos com número de série vazio"
 
 #: inc/config.class.php:116
 msgid "Import devices with empty mac"
-msgstr "Импортировать устройства с пустым mac адресом"
+msgstr "Importar dispositivos com MAC vazio"
 
 #: inc/config.class.php:124
 msgid "Import 'not_configured' devices"
-msgstr "Импортировать несконфигурированные устройства"
+msgstr "Importar dispositivos \"não configurados\""
 
 #: inc/config.class.php:133
 msgid "Default entity"
-msgstr "Организация по-умолчанию"
+msgstr "Entidade padrão"
 
 #: inc/config.class.php:157
 msgid "API XIVO status"
-msgstr "Статус API XIVO"
+msgstr "Estado da API XIVO"
 
 #: inc/config.class.php:178
 msgid "Last Error"
-msgstr "Последняя ошибка"
+msgstr "Último erro"
 
 #: inc/config.class.php:188
 msgid "Auth token"
-msgstr "Токен аутентификации"
+msgstr "Token de autenticação"
 
 #: inc/config.class.php:194
 msgid "ACL"
@@ -164,38 +162,34 @@ msgstr "ACL"
 
 #: inc/inventory.class.php:13
 msgid "Import Xivo assets"
-msgstr "Импортировать оборудование Xivo"
+msgstr "Importar ativos Xivo"
 
 #: inc/inventory.class.php:77
 #, php-format
 msgid "%1$d line imported"
 msgid_plural "%1$d lines imported"
-msgstr[0] "%1$d линия импортирована"
-msgstr[1] "%1$d линий импортировано"
-msgstr[2] "%1$d линий импортировано"
-msgstr[3] "%1$d линий импортировано"
+msgstr[0] "%1$d linha importada"
+msgstr[1] "%1$d linhas importadas"
 
 #: inc/inventory.class.php:115
 #, php-format
 msgid "%1$d phone imported"
 msgid_plural "%1$d phones imported"
-msgstr[0] "%1$d телефон импортирован"
-msgstr[1] "%1$d телефонов импортировано"
-msgstr[2] "%1$d телефонов импортировано"
-msgstr[3] "%1$d телефонов импортировано"
+msgstr[0] "%1$d telefone importado"
+msgstr[1] "%1$d telefones importados"
 
 #: inc/phone.class.php:251
 msgid "XIVO informations"
-msgstr "XIVO информация"
+msgstr "Informaçoes Xivo"
 
 #: inc/phone.class.php:255
 msgid "Xivo ID"
-msgstr "XIVO идентификатор"
+msgstr "ID Xivo"
 
 #: inc/phone.class.php:257
 msgid "Template"
-msgstr "Шаблон"
+msgstr "Modelo"
 
 #: inc/phone.class.php:262
 msgid "Last synchronisation"
-msgstr "Последняя синхронизация"
+msgstr "Última sincronização"
