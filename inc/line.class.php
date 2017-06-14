@@ -145,8 +145,6 @@ class PluginXivoLine extends CommonDBTM {
       echo "</td>";
       echo "</tr>";
 
-
-
       // end form html and show controls
       $this->showFormButtons($options);
 
@@ -356,7 +354,7 @@ class PluginXivoLine extends CommonDBTM {
 
       // insert display preferences
       $rank = 1;
-      foreach([2, 4, 7, 8, 6, 5] as $option) {
+      foreach ([2, 4, 7, 8, 6, 5] as $option) {
          $DB->query("REPLACE INTO `glpi_displaypreferences` VALUES (
             NULL,
             'PluginXivoLine',
@@ -366,7 +364,6 @@ class PluginXivoLine extends CommonDBTM {
          )");
          $rank++;
       }
-
 
       return true;
    }

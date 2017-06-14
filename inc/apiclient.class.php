@@ -68,33 +68,34 @@ class PluginXivoAPIClient extends CommonGLPI {
       $line_id = is_array($line) ? end($line['items'])['id'] : false;
 
       return [
-         __('Api access', 'xivo')        => !empty($this->auth_token),
+         __('Api access', 'xivo')
+            => !empty($this->auth_token),
          __('Get phone devices', 'xivo')." (confd.devices.read)"
             => is_array($device),
          __('Get single device', 'xivo')." (confd.devices.#.read)"
-             => is_array($this->getSingleDevice($device_id, [
-            'query' => [
-               'limit' => 1
-            ]
-         ])) && is_array($this->getSingleDeviceLines($device_id, [
-            'query' => [
-               'limit' => 1
-            ]
-         ])),
+            => is_array($this->getSingleDevice($device_id, [
+               'query' => [
+                  'limit' => 1
+               ]
+            ])) && is_array($this->getSingleDeviceLines($device_id, [
+               'query' => [
+                  'limit' => 1
+               ]
+            ])),
          __('Get lines', 'xivo')." (confd.lines.read)"
-             => is_array($line),
+            => is_array($line),
          __('Get single line', 'xivo')." (confd.lines.#.read)"
-             => is_array($this->getSingleLine($line_id, [
-            'query' => [
-               'limit' => 1
-            ]
-         ])),
+            => is_array($this->getSingleLine($line_id, [
+               'query' => [
+                  'limit' => 1
+               ]
+            ])),
          __('Get users', 'xivo')." (confd.users.read)"
-             => is_array($this->getUsers([
-            'query' => [
-               'limit' => 1
-            ]
-         ])),
+            => is_array($this->getUsers([
+               'query' => [
+                  'limit' => 1
+               ]
+            ] )),
       ];
    }
 
@@ -244,7 +245,7 @@ class PluginXivoAPIClient extends CommonGLPI {
 
          $items = array_merge($items, $page['items']);
          $offset+= $limit;
-      } while($offset < $page['total']);
+      } while ($offset < $page['total']);
 
       return $items;
    }
@@ -303,7 +304,7 @@ class PluginXivoAPIClient extends CommonGLPI {
          return false;
       }
       $lines = [];
-      foreach($lines_items as $item) {
+      foreach ($lines_items as $item) {
          $lines[] = $this->getSingleLine($item['line_id']);
       }
       return $lines;
@@ -420,7 +421,6 @@ class PluginXivoAPIClient extends CommonGLPI {
          $data['_headers']   = $headers;
          $data['_http_code'] = $http_code;
       }
-
 
       return $data;
    }

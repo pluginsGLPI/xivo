@@ -60,7 +60,7 @@ class PluginXivoInventory extends CommonGLPI {
       }
 
       // import lines
-      foreach($lines as &$line) {
+      foreach ($lines as &$line) {
          //check if we can retrive the ldap username
          $line['glpi_users_id'] = 0;
          if (isset($caller_id_list[$line['caller_id_name']])) {
@@ -80,14 +80,14 @@ class PluginXivoInventory extends CommonGLPI {
                                 $totallines));
       }
 
-      foreach($devices as $index => &$device) {
+      foreach ($devices as $index => &$device) {
          // remove devices with missing mandatory informations
          if (!$xivoconfig['import_empty_sn']
              && empty($device['sn'])) {
             unset($devices[$index]);
             continue;
          }
-          if (!$xivoconfig['import_empty_mac']
+         if (!$xivoconfig['import_empty_mac']
              && empty($device['mac'])) {
             unset($devices[$index]);
             continue;
@@ -100,7 +100,7 @@ class PluginXivoInventory extends CommonGLPI {
 
          // find possible lines for this device
          $device['lines'] = [];
-         foreach($lines as $line) {
+         foreach ($lines as $line) {
             if ($line['device_id'] == $device['id']) {
                $device['lines'][] = $line;
             }

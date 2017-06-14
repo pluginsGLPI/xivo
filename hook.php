@@ -70,7 +70,7 @@ function plugin_xivo_uninstall() {
          }
       }
    }
-   return true ;
+   return true;
 }
 
 function plugin_xivo_getAddSearchOptions($itemtype) {
