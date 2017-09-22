@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_XIVO_VERSION', '0.1.0');
+define('PLUGIN_XIVO_VERSION', '0.2.0');
 
 if (!defined("PLUGINXIVO_DIR")) {
    define("PLUGINXIVO_DIR", GLPI_ROOT . "/plugins/xivo");
@@ -103,7 +103,12 @@ function plugin_version_xivo() {
       'author'         => '<a href="http://www.teclib.com">Teclib\'</a>',
       'license'        => '',
       'homepage'       => '',
-      'minGlpiVersion' => '9.1'
+      'requirements'   => [
+         'glpi' => [
+            'min' => '9.2',
+            'dev' => true
+         ]
+      ]
    ];
 }
 
@@ -114,15 +119,12 @@ function plugin_version_xivo() {
  * @return boolean
  */
 function plugin_xivo_check_prerequisites() {
-   // Strict version check (could be less strict, or could allow various version)
-   if (version_compare(GLPI_VERSION, '9.1', 'lt')) {
-      if (method_exists('Plugin', 'messageIncompatible')) {
-         echo Plugin::messageIncompatible('core', '9.1');
-      } else {
-         echo "This plugin requires GLPI >= 9.1";
-      }
+   $version = rtrim(GLPI_VERSION, '-dev');
+   if (version_compare($version, '9.2', 'lt')) {
+      echo "This plugin requires GLPI 9.2";
       return false;
    }
+
    return true;
 }
 
