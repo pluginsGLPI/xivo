@@ -322,7 +322,7 @@ class PluginXivoLine extends CommonDBTM {
       global $DB;
 
       $table = self::getTable();
-      if (!TableExists($table)) {
+      if (!$DB->tableExists($table)) {
          $migration->displayMessage(sprintf(__("Installing %s"), $table));
 
          $query = "CREATE TABLE `$table` (
