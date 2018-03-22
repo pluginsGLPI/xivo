@@ -168,7 +168,7 @@ class PluginXivoConfig extends Config {
                $error = true;
             }
             echo "<li>";
-            echo Html::image($CFG_GLPI['url_base']."/pics/$color_png");
+            echo Html::image($CFG_GLPI['root_doc']."/pics/$color_png");
             echo "&nbsp;".$status_label;
             echo "</li>";
          }
