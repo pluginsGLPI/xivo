@@ -83,7 +83,7 @@ class PluginXivoConfig extends Config {
          'attrs' => [
             'name'  => 'api_username',
             'value' => $current_config['api_username'],
-            'style' => 'width:100px;',
+            'style' => 'width:200px;',
          ]
       ]);
       echo self::showField([
@@ -92,7 +92,7 @@ class PluginXivoConfig extends Config {
          'attrs'     => [
             'name'  => 'api_password',
             'value' => $current_config['api_password'],
-            'style' => 'width:100px;',
+            'style' => 'width:200px;',
          ]
       ]);
       echo self::showField([
