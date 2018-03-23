@@ -94,3 +94,35 @@
    padding: 10px;
    margin-top: -15px;
 }
+
+.xivo_callto_link {
+   position: relative;
+   width: 15px;
+   height: 15px;
+   display: inline-block;
+   margin-left: 2px;
+}
+.xivo_callto_link:before {
+   position: absolute;
+   top: 4px;
+   left: 0;
+   content: "\f098";
+   font-family:'FontAwesome';
+   font-size: 15px;
+   color: #9E9E9E;
+   opacity: .8;
+}
+
+.xivo_callto_link.online:before {
+   color: #14c332;
+}
+.xivo_callto_link.busy:before {
+   color: #D13224;
+}
+.xivo_callto_link.absent:before {
+   color: #F2833A;
+}
+
+.xivo_callto_link:hover:before {
+   opacity: 1;
+}
