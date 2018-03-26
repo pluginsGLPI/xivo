@@ -32,9 +32,9 @@ class PluginXivoPhone extends CommonDBTM {
       $contact_num      = '';
       if ($number_line) {
          $last_line   = end($device['lines']);
-         if (isset($last_line['caller_id_name'])) {
-            $contact     = $last_line['caller_id_name'];
-            $contact_num = $last_line['caller_id_num'];
+         if (isset($last_line['caller_name'])) {
+            $contact     = $last_line['caller_name'];
+            $contact_num = $last_line['caller_num'];
          }
       }
 
@@ -181,8 +181,8 @@ class PluginXivoPhone extends CommonDBTM {
       // import lines
       foreach ($device['lines'] as &$line) {
          // add or update assets
-         $plugin_xivo_lines_id         = PluginXivoLine::importSingle($line);
-         $line['plugin_xivo_lines_id'] = $plugin_xivo_lines_id;
+         $lines_id         = PluginXivoLine::importSingle($line);
+         $line['lines_id'] = $lines_id;
       }
 
       // import phone

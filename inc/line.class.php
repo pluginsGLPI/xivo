@@ -49,7 +49,7 @@ class PluginXivoLine extends CommonDBTM {
       $xline->getFromDBByCrit([
          'xivo_line_id' => $line['id']
       ]);
-      if ($x_lines_id = $xline->getID()) {
+      if (($x_lines_id = $xline->getID()) > 0) {
          $gline->getFromDB($xline->fields['lines_id']);
          $g_lines_id = $gline->getID();
       }
@@ -67,30 +67,30 @@ class PluginXivoLine extends CommonDBTM {
       ];
       $input_gline = [
          'name'                   => $line['name'],
-         'caller_num'             => $line['caller_num'],
-         'caller_name'            => $line['caller_name'],
+         'caller_num'             => $line['caller_id_num'],
+         'caller_name'            => $line['caller_id_name'],
       ];
 
       if (isset($line['glpi_users_id'])) {
          $input_gline['users_id'] = $line['glpi_users_id'];
       }
 
-      if (!$x_lines_id) {
-         $input_gline['entities_id'] = $xivoconfig['default_entity'];
-         $g_lines_id = $gline->add($input_gline);
-
-         $input_xline['lines_id'] = $g_lines_id;
-         $x_lines_id = $xline->add($input_xline);
-
-      } else {
+      if ($x_lines_id > 0) {
          $input_gline['id'] = $g_lines_id;
          $gline->update($input_gline);
 
          $input_xline['id'] = $x_lines_id;
          $xline->update($input_xline);
+
+      } else {
+         $input_gline['entities_id'] = $xivoconfig['default_entity'];
+         $g_lines_id = $gline->add($input_gline);
+
+         $input_xline['lines_id'] = $g_lines_id;
+         $x_lines_id = $xline->add($input_xline);
       }
 
-      return $x_lines_id;
+      return $g_lines_id;
    }
 
    static function showForLine(Line $line) {
@@ -119,7 +119,7 @@ class PluginXivoLine extends CommonDBTM {
       echo "</td>";
       echo "<td>".__('Xivo line_id', 'xivo')."</td>";
       echo "<td>";
-      echo Html::input('line_id', ['value' => $xline->fields['line_id']]);
+      echo Html::input('line_id', ['value' => $xline->fields['xivo_line_id']]);
       echo "</td>";
       echo "</tr>";
 

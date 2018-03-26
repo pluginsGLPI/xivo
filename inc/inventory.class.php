@@ -68,9 +68,9 @@ class PluginXivoInventory extends CommonGLPI {
          }
 
          // add or update assets
-         $plugin_xivo_lines_id         = PluginXivoLine::importSingle($line);
-         $line['plugin_xivo_lines_id'] = $plugin_xivo_lines_id;
-         $totallines                  += (int) (bool) $plugin_xivo_lines_id;
+         $lines_id         = PluginXivoLine::importSingle($line);
+         $line['lines_id'] = $lines_id;
+         $totallines       += (int) (bool) $lines_id;
       }
 
       if ($totallines) {
