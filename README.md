@@ -10,7 +10,7 @@ Here is the list of currently working/planned features:
 - [x] Lines inventory
 - [ ] Users presence
 - [ ] Auto-open tickets or users form
-- [ ] Click2Call
+- [x] Click2Call (requires xivo client to handle `callto:` links)
 - [ ] Call logs
 - [ ] Directory
 
