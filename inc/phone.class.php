@@ -85,9 +85,10 @@ class PluginXivoPhone extends CommonDBTM {
          $phone->update($input);
 
          // add line in object table (to store xivo id)
-         $current_id = xivoGetIdByField(__CLASS__, 'xivo_id', $device['id']);
-         if ($current_id) {
-            $input_xivophone['id'] = $current_id;
+         if ($xivophone->getFromDBByCrit([
+            'xivo_id' => $device['id']
+         ])) {
+            $input_xivophone['id'] = $xivophone->getID();
             $xivophone->update($input_xivophone);
          } else {
             $input_xivophone['phones_id']   = $phones_id;
@@ -243,11 +244,9 @@ class PluginXivoPhone extends CommonDBTM {
     */
    static function displayAutoInventory(Phone $phone) {
       $xivophone     = new self;
-      $xivophones_id = xivoGetIdByField(__CLASS__, 'phones_id', $phone->getID());
-      if ($xivophones_id) {
-         $xivophone->getFromDB($xivophones_id);
-         $form_url      = self::getFormURL();
-
+      if ($xivophone->getFromDBByCrit([
+         'phones_id' => $phone->getID()
+      ])) {
          echo "<h1 class='xivo_title'>".__('XIVO informations', 'xivo')."</h1>";
          echo "</td></tr>";
 
@@ -265,6 +264,7 @@ class PluginXivoPhone extends CommonDBTM {
 
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
+         $form_url = self::getFormURL();
          echo Html::link(__("Force synchronization"),
                          "$form_url?forcesync&xivo_id=".$xivophone->fields['xivo_id'],
                          ['class' => 'vsubmit']);

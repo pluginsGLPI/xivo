@@ -32,6 +32,8 @@
  * @return boolean
  */
 function plugin_xivo_install() {
+   global $DB;
+
    $version   = plugin_version_xivo();
    $migration = new Migration($version['version']);
 
@@ -47,6 +49,7 @@ function plugin_xivo_install() {
          }
       }
    }
+
    $migration->executeMigration();
 
    return true;
@@ -80,6 +83,7 @@ function plugin_xivo_getAddSearchOptions($itemtype) {
 
       switch ($itemtype) {
          case 'Phone':
+         case 'Line':
             return PluginXivoLine::getAddSearchOptions($itemtype);
       }
    }

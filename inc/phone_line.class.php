@@ -346,9 +346,9 @@ class PluginXivoPhone_Line extends CommonDBRelation {
          $query = "CREATE TABLE `$table` (
                   `id`                   INT(11) NOT NULL auto_increment,
                   `phones_id`            INT(11) NOT NULL DEFAULT 0,
-                  `plugin_xivo_lines_id` INT(11) NOT NULL DEFAULT 0,
+                  `lines_id` INT(11) NOT NULL DEFAULT 0,
                   PRIMARY KEY                 (`id`),
-                  UNIQUE INDEX `unicity` (`phones_id`, `plugin_xivo_lines_id`)
+                  UNIQUE INDEX `unicity` (`phones_id`, `lines_id`)
                ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
             $DB->query($query) or die ($DB->error());
       }

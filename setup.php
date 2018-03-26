@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_XIVO_VERSION', '0.2.0');
+define('PLUGIN_XIVO_VERSION', '0.3.0');
 
 if (!defined("PLUGINXIVO_DIR")) {
    define("PLUGINXIVO_DIR", GLPI_ROOT . "/plugins/xivo");
@@ -64,9 +64,7 @@ function plugin_init_xivo() {
 
    // add Line to GLPI types
    Plugin::registerClass('PluginXivoLine',
-                         ['linkuser_types' => 'Line',
-                          'contract_types' => 'Line',
-                          'document_types' => 'Line']);
+                         ['addtabon' => 'Line']);
 
    // css & js
    $PLUGIN_HOOKS['add_css']['xivo'] = 'xivo.css';
@@ -80,12 +78,6 @@ function plugin_init_xivo() {
    // display autoinventory in phones
    $PLUGIN_HOOKS['autoinventory_information']['xivo'] = [
       'Phone' =>  ['PluginXivoPhone', 'displayAutoInventory'],
-   ];
-
-   // add menu hook
-   $PLUGIN_HOOKS['menu_toadd']['xivo'] = [
-      // insert into 'plugin menu'
-      'management' => 'PluginXivoLine'
    ];
 }
 
@@ -161,18 +153,4 @@ function plugin_xivo_recursive_remove_empty($haystack) {
    }
 
    return $haystack;
-}
-
-function xivoGetIdByField($itemtype = "", $field = "", $value = "") {
-   global $DB;
-
-   $query = "SELECT `id`
-             FROM `".$itemtype::getTable()."`
-             WHERE `$field` = '".addslashes($value)."'";
-   $result = $DB->query($query);
-
-   if ($DB->numrows($result) == 1) {
-      return $DB->result($result, 0, 'id');
-   }
-   return false;
 }
