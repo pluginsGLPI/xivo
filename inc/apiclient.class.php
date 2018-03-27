@@ -68,7 +68,7 @@ class PluginXivoAPIClient extends CommonGLPI {
       $line_id = is_array($line) ? end($line['items'])['id'] : false;
 
       return [
-         __('Api access', 'xivo')
+         __('REST API access', 'xivo')
             => !empty($this->auth_token),
          __('Get phone devices', 'xivo')." (confd.devices.read)"
             => is_array($device),

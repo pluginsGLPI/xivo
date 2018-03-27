@@ -6,12 +6,15 @@ if (users_cache === null) {
 $(function() {
    // do like a jquery toggle but based on a parameter
    $.fn.toggleFromValue = function(val) {
+      var that = this;
       if (val === 1
           || val === "1"
           || val === true) {
-         this.show();
+         that.show();
+      $(that).find('[_required]').prop('required', true);
       } else {
-         this.hide();
+         that.hide();
+         $(that).find('[required]').prop('required', false).attr('_required', 'true');
       }
    }
 
@@ -20,7 +23,21 @@ $(function() {
    $(".glpi_tabs").on("tabsload", function(event, ui) {
       parseTooltipLinks();
    });
+
+   // remove required from hidden fields
+   $(document).on('click','.xivo_config form input[type=submit]',function() {
+      xivoCheckConfig();
+   });
 });
+
+var xivoCheckConfig = function() {
+   $(".xivo_config .xivo_config_block").each(function() {
+      var that = $(this);
+      if (that.css("display") == "none") {
+         $(that).find('[required]').prop('required', false);
+      }
+   });
+};
 
 /**
  * Find all link to user form and append they 'callto' links

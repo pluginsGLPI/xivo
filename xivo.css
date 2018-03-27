@@ -19,10 +19,21 @@
 }
 
 .xivo_field {
-   margin: 10px 0 35px 0;
+   margin: 10px 0 30px 0;
    position: relative;
    height: 20px;
    text-align: left;
+}
+
+.inline_fields .xivo_field {
+   float: left;
+   margin-bottom: 15px;
+}
+
+.inline_fields_clear {
+   height: 10px;
+   clear: left;
+   content: " ";
 }
 
 .xivo_field .xivo_input,
@@ -92,7 +103,15 @@
 .xivo_config_block {
    background-color: #F3F3F3;
    padding: 10px;
-   margin-top: -15px;
+   margin: -15px 0 20px 0;
+   overflow: hidden;
+}
+
+.xivo_config_block.sub_config {
+   background-color: #E8E7E7;
+   padding-bottom: 0;
+   border: 0 solid #C2C2C2;
+   border-width: 0 0 0 5px;
 }
 
 .xivo_callto_link {
