@@ -54,6 +54,8 @@ function plugin_init_xivo() {
       return true;
    }
 
+   $xivoconfig = PluginXivoConfig::getConfig();
+
    // config page
    Plugin::registerClass('PluginXivoConfig', ['addtabon' => 'Config']);
    $PLUGIN_HOOKS['config_page']['xivo'] = 'front/config.form.php';
@@ -68,7 +70,14 @@ function plugin_init_xivo() {
 
    // css & js
    $PLUGIN_HOOKS['add_css']['xivo'] = 'xivo.css';
-   $PLUGIN_HOOKS['add_javascript']['xivo'] = 'xivo.js';
+   $PLUGIN_HOOKS['add_javascript']['xivo'] = [
+      'js/require.js',
+      'js/init.js.php',
+      'js/common.js',
+   ];
+   if ($xivoconfig['enable_xuc']) {
+      $PLUGIN_HOOKS['add_javascript']['xivo'][]  = 'js/xuc.js';
+   }
 
    // standard hooks
    $PLUGIN_HOOKS['item_purge']['xivo'] = [

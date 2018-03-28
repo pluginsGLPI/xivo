@@ -4,46 +4,37 @@ if (users_cache === null) {
 }
 
 $(function() {
-   // do like a jquery toggle but based on a parameter
-   $.fn.toggleFromValue = function(val) {
-      var that = this;
-      if (val === 1
-          || val === "1"
-          || val === true) {
-         that.show();
-      $(that).find('[_required]').prop('required', true);
-      } else {
-         that.hide();
-         $(that).find('[required]').prop('required', false).attr('_required', 'true');
-      }
+   if (typeof xivo_config != "object"
+       || !xivo_config.enable_xuc) {
+      return false;
    }
 
-   // append 'callto:' links to domready events and also after tabs change
-   parseTooltipLinks();
-   $(".glpi_tabs").on("tabsload", function(event, ui) {
-      parseTooltipLinks();
-   });
+   if (xivo_config.enable_click2call) {
+      // append 'callto:' links to domready events and also after tabs change
+      click2Call();
+      $(".glpi_tabs").on("tabsload", function(event, ui) {
+         click2Call();
+      });
+   }
 
-   // remove required from hidden fields
-   $(document).on('click','.xivo_config form input[type=submit]',function() {
-      xivoCheckConfig();
-   });
+   if (xivo_config.enable_presence) {
+      require(xuc_libs, function () {
+         console.log("xuc libs loaded")
+      });
+   }
+
+   if (xivo_config.enable_auto_open) {
+      require(xuc_libs, function () {
+         console.log("xuc libs loaded")
+      });
+   }
 });
-
-var xivoCheckConfig = function() {
-   $(".xivo_config .xivo_config_block").each(function() {
-      var that = $(this);
-      if (that.css("display") == "none") {
-         $(that).find('[required]').prop('required', false);
-      }
-   });
-};
 
 /**
  * Find all link to user form and append they 'callto' links
  * @return nothing
  */
-var parseTooltipLinks = function() {
+var click2Call = function() {
    var elements = [],
        users_id = [];
 
@@ -108,7 +99,7 @@ var storeUsersInSessionStorage = function(users_id) {
    });
 
    return deferreds;
-}
+};
 
 /**
  * For each elements passed, add 'callto_link_added' cl and append 'callto:'' link after

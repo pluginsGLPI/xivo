@@ -60,15 +60,15 @@ class PluginXivoConfig extends Config {
          'inputtype' => 'yesno',
          'label'     => __("XUC integration (click2call, presence, etc)", 'xivo'),
          'attrs'     => [
-            'name'      => 'xuc_config',
-            'value'     => $current_config['xuc_config'],
+            'name'      => 'enable_xuc',
+            'value'     => $current_config['enable_xuc'],
             'on_change' => '$("#xuc_config").toggleFromValue(this.value);',
          ]
       ]);
       echo "</h4>";
 
       $style = "";
-      if (!$current_config['xuc_config']) {
+      if (!$current_config['enable_xuc']) {
          $style = "display: none;";
       }
       echo "<div id='xuc_config' class='xivo_config_block' style='$style'>";
@@ -462,7 +462,7 @@ class PluginXivoConfig extends Config {
          'import_empty_mac'  => 0,
          'import_notconfig'  => 0,
          'default_entity'    => 0,
-         'xuc_config'        => 0,
+         'enable_xuc'        => 0,
          'xuc_url'           => '',
          'enable_click2call' => 0,
          'enable_presence'   => 0,
