@@ -125,7 +125,7 @@ class PluginXivoConfig extends Config {
          'attrs'     => [
             'name'      => 'import_assets',
             'value'     => $current_config['import_assets'],
-            'on_change' => '$("#import_devices").toggleFromValue(this.value);',
+            'on_change' => '$("#import_assets").toggleFromValue(this.value);',
          ]
       ]);
       echo "</h4>";
