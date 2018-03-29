@@ -20,7 +20,8 @@ var xivo_config = $xivoconfig;
 // config requirejs for xivo xuc libs (some have dependencies)
 require.config({
    paths: {
-      "xuc_lib": xivo_config.xuc_url + '/xucassets/javascripts'
+      "xivo_plugin": '../plugins/xivo/js',
+      "xuc_lib": xivo_config.xuc_url + '/xucassets/javascripts',
    },
    shim: {
       'xuc_lib/xc_webrtc': {
@@ -29,7 +30,7 @@ require.config({
    }
 });
 
-// define an array xuc libraries for future usage
+// define an array of xuc libraries for future usage
 var xuc_libs = [
    'xuc_lib/shotgun',
    'xuc_lib/cti',

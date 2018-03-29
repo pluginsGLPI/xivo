@@ -132,16 +132,126 @@
    opacity: .8;
 }
 
-.xivo_callto_link.online:before {
-   color: #14c332;
-}
-.xivo_callto_link.busy:before {
-   color: #D13224;
-}
-.xivo_callto_link.absent:before {
-   color: #F2833A;
-}
-
 .xivo_callto_link:hover:before {
    opacity: 1;
+}
+
+#c_preference #xivo_agent_button.fa {
+   font-size: 1.8em;
+   cursor: pointer;
+}
+
+#xivo_agent {
+   position: relative;
+}
+#xivo_agent_form {
+   display: none;
+   text-align: left;
+   top: 40px;
+   right: -100px;
+   position: absolute;
+   min-width: 150px;
+   background: white;
+   box-shadow: 0px 2px 2px 1px #D2CAC6;
+   z-index: 9999;
+   padding: 0 12px 12px 12px;
+}
+
+#xivo_agent_form a.vsubmit {
+   color: #8f5a0a;
+}
+
+#xivo_agent_form:after {
+   bottom: 100%;
+   right: 92px;
+   border: solid transparent;
+   content: " ";
+   height: 0;
+   width: 0;
+   position: absolute;
+   pointer-events: none;
+   border-color: rgba(255, 255, 255, 0);
+   border-bottom-color: #FFF;
+   border-width: 15px;
+   margin-left: -15px;
+}
+
+#xivo_agent_form h2 {
+   font-size: 1.2em;
+   background: #D8D8D8;
+   padding: 3px 5px;
+   white-space: nowrap;
+}
+
+#xivo_agent_form label,
+#xivo_agent_form input {
+   display: block;
+}
+
+#xivo_agent_form input {
+   margin-bottom: 10px;
+}
+
+#xivo_agent_button {
+   position: relative;
+}
+#xivo_agent_button.logged:after {
+   position: absolute;
+   content: '\f111';
+   font-family:'FontAwesome';
+   color: #CCCCCC;
+   font-size: 12px;
+   top: -3px;
+   right: -3px;
+}
+#xivo_agent_button.logged.status_disconnected:after {
+   color: #9E9E9E;
+}
+#xivo_agent_button.logged.status_away:after {
+   color: #FFDD00;
+}
+#xivo_agent_button.logged.status_berightback:after {
+   color: #F2833A;
+}
+#xivo_agent_button.logged.status_available:after {
+   color: #9BC920;
+}
+#xivo_agent_button.logged.status_outtolunch:after {
+   color: #6CA6FF;
+}
+#xivo_agent_button.logged.status_donotdisturb:after {
+   color: #D13224;
+}
+
+#xuc_sign_out {
+   font-size: 16px;
+   float: right;
+}
+
+#xuc_user_info {
+   min-width: 300px;
+}
+
+i#xuc_user_picture.fa {
+   float: left;
+   font-size: 50px;
+   color: #B9B9B9;
+   margin-right: 5px;
+}
+#xuc_user_info .floating_text {
+   float: left;
+}
+
+#xuc_fullname {
+   margin-top: 5px;
+   vertical-align: top;
+   font-size: 1.1em;
+   white-space: nowrap;
+   text-transform: capitalize;
+   display: block;
+}
+
+#xuc_user_status {
+   color: #636363;
+   text-transform: uppercase;
 }

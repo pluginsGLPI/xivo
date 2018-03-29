@@ -67,6 +67,8 @@ class PluginXivoAPIClient extends CommonGLPI {
       ]);
       $line_id = is_array($line) ? end($line['items'])['id'] : false;
 
+      Toolbox::logDebug($this->auth_token);
+
       return [
          __('REST API access', 'xivo')
             => !empty($this->auth_token),
