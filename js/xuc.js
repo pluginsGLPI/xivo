@@ -70,7 +70,15 @@ var initUiGLPI = function() {
 
    var xivo_data = retrieveXivoSession();
    if (xivo_data !== false) {
-      initConnection(xivo_data);
+      $.when(checkTokenValidity(xivo_data.token))
+         .then(function() {
+            initConnection(xivo_data);
+         })
+         .fail(function(jqXHR, textStatus) {
+            if (jqXHR.responseJSON.error == "TokenExpired") {
+               destroyXivoSession();
+            }
+         });
    }
 
    $(document).on("click", "#xuc_sign_in", function() {
@@ -180,6 +188,21 @@ var loginOnXuc = function(username, password) {
       dataType: 'json'
    });
 };
+
+var checkTokenValidity = function(access_token) {
+   return $.ajax({
+      type: "GET",
+      url: xivo_config.xuc_url + "/xuc/api/2.0/auth/check",
+      dataType: 'json',
+      beforeSend : function( xhr ) {
+         xhr.setRequestHeader( 'Authorization', 'Bearer ' + access_token );
+      },
+      success: function( response ) {
+         // response
+         console.log(response);
+      }
+   });
+}
 
 /**
  * Find all link to user form and append they 'callto' links
