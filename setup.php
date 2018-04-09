@@ -73,11 +73,9 @@ function plugin_init_xivo() {
    $PLUGIN_HOOKS['add_javascript']['xivo'] = [
       'js/require.js',
       'js/init.js.php',
+      'js/app.js',
       'js/common.js',
    ];
-   if ($xivoconfig['enable_xuc']) {
-      $PLUGIN_HOOKS['add_javascript']['xivo'][]  = 'js/xuc.js';
-   }
 
    // standard hooks
    $PLUGIN_HOOKS['item_purge']['xivo'] = [

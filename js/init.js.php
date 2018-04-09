@@ -38,6 +38,7 @@ var xuc_libs = [
    'xuc_lib/membership',
    'xuc_lib/SIPml-api',
    'xuc_lib/xc_webrtc',
+   'xivo_plugin/xuc',
 ];
 
 JAVASCRIPT;
