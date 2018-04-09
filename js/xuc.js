@@ -3,9 +3,6 @@ if (users_cache === null) {
    users_cache = {};
 }
 
-var logged = false;
-var plugin_ajax_url = "../plugins/xivo/ajax/xuc.php";
-
 require(["xivo_plugin/store.modern.min"], function(store) {
    window.xivo_store = store;
 });
@@ -17,11 +14,12 @@ $(function() {
    }
 
    require(xuc_libs, function() {
-      retrieveXivoSession();
-      initUiGLPI();
+      // call xuc integration
+      var xuc_obj = new Xuc();
+      xuc_obj.init();
 
+      // append 'callto:' links to domready events and also after tabs change
       if (xivo_config.enable_click2call) {
-         // append 'callto:' links to domready events and also after tabs change
          click2Call();
          $(".glpi_tabs").on("tabsload", function(event, ui) {
             click2Call();
@@ -38,171 +36,195 @@ $(function() {
    });
 });
 
-var retrieveXivoSession = function() {
-   var xivo_data = xivo_store.get('xivo');
-   if (typeof xivo_data == "object") {
-      return xivo_data;
-   }
 
-   return false;
-};
+var Xuc = function() {
+   var username        = '';
+   var password        = '';
+   var phoneNumber     = '';
+   var bearerToken     = '';
 
-var destroyXivoSession = function() {
-   xivo_store.remove('xivo');
-}
+   var logged          = false;
+   var plugin_ajax_url = "";
 
-var saveXivoSession = function(xivo_data) {
-   xivo_store.set('xivo', xivo_data);
-};
+   var my_xuc = this;
 
-var initUiGLPI = function() {
-   $("#c_preference ul #preferences_link")
-      .after("<li id='xivo_agent'>\
-               <a class='fa fa-phone' id='xivo_agent_button'></a>\
-               <div id='xivo_agent_form'>empty</div>\
-             </li>");
-   $(document).on("click", "#xivo_agent_button", function() {
-      $("#xivo_agent_form").toggle();
-      if (!logged) {
-         loadLoginForm();
-      }
-   });
+   my_xuc.init = function() {
+      my_xuc.setAjaxUrl();
+      my_xuc.retrieveXivoSession();
 
-   var xivo_data = retrieveXivoSession();
-   if (xivo_data !== false) {
-      $.when(checkTokenValidity(xivo_data.token))
-         .then(function() {
-            initConnection(xivo_data);
+      $("#c_preference ul #preferences_link")
+         .after("<li id='xivo_agent'>\
+                  <a class='fa fa-phone' id='xivo_agent_button'></a>\
+                  <div id='xivo_agent_form'>empty</div>\
+                </li>");
+
+      $(document)
+         .on("click", "#xivo_agent_button", function() {
+            $("#xivo_agent_form").toggle();
+            if (!logged) {
+               my_xuc.loadLoginForm();
+            }
          })
-         .fail(function(jqXHR, textStatus) {
-            if (jqXHR.responseJSON.error == "TokenExpired") {
-               destroyXivoSession();
+         .on("submit", "#xuc_login_form", function(e) {
+            e.preventDefault();
+            my_xuc.xucSignIn();
+         })
+         .on("click", "#xuc_sign_in", function(e) {
+            e.preventDefault();
+            my_xuc.xucSignIn();
+         })
+         .on("click", "#xuc_sign_out", function(e) {
+            e.preventDefault();
+            my_xuc.xucSignOut();
+         });
+
+      if (my_xuc.retrieveXivoSession() !== false) {
+         $.when(my_xuc.checkTokenValidity())
+            .then(function() {
+               my_xuc.initConnection();
+            })
+            .fail(function(jqXHR, textStatus) {
+               if (jqXHR.responseJSON.error == "TokenExpired") {
+                  my_xuc.destroyXivoSession();
+               }
+            });
+      }
+   };
+
+   my_xuc.setAjaxUrl = function() {
+      plugin_ajax_url = "../plugins/xivo/ajax/xuc.php";
+   };
+
+   my_xuc.checkTokenValidity = function() {
+      return $.ajax({
+         type: "GET",
+         url: xivo_config.xuc_url + "/xuc/api/2.0/auth/check",
+         dataType: 'json',
+         beforeSend : function(xhr) {
+            xhr.setRequestHeader('Authorization', 'Bearer ' + bearerToken);
+         }
+      });
+   };
+
+   my_xuc.initConnection = function() {
+      $.when(my_xuc.loadLoggedForm()).then(function() {
+         var wsurl = xivo_config.xuc_url.replace(/https*:\/\//, 'ws://')
+                        + "/xuc/api/2.0/cti?token="+bearerToken;
+         Cti.WebSocket.init(wsurl, username, phoneNumber);
+         logged = true;
+
+         Cti.setHandler(Cti.MessageType.LOGGEDON, function() {
+            $("#xivo_agent_form").hide();
+         });
+
+         Cti.setHandler(Cti.MessageType.USERSTATUSES, function(statuses) {
+            //console.log(statuses);
+         });
+
+         Cti.setHandler(Cti.MessageType.USERSTATUSUPDATE, function(event) {
+            $("#xivo_agent_button")
+               .removeClass()
+               .addClass('logged fa fa-phone')
+               .addClass('status_' + event.status);
+
+            if (event.status !== null) {
+               $("#xuc_user_status").text(event.status);
             }
          });
-   }
 
-   $(document).on("click", "#xuc_sign_in", function() {
-      xucSignIn();
-   });
+         Cti.setHandler(Cti.MessageType.USERCONFIGUPDATE, function(event) {
+            if (event.fullName !== null) {
+               $("#xuc_fullname").text(event.fullName);
+            }
+         });
+      });
+   };
 
-   $(document).on("click", "#xuc_sign_out", function() {
-      xucSignOut();
-   });
-};
+   my_xuc.retrieveXivoSession = function() {
+      var xivo_data = xivo_store.get('xivo');
 
-var loadLoginForm = function() {
-   $("#xivo_agent_form").load(plugin_ajax_url, {
-      'action': 'get_login_form'
-   });
-}
+      if (typeof xivo_data == "object") {
+         username    = xivo_data.username;
+         password    = xivo_data.password;
+         phoneNumber = xivo_data.phoneNumber;
+         bearerToken = xivo_data.bearerToken;
 
-var loadLoggedForm = function() {
-   return $.ajax({
-      'type': 'POST',
-      'url': plugin_ajax_url,
-      'data': {
-         'action': 'get_logged_form'
-      },
-      'success': function(html) {
-         $("#xivo_agent_form").html(html)
+         return true;
       }
-   });
-}
 
-var xucSignIn = function() {
-   var xuc_username    = $("#xuc_username").val();
-   var xuc_password    = $("#xuc_password").val();
-   var xuc_phoneNumber = $("#xuc_phoneNumber").val();
-
-   $.when(loginOnXuc(xuc_username, xuc_password)).then(function(data) {
-      var xivo_data = {
-         'username': xuc_username,
-         'token': data.token,
-         'phoneNumber': xuc_phoneNumber,
-      };
-      saveXivoSession(xivo_data);
-      initConnection(xivo_data);
-   });
-};
-
-var xucSignOut = function() {
-   Cti.webSocket.close();
-   loadLoginForm();
-   destroyXivoSession();
-   $("#xivo_agent_form").hide();
-   $("#xivo_agent_button")
-      .removeClass()
-      .addClass('fa fa-phone');
-};
-
-var initConnection = function(xivo_data) {
-   if (typeof xivo_data !==  "object") {
       return false;
-   }
+   };
 
-   $.when(loadLoggedForm()).then(function() {
-      var wsurl = getXucWsUrl() + "/xuc/api/2.0/cti?token="+xivo_data.token;
-      Cti.WebSocket.init(wsurl, xivo_data.username, xivo_data.phoneNumber);
-      logged = true;
+   my_xuc.destroyXivoSession = function() {
+      xivo_store.remove('xivo');
+   };
 
-      Cti.setHandler(Cti.MessageType.LOGGEDON, function() {
-         $("#xivo_agent_form").hide();
-      });
-
-      Cti.setHandler(Cti.MessageType.USERSTATUSES, function(statuses) {
-         //console.log(statuses);
-      });
-
-      Cti.setHandler(Cti.MessageType.USERSTATUSUPDATE, function(event) {
-         $("#xivo_agent_button")
-            .removeClass()
-            .addClass('logged fa fa-phone')
-            .addClass('status_' + event.status);
-
-         if (event.status !== null) {
-            $("#xuc_user_status").text(event.status);
-         }
-      });
-
-      Cti.setHandler(Cti.MessageType.USERCONFIGUPDATE, function(event) {
-         if (event.fullName !== null) {
-            $("#xuc_fullname").text(event.fullName);
-         }
-      });
-   });
-}
-
-var getXucWsUrl = function() {
-   return xivo_config.xuc_url.replace(/https*:\/\//, 'ws://')
-};
-
-var loginOnXuc = function(username, password) {
-   return $.ajax({
-      type: "POST",
-      url: xivo_config.xuc_url + "/xuc/api/2.0/auth/login",
-      contentType: "application/json",
-      data: JSON.stringify({
-         'login': username,
-         'password': password
-      }),
-      dataType: 'json'
-   });
-};
-
-var checkTokenValidity = function(access_token) {
-   return $.ajax({
-      type: "GET",
-      url: xivo_config.xuc_url + "/xuc/api/2.0/auth/check",
-      dataType: 'json',
-      beforeSend : function( xhr ) {
-         xhr.setRequestHeader( 'Authorization', 'Bearer ' + access_token );
-      },
-      success: function( response ) {
-         // response
-         console.log(response);
+   my_xuc.saveXivoSession = function() {
+      var xivo_data = {
+         'username':    username,
+         'password':    password,
+         'phoneNumber': phoneNumber,
+         'bearerToken': bearerToken
       }
-   });
-}
+      xivo_store.set('xivo', xivo_data);
+   };
+
+   my_xuc.loadLoginForm = function() {
+      $("#xivo_agent_form").load(plugin_ajax_url, {
+         'action': 'get_login_form'
+      });
+   };
+
+   my_xuc.loadLoggedForm = function() {
+      return $.ajax({
+         'type': 'POST',
+         'url': plugin_ajax_url,
+         'data': {
+            'action': 'get_logged_form'
+         },
+         'success': function(html) {
+            $("#xivo_agent_form").html(html)
+         }
+      });
+   };
+
+   my_xuc.xucSignIn = function() {
+      username    = $("#xuc_username").val();
+      password    = $("#xuc_password").val();
+      phoneNumber = $("#xuc_phoneNumber").val();
+
+      $.when(my_xuc.loginOnXuc()).then(function(data) {
+         bearerToken = data.token;
+         my_xuc.saveXivoSession();
+         my_xuc.initConnection();
+      });
+   };
+
+   my_xuc.xucSignOut = function() {
+      Cti.webSocket.close();
+      my_xuc.loadLoginForm();
+      my_xuc.destroyXivoSession();
+      $("#xivo_agent_form").hide();
+      $("#xivo_agent_button")
+         .removeClass()
+         .addClass('fa fa-phone');
+      logged = false;
+   };
+
+   my_xuc.loginOnXuc = function() {
+      return $.ajax({
+         type: "POST",
+         url: xivo_config.xuc_url + "/xuc/api/2.0/auth/login",
+         contentType: "application/json",
+         data: JSON.stringify({
+            'login': username,
+            'password': password
+         }),
+         dataType: 'json'
+      });
+   };
+};
+
 
 /**
  * Find all link to user form and append they 'callto' links

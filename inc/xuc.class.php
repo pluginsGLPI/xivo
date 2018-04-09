@@ -18,7 +18,7 @@ class PluginXivoXuc {
          <label for='xuc_phoneNumber'>".__("XIVO phone number", 'xivo')."</label>
          <input type='text' id='xuc_phoneNumber' size='6'>
 
-         <a class='vsubmit' id='xuc_sign_in'>".__("Connect")."</a>
+         <input type='submit' class='submit' id='xuc_sign_in' value='".__("Connect")."'>
       </form>";
 
       return $out;
