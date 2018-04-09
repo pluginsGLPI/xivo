@@ -228,8 +228,14 @@ var Xuc = function() {
       // and when done, append 'callto:' links
       $.when.apply($, my_xuc.getUsers(users_id)).then(function() {
          xivo_store.set('users_cache', users_cache);
-         my_xuc.appendCalltoLinks(elements);
+         my_xuc.appendCalltoIcons(elements);
       });
+
+      // event for callto icons
+      $(document)
+         .on("click", "#page .xivo_callto_link", function() {
+            my_xuc.triggerCall($(this).data('phone'));
+         });
    };
 
    /**
@@ -238,19 +244,27 @@ var Xuc = function() {
     *                        (each should have a user_id key to match users_cache list)
     * @return nothing
     */
-   my_xuc.appendCalltoLinks = function(elements) {
+   my_xuc.appendCalltoIcons = function(elements) {
       $.each(elements, function(index, element) {
          var user_id = element.user_id;
          var data = users_cache[user_id];
          if ('phone' in data
              && data.phone != null) {
+
             element
                .addClass("callto_link_added")
-               .after("<a href='callto:" + data.phone
+               .after("<span"
+                  + "' data-phone='" + data.phone
                   + "' class='xivo_callto_link" + data.append_classes
                   + "' title='" + data.title+ "'></a>");
          }
       });
+   };
+
+   my_xuc.triggerCall = function(target_num) {
+      console.log("Dial num: " + target_num);
+      var variables = {};
+      Cti.dial(target_num, variables);
    };
 
    /**

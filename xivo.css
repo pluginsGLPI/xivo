@@ -120,6 +120,7 @@
    height: 15px;
    display: inline-block;
    margin-left: 2px;
+   cursor: pointer;
 }
 .xivo_callto_link:before {
    position: absolute;
