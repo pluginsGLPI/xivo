@@ -147,6 +147,7 @@ var Xuc = function() {
       // TODO: in 9.3, check if this declaration is still valid (select2 upgraded 4.0)
       $("#xuc_user_status").select2({
          'width': '200px',
+         'minimumResultsForSearch': -1,
          'formatResult': function(status) {
             var option = status.element;
             var color = $(option).data('color');
@@ -439,14 +440,14 @@ var Xuc = function() {
       $("#xuc_call_informations").show();
       $("#xuc_caller_num").html(my_xuc.callerNum);
       $("#xuc_caller_numname").html(my_xuc.callerName);
-   }
+   };
 
    /**
     * Hangup the current call on CTI
     */
    my_xuc.hangup = function() {
       Cti.hangup();
-   }
+   };
 
    /**
     * Answer the current call on CTI
@@ -454,7 +455,7 @@ var Xuc = function() {
     */
    my_xuc.answer = function() {
       Cti.answer();
-   }
+   };
 
    /**
     * For all user's id passed, retrieve the user information by calling ajax requests
