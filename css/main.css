@@ -201,7 +201,7 @@
    animation: ringing 2s linear infinite;
 }
 
-#xivo_agent_button.logged:after {
+#xivo_agent_status {
    position: absolute;
    content: '\f111';
    font-family:'FontAwesome';
@@ -210,23 +210,40 @@
    top: -3px;
    right: -3px;
 }
-#xivo_agent_button.logged.status_disconnected:after {
-   color: #9E9E9E;
+
+#xuc_statuses label {
+   display: inline-block;
+   min-width: 40px;
 }
-#xivo_agent_button.logged.status_away:after {
-   color: #FFDD00;
+#xuc_statuses input {
+   margin-bottom: inherit;
+   border: none;
+   display: inline-block;
 }
-#xivo_agent_button.logged.status_berightback:after {
-   color: #F2833A;
+
+#c_preference #xuc_statuses .select2-choice {
+   color: inherit;
+   text-transform: uppercase;
 }
-#xivo_agent_button.logged.status_available:after {
-   color: #9BC920;
+
+#xuc_statuses .select2-container .select2-choice {
+   text-overflow: inherit;
 }
-#xivo_agent_button.logged.status_outtolunch:after {
-   color: #6CA6FF;
+
+#xuc_statuses .select2-container .select2-choice:before {
+   content: none;
 }
-#xivo_agent_button.logged.status_donotdisturb:after {
-   color: #D13224;
+
+#xuc_statuses .select2-container .select2-choice > .select2-chosen {
+   text-indent: inherit;
+}
+
+#xuc_statuses .select2-container .select2-choice > .select2-chosen:before {
+   content: none;
+}
+
+#xuc_phone_status {
+   margin-left: 6px;
 }
 
 #xuc_sign_out {
@@ -251,10 +268,11 @@ i#xuc_user_picture.fa {
 #xuc_fullname {
    margin-top: 5px;
    vertical-align: top;
-   font-size: 1.1em;
+   font-size: 1.2em;
    white-space: nowrap;
    text-transform: capitalize;
    display: block;
+   font-weight: bold;
 }
 
 #xuc_user_status {
@@ -262,7 +280,9 @@ i#xuc_user_picture.fa {
    text-transform: uppercase;
 }
 
-#xuc_call_informations {
+#xuc_call_informations,
+#xuc_ringing_title,
+#xuc_oncall_title {
    display: none;
 }
 

@@ -7,8 +7,10 @@ var Xuc = function() {
    var logged          = false;
    var plugin_ajax_url = "";
 
-   var callerNum      = null;
-   var callerName     = ''
+   var userStatuses    = {};
+
+   var callerNum       = null;
+   var callerName      = ''
 
    // click2call cache to avoid redundant ajax requests
    var users_cache     = {};
@@ -25,6 +27,7 @@ var Xuc = function() {
       $("#c_preference ul #preferences_link")
          .after("<li id='xivo_agent'>\
                   <a class='fa fa-phone' id='xivo_agent_button'></a>\
+                  <i class='fa fa-circle' id='xivo_agent_status'></i>\
                   <div id='xivo_agent_form'>empty</div>\
                 </li>");
 
@@ -94,7 +97,7 @@ var Xuc = function() {
     */
    my_xuc.initConnection = function() {
       $.when(my_xuc.loadLoggedForm()).then(function() {
-         Cti.debugMsg = true;
+         //Cti.debugMsg = true;
          Cti.clearHandlers();
 
          var wsurl = xivo_config.xuc_url.replace(/https*:\/\//, 'ws://')
@@ -109,18 +112,13 @@ var Xuc = function() {
             $("#xivo_agent_form").hide();
          });
 
-         Cti.setHandler(Cti.MessageType.USERSTATUSES, function(statuses) {
-            //console.log(statuses);
-         });
+         Cti.setHandler(Cti.MessageType.USERSTATUSES, my_xuc.setUserStatuses);
 
-         Cti.setHandler(Cti.MessageType.USERSTATUSUPDATE, function(event) {
-            $("#xivo_agent_button")
-               .removeClass()
-               .addClass('logged fa fa-phone')
-               .addClass('status_' + event.status);
+         Cti.setHandler(Cti.MessageType.USERSTATUSUPDATE, my_xuc.userStatusUpdate);
 
+         Cti.setHandler(Cti.MessageType.PHONESTATUSUPDATE, function(event) {
             if (event.status !== null) {
-               $("#xuc_user_status").text(event.status);
+               $("#xuc_phone_status").val(event.status);
             }
          });
 
@@ -141,12 +139,69 @@ var Xuc = function() {
                case "EventReleased":
                   my_xuc.commReleased();
                   break;
-               case "EventEtablished":
-                  my_xuc.commEtablished();
+               case "EventEstablished":
+                  my_xuc.commEstablished();
                   break;
             }
          });
       });
+   };
+
+   /**
+    * Populate select html tag for user status with data returned by CTI
+    */
+   my_xuc.setUserStatuses = function(statuses) {
+      userStatuses = statuses;
+      $("#xuc_user_status").empty();
+      $.each(statuses, function(key, item) {
+         $("#xuc_user_status")
+            .append("<option data-color='"+item.color+"' value='"+item.name+"'>"+ item.longName + "</option>");
+      });
+
+      // TODO: in 9.3, check if this declaration is still valid (select2 upgraded 4.0)
+      $("#xuc_user_status").select2({
+         'width': '200px',
+         'formatResult': function(status) {
+            var option = status.element;
+            var color = $(option).data('color');
+
+            return "<i class='fa fa-circle' style='color: "+color+"'></i>&nbsp;"
+                   + status.text.toUpperCase();
+         },
+      });
+
+      // set cti event on change select
+      $('#xuc_user_status').on('change', function (e) {
+         var optionSelected = $(this).find("option:selected").val();
+         Cti.changeUserStatus(optionSelected);
+      });
+   };
+
+   /**
+    * Callback triggerd when user status changes
+    * @param  Object event the event passed by CTI on status change
+    *                      it should contains:
+    *                         - status = key of status,
+    *                                    we can match to the Xuc object user_status property
+    */
+   my_xuc.userStatusUpdate = function(event) {
+      var current_status = userStatuses.filter(function(status) {
+         return status.name == event.status;
+      })[0];
+
+      $("#xivo_agent_button")
+         .removeClass()
+         .addClass('logged fa fa-phone')
+         .addClass('status_' + current_status.name);
+
+      $("#xivo_agent_status")
+         .css('color', current_status.color);
+
+      if (event.status !== null) {
+         //$("#xuc_user_status").val(current_status.name);
+         // TODO 9.3 moved to select2 version 4, the following line could be broken
+         $("#xuc_user_status").select2("val", current_status.name);
+      }
    };
 
    /**
@@ -345,30 +400,40 @@ var Xuc = function() {
     */
    my_xuc.phoneRinging = function() {
       $("#xivo_agent_form").show();
-      $("#xuc_call_informations").show();
-      $("#xuc_caller_num").html(my_xuc.callerNum);
-      $("#xuc_caller_numname").html(my_xuc.callerName);
+      $("#xuc_call_titles div").hide();
+      $("#xuc_ringing_title").show();
       $("#xivo_agent_button").addClass('ringing');
+      this.setCallerInformation();
    };
 
    /**
     * Callback triggered when a phone call etablished
     */
-   my_xuc.commEtablished = function() {
+   my_xuc.commEstablished = function() {
+      $("#xuc_call_titles div").hide();
+      $("#xuc_oncall_title").show();
       $("#xivo_agent_button").removeClass('ringing');
+      this.setCallerInformation();
    };
 
    /**
     * Callback triggered when communication hanged up
     */
    my_xuc.commReleased = function() {
-      $("#xivo_agent_button").removeClass('ringing');
+      $("#xivo_agent_form").hide();
       $("#xuc_call_informations").hide();
+      $("#xivo_agent_button").removeClass('ringing');
       my_xuc.callerNum = null;
       my_xuc.callerName = 'null';
       $("#xuc_caller_num").html('');
       $("#xuc_caller_numname").html('');
    };
+
+   my_xuc.setCallerInformation = function() {
+      $("#xuc_call_informations").show();
+      $("#xuc_caller_num").html(my_xuc.callerNum);
+      $("#xuc_caller_numname").html(my_xuc.callerName);
+   }
 
    /**
     * Hangup the current call on CTI

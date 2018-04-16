@@ -35,7 +35,16 @@ class PluginXivoXuc {
             <i id='xuc_user_picture' class='fa fa-user-circle-o'></i>
             <div class='floating_text'>
                <div id='xuc_fullname'></div>
-               <div id='xuc_user_status'></div>
+               <div id='xuc_statuses'>
+                  <div>
+                     <label for='xuc_user_status'>".__("User", 'xivo')."</label>
+                     <select id='xuc_user_status'></select>
+                  </div>
+                  <div>
+                     <label for='xuc_phone_status'>".__("Phone", 'xivo')."</label>
+                     <input type='text' id='xuc_phone_status' readonly>
+                  </div>
+               </div>
             </div>
          </div>
       </form>
@@ -43,8 +52,9 @@ class PluginXivoXuc {
       <div class='separ'></div>
 
       <div id='xuc_call_informations'>
-         <h2>
+         <h2 id='xuc_call_titles'>
             <div id='xuc_ringing_title'>".__("Incoming call", 'xivo')."</div>
+            <div id='xuc_oncall_title'>".__("On call", 'xivo')."</div>
          </h2>
          <div id='xuc_caller_num'></div>
          <div id='xuc_caller_name'></div>
