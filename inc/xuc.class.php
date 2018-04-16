@@ -25,6 +25,13 @@ class PluginXivoXuc {
    }
 
    static function getLoggedForm() {
+      $user = new User;
+      $user->getFromDB($_SESSION['glpiID']);
+      $picture = "";
+      if (isset($user->fields['picture'])) {
+         $picture = $user->fields['picture'];
+      }
+
       $out = "<form id='xuc_logged_form'>
          <h2>".
             __("XIVO connected", 'xivo')."&nbsp;
@@ -32,7 +39,9 @@ class PluginXivoXuc {
          </h2>
 
          <div id='xuc_user_info'>
-            <i id='xuc_user_picture' class='fa fa-user-circle-o'></i>
+            <div id='xuc_user_picture'>
+               <img src='".User::getThumbnailURLForPicture($picture)."'>
+            </div>
             <div class='floating_text'>
                <div id='xuc_fullname'></div>
                <div id='xuc_statuses'>

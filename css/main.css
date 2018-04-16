@@ -255,12 +255,22 @@
    min-width: 300px;
 }
 
-i#xuc_user_picture.fa {
+#xuc_user_picture {
    float: left;
-   font-size: 50px;
-   color: #B9B9B9;
+   width: 50px;
+   height: 50px;
    margin-right: 5px;
+   padding:2px;
+   border-radius: 51px;
+   border: 3px inset #C2C2C2;
 }
+
+#xuc_user_picture img {
+   width: 50px;
+   height: 50px;
+   border-radius: 50px;
+}
+
 #xuc_user_info .floating_text {
    float: left;
 }

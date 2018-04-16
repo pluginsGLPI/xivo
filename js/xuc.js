@@ -146,7 +146,7 @@ var Xuc = function() {
 
       // TODO: in 9.3, check if this declaration is still valid (select2 upgraded 4.0)
       $("#xuc_user_status").select2({
-         'width': '200px',
+         'width': '180px',
          'minimumResultsForSearch': -1,
          'formatResult': function(status) {
             var option = status.element;
