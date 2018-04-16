@@ -15,6 +15,9 @@ var Xuc = function() {
 
    var my_xuc = this;
 
+   /**
+    * Init UI in GLPI
+    */
    my_xuc.init = function() {
       my_xuc.setAjaxUrl();
       my_xuc.retrieveXivoSession();
@@ -70,6 +73,10 @@ var Xuc = function() {
       plugin_ajax_url = "../plugins/xivo/ajax/xuc.php";
    };
 
+   /**
+    * Check the current token store as object property is still valid on xuc
+    * @return Ajax Promise
+    */
    my_xuc.checkTokenValidity = function() {
       return $.ajax({
          type: "GET",
@@ -81,6 +88,10 @@ var Xuc = function() {
       });
    };
 
+   /**
+    * Init connection to CTI with xuc libs.
+    * Init XIVO events (phones, statuses events)
+    */
    my_xuc.initConnection = function() {
       $.when(my_xuc.loadLoggedForm()).then(function() {
          Cti.debugMsg = true;
@@ -119,6 +130,7 @@ var Xuc = function() {
             }
          });
 
+         // intercept phones events and switch to adequate function
          Cti.setHandler(Cti.MessageType.PHONEEVENT, function(event) {
             my_xuc.callerNum = event.otherDN;
             my_xuc.callerName = event.otherDName;
@@ -137,6 +149,10 @@ var Xuc = function() {
       });
    };
 
+   /**
+    * Retrieve xivo properties in LocalStorage
+    * @return bool
+    */
    my_xuc.retrieveXivoSession = function() {
       var xivo_data = xivo_store.get('xivo');
 
@@ -152,10 +168,16 @@ var Xuc = function() {
       return false;
    };
 
+   /**
+    * Clear Xivo data in LocalStorage
+    */
    my_xuc.destroyXivoSession = function() {
       xivo_store.remove('xivo');
    };
 
+   /**
+    * Save xivo properties in LocalStorage
+    */
    my_xuc.saveXivoSession = function() {
       var xivo_data = {
          'username':    username,
@@ -166,12 +188,18 @@ var Xuc = function() {
       xivo_store.set('xivo', xivo_data);
    };
 
+   /**
+    * Load login form in GLPI UI
+    */
    my_xuc.loadLoginForm = function() {
       $("#xivo_agent_form").load(plugin_ajax_url, {
          'action': 'get_login_form'
       });
    };
 
+   /**
+    * Load logged form in GLPI UI
+    */
    my_xuc.loadLoggedForm = function() {
       return $.ajax({
          'type': 'POST',
@@ -185,6 +213,9 @@ var Xuc = function() {
       });
    };
 
+   /**
+    * Take login form parameters, store them in LocalStorage, and init CTI connection
+    */
    my_xuc.xucSignIn = function() {
       username    = $("#xuc_username").val();
       password    = $("#xuc_password").val();
@@ -197,6 +228,9 @@ var Xuc = function() {
       });
    };
 
+   /**
+    * Logout from CTI (and reset GLPI UI)
+    */
    my_xuc.xucSignOut = function() {
       Cti.webSocket.close();
       my_xuc.loadLoginForm();
@@ -208,6 +242,10 @@ var Xuc = function() {
       logged = false;
    };
 
+   /**
+    * Login on Xuc Rest API
+    * @return Ajax Promise
+    */
    my_xuc.loginOnXuc = function() {
       return $.ajax({
          type: "POST",
@@ -275,7 +313,6 @@ var Xuc = function() {
     * For each elements passed, add 'callto_link_added' cl and append 'callto:'' link after
     * @param  Array elements list of dom elements
     *                        (each should have a user_id key to match users_cache list)
-    * @return nothing
     */
    my_xuc.appendCalltoIcons = function(elements) {
       $.each(elements, function(index, element) {
@@ -294,11 +331,18 @@ var Xuc = function() {
       });
    };
 
+   /**
+    * Launch on CTI a call with target_num parameter
+    * @param  String target_num the to call
+    */
    my_xuc.dial = function(target_num) {
       var variables = {};
       Cti.dial(String(target_num), variables);
    };
 
+   /**
+    * Callback triggered when phone is ringing
+    */
    my_xuc.phoneRinging = function() {
       $("#xivo_agent_form").show();
       $("#xuc_call_informations").show();
@@ -307,10 +351,16 @@ var Xuc = function() {
       $("#xivo_agent_button").addClass('ringing');
    };
 
+   /**
+    * Callback triggered when a phone call etablished
+    */
    my_xuc.commEtablished = function() {
       $("#xivo_agent_button").removeClass('ringing');
    };
 
+   /**
+    * Callback triggered when communication hanged up
+    */
    my_xuc.commReleased = function() {
       $("#xivo_agent_button").removeClass('ringing');
       $("#xuc_call_informations").hide();
@@ -320,10 +370,17 @@ var Xuc = function() {
       $("#xuc_caller_numname").html('');
    };
 
+   /**
+    * Hangup the current call on CTI
+    */
    my_xuc.hangup = function() {
       Cti.hangup();
    }
 
+   /**
+    * Answer the current call on CTI
+    * Warning: the function doesn't seem to work at the moment.
+    */
    my_xuc.answer = function() {
       Cti.answer();
    }
