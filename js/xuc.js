@@ -120,7 +120,6 @@ var Xuc = function() {
          });
 
          Cti.setHandler(Cti.MessageType.PHONEEVENT, function(event) {
-            console.log("PHONEEVENT", event);
             my_xuc.callerNum = event.otherDN;
             my_xuc.callerName = event.otherDName;
             switch (event.eventType) {
@@ -301,7 +300,6 @@ var Xuc = function() {
    };
 
    my_xuc.phoneRinging = function() {
-      console.log("phone phoneRinging: "+my_xuc.callerNum);
       $("#xivo_agent_form").show();
       $("#xuc_call_informations").show();
       $("#xuc_caller_num").html(my_xuc.callerNum);
