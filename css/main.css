@@ -196,6 +196,11 @@
 #xivo_agent_button {
    position: relative;
 }
+
+#xivo_agent_button.ringing {
+   animation: ringing 2s linear infinite;
+}
+
 #xivo_agent_button.logged:after {
    position: absolute;
    content: '\f111';
@@ -255,4 +260,21 @@ i#xuc_user_picture.fa {
 #xuc_user_status {
    color: #636363;
    text-transform: uppercase;
+}
+
+#xuc_call_informations {
+   display: none;
+}
+
+#xuc_hangup {
+   color: red;
+   font-size: 25px;
+   cursor: pointer;
+}
+
+#xuc_answer {
+   display: none;/* feature doesn't work in Cti*/
+   color: green;
+   font-size: 25px;
+   cursor: pointer;
 }

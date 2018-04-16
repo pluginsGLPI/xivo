@@ -69,7 +69,10 @@ function plugin_init_xivo() {
                          ['addtabon' => 'Line']);
 
    // css & js
-   $PLUGIN_HOOKS['add_css']['xivo'] = 'xivo.css';
+   $PLUGIN_HOOKS['add_css']['xivo'] = [
+      'css/animation.css',
+      'css/main.css'
+   ];
    $PLUGIN_HOOKS['add_javascript']['xivo'] = [
       'js/require.js',
       'js/init.js.php',

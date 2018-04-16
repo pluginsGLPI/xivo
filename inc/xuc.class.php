@@ -30,6 +30,7 @@ class PluginXivoXuc {
             __("XIVO connected", 'xivo')."&nbsp;
             <i id='xuc_sign_out' class='fa fa-power-off pointer'></i>
          </h2>
+
          <div id='xuc_user_info'>
             <i id='xuc_user_picture' class='fa fa-user-circle-o'></i>
             <div class='floating_text'>
@@ -37,7 +38,19 @@ class PluginXivoXuc {
                <div id='xuc_user_status'></div>
             </div>
          </div>
-      </form>";
+      </form>
+
+      <div class='separ'></div>
+
+      <div id='xuc_call_informations'>
+         <h2>
+            <div id='xuc_ringing_title'>".__("Incoming call", 'xivo')."</div>
+         </h2>
+         <div id='xuc_caller_num'></div>
+         <div id='xuc_caller_name'></div>
+         <i class='fa fa-phone-square fa-flip-horizontal' id='xuc_answer'></i>
+         <i class='fa fa-phone-square fa-rotate-90' id='xuc_hangup'></i>
+      </div>";
 
       return $out;
    }

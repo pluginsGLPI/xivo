@@ -7,6 +7,9 @@ var Xuc = function() {
    var logged          = false;
    var plugin_ajax_url = "";
 
+   var callerNum      = null;
+   var callerName     = ''
+
    // click2call cache to avoid redundant ajax requests
    var users_cache     = {};
 
@@ -40,6 +43,14 @@ var Xuc = function() {
          .on("click", "#xuc_sign_out", function(e) {
             e.preventDefault();
             my_xuc.xucSignOut();
+         })
+         .on("click", "#xuc_hangup", function(e) {
+            e.preventDefault();
+            my_xuc.hangup();
+         })
+         .on("click", "#xuc_answer", function(e) {
+            e.preventDefault();
+            my_xuc.answer();
          });
 
       if (my_xuc.retrieveXivoSession() !== false) {
@@ -72,9 +83,15 @@ var Xuc = function() {
 
    my_xuc.initConnection = function() {
       $.when(my_xuc.loadLoggedForm()).then(function() {
+         Cti.debugMsg = true;
+         Cti.clearHandlers();
+
          var wsurl = xivo_config.xuc_url.replace(/https*:\/\//, 'ws://')
                         + "/xuc/api/2.0/cti?token="+bearerToken;
          Cti.WebSocket.init(wsurl, username, phoneNumber);
+
+         Callback.init(Cti);
+         Membership.init(Cti);
          logged = true;
 
          Cti.setHandler(Cti.MessageType.LOGGEDON, function() {
@@ -99,6 +116,23 @@ var Xuc = function() {
          Cti.setHandler(Cti.MessageType.USERCONFIGUPDATE, function(event) {
             if (event.fullName !== null) {
                $("#xuc_fullname").text(event.fullName);
+            }
+         });
+
+         Cti.setHandler(Cti.MessageType.PHONEEVENT, function(event) {
+            console.log("PHONEEVENT", event);
+            my_xuc.callerNum = event.otherDN;
+            my_xuc.callerName = event.otherDName;
+            switch (event.eventType) {
+               case "EventRinging":
+                  my_xuc.phoneRinging();
+                  break;
+               case "EventReleased":
+                  my_xuc.commReleased();
+                  break;
+               case "EventEtablished":
+                  my_xuc.commEtablished();
+                  break;
             }
          });
       });
@@ -234,7 +268,7 @@ var Xuc = function() {
       // event for callto icons
       $(document)
          .on("click", "#page .xivo_callto_link", function() {
-            my_xuc.triggerCall($(this).data('phone'));
+            my_xuc.dial($(this).data('phone'));
          });
    };
 
@@ -261,11 +295,40 @@ var Xuc = function() {
       });
    };
 
-   my_xuc.triggerCall = function(target_num) {
-      console.log("Dial num: " + target_num);
+   my_xuc.dial = function(target_num) {
       var variables = {};
-      Cti.dial(target_num, variables);
+      Cti.dial(String(target_num), variables);
    };
+
+   my_xuc.phoneRinging = function() {
+      console.log("phone phoneRinging: "+my_xuc.callerNum);
+      $("#xivo_agent_form").show();
+      $("#xuc_call_informations").show();
+      $("#xuc_caller_num").html(my_xuc.callerNum);
+      $("#xuc_caller_numname").html(my_xuc.callerName);
+      $("#xivo_agent_button").addClass('ringing');
+   };
+
+   my_xuc.commEtablished = function() {
+      $("#xivo_agent_button").removeClass('ringing');
+   };
+
+   my_xuc.commReleased = function() {
+      $("#xivo_agent_button").removeClass('ringing');
+      $("#xuc_call_informations").hide();
+      my_xuc.callerNum = null;
+      my_xuc.callerName = 'null';
+      $("#xuc_caller_num").html('');
+      $("#xuc_caller_numname").html('');
+   };
+
+   my_xuc.hangup = function() {
+      Cti.hangup();
+   }
+
+   my_xuc.answer = function() {
+      Cti.answer();
+   }
 
    /**
     * For all user's id passed, retrieve the user information by calling ajax requests
