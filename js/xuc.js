@@ -129,21 +129,7 @@ var Xuc = function() {
          });
 
          // intercept phones events and switch to adequate function
-         Cti.setHandler(Cti.MessageType.PHONEEVENT, function(event) {
-            my_xuc.callerNum = event.otherDN;
-            my_xuc.callerName = event.otherDName;
-            switch (event.eventType) {
-               case "EventRinging":
-                  my_xuc.phoneRinging();
-                  break;
-               case "EventReleased":
-                  my_xuc.commReleased();
-                  break;
-               case "EventEstablished":
-                  my_xuc.commEstablished();
-                  break;
-            }
-         });
+         Cti.setHandler(Cti.MessageType.PHONEEVENT, my_xuc.phoneEvents);
       });
    };
 
@@ -393,6 +379,26 @@ var Xuc = function() {
    my_xuc.dial = function(target_num) {
       var variables = {};
       Cti.dial(String(target_num), variables);
+   };
+
+   /**
+    * Callback triggered when phone status changes
+    * @param  Object event original CTI event
+    */
+   my_xuc.phoneEvents = function(event) {
+      my_xuc.callerNum = event.otherDN;
+      my_xuc.callerName = event.otherDName;
+      switch (event.eventType) {
+         case "EventRinging":
+            my_xuc.phoneRinging();
+            break;
+         case "EventReleased":
+            my_xuc.commReleased();
+            break;
+         case "EventEstablished":
+            my_xuc.commEstablished();
+            break;
+      }
    };
 
    /**
