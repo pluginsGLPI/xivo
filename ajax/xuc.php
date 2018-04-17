@@ -21,7 +21,8 @@ switch ($_REQUEST['action']) {
       break;
 
    case 'comm_established':
-      echo $xuc->commEstablished();
+      $data = $xuc->commEstablished($_REQUEST);
+      echo json_encode($data);
       break;
 
    case 'get_call_link':

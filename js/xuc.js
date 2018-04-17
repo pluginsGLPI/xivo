@@ -421,6 +421,22 @@ var Xuc = function() {
       $("#xuc_oncall_title").show();
       $("#xivo_agent_button").removeClass('ringing');
       this.setCallerInformation();
+
+      $.ajax({
+         url: plugin_ajax_url,
+         method: "POST",
+         dataType: 'json',
+         data: {
+            'action': 'comm_established',
+            'caller_num': my_xuc.callerNum
+         }
+      })
+      .done(function(data) {
+         console.log(data);
+         if (data.redirect !== false) {
+            window.location = data.redirect;
+         }
+      })
    };
 
    /**

@@ -90,4 +90,62 @@ class PluginXivoXuc {
 
       return $data;
    }
+
+   function commEstablished($params = []) {
+      global $DB;
+
+      $data = [
+         'users'    => null,
+         'tickets'  => null,
+         'redirect' => false,
+         'message'  => null
+      ];
+
+      $caller_num = isset($params['caller_num'])
+         ? preg_replace('/\D+/', '', $params['caller_num']) // only digits
+         : 0;
+
+      if (empty($caller_num)) {
+         return $data;
+      }
+
+      $r_not_digit = "[^0-9]*";
+      $regex_num = $r_not_digit.implode($r_not_digit, str_split($caller_num)).$r_not_digit;
+
+      // try to find user by its phone or mobile numbers
+      $iterator_users = $DB->request("SELECT id, name, realname, firstname FROM glpi_users
+                                      WHERE phone  REGEXP '$regex_num'
+                                         OR mobile REGEXP '$regex_num'");
+      $data['users'] = iterator_to_array($iterator_users);
+
+      // one user search for tickets
+      if (count($iterator_users) > 1) {
+         // mulitple user, no redirect and return a message
+         $data['message'] = __("Multiple users found with this phone number", 'xivo');
+      } elseif (count($iterator_users) == 1) {
+         $current_user     = current($data['users']);
+         $users_id         = $current_user['id'];
+         $iterator_tickets = $DB->request("SELECT glpi_tickets.id, glpi_tickets.name, glpi_tickets.content
+                                           FROM glpi_tickets
+                                           INNER JOIN glpi_tickets_users
+                                             ON glpi_tickets_users.tickets_id = glpi_tickets.id
+                                             AND glpi_tickets_users.type = ".CommonITILActor::REQUESTER."
+                                           WHERE glpi_tickets.status < ".CommonITILObject::SOLVED);
+         $data['tickets'] = iterator_to_array($iterator_tickets);
+
+         if (count($iterator_tickets) == 1) {
+            // if we have one user with one ticket, redirect to ticket
+            $ticket = new Ticket;
+            $ticket->getFromDB(current($data['tickets'])['id']);
+            $data['redirect'] = $ticket->getLinkURL();
+         } else {
+            // if we have one user without or with multiple tickets, redirect to user (on Ticket tab)
+            $user = new User;
+            $user->getFromDB($users_id);
+            $data['redirect'] = $user->getLinkURL().'&forcetab=Ticket$1';
+         }
+      }
+
+      return $data;
+   }
 }
