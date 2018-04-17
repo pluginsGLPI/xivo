@@ -290,21 +290,36 @@
    text-transform: uppercase;
 }
 
-#xuc_call_informations,
+/*#xuc_call_informations,*/
 #xuc_ringing_title,
 #xuc_oncall_title {
    display: none;
 }
 
+#xuc_call_informations i.fa:hover {
+   opacity: .8;
+}
+
+.xuc_content {
+   margin-left: 10px;
+}
+
 #xuc_hangup {
-   color: red;
+   color: #CB2F2F;
+   font-size: 25px;
+   cursor: pointer;
+}
+
+#xuc_hold {
+   display: none; /* feature doesn't work in Cti*/
+   color: #ffa500;
    font-size: 25px;
    cursor: pointer;
 }
 
 #xuc_answer {
-   display: none;/* feature doesn't work in Cti*/
-   color: green;
+   display: none; /* feature doesn't work in Cti*/
+   color: #4CA84C;
    font-size: 25px;
    cursor: pointer;
 }

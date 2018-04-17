@@ -65,10 +65,16 @@ class PluginXivoXuc {
             <div id='xuc_ringing_title'>".__("Incoming call", 'xivo')."</div>
             <div id='xuc_oncall_title'>".__("On call", 'xivo')."</div>
          </h2>
-         <div id='xuc_caller_num'></div>
-         <div id='xuc_caller_name'></div>
-         <i class='fa fa-phone-square fa-flip-horizontal' id='xuc_answer'></i>
-         <i class='fa fa-phone-square fa-rotate-90' id='xuc_hangup'></i>
+         <div class='xuc_content'>
+            <div><b>".__('Caller num:')."</b>&nbsp;<span id='xuc_caller_num'></span></div>
+            <div id='xuc_caller_infos'></div>
+         </div>
+         <h2>".__("Phone actions", 'xivo')."</h2>
+         <div class='xuc_content'>
+            <i class='fa fa-phone-square fa-flip-horizontal' id='xuc_answer'></i>
+            <i class='fa fa-phone-square fa-rotate-90' id='xuc_hangup'></i>
+            <i class='fa fa-pause-circle' id='xuc_hold'></i>
+         </div>
       </div>";
 
       return $out;
@@ -91,12 +97,12 @@ class PluginXivoXuc {
       return $data;
    }
 
-   function commEstablished($params = []) {
+   function getUserInfosByPhone($params = []) {
       global $DB;
 
       $data = [
-         'users'    => null,
-         'tickets'  => null,
+         'users'    => [],
+         'tickets'  => [],
          'redirect' => false,
          'message'  => null
       ];
@@ -113,16 +119,27 @@ class PluginXivoXuc {
       $regex_num = $r_not_digit.implode($r_not_digit, str_split($caller_num)).$r_not_digit;
 
       // try to find user by its phone or mobile numbers
-      $iterator_users = $DB->request("SELECT id, name, realname, firstname FROM glpi_users
+      $iterator_users = $DB->request("SELECT id FROM glpi_users
                                       WHERE phone  REGEXP '$regex_num'
                                          OR mobile REGEXP '$regex_num'");
-      $data['users'] = iterator_to_array($iterator_users);
+      foreach ($iterator_users as $data_user) {
+         $userdata = getUserName($data_user["id"], 2);
+         $name     = "<b>".__("User found in GLPI:", 'xivo')."</b>".
+                     "&nbsp;".$userdata['name'];
+         $name     = sprintf(__('%1$s %2$s'), $name,
+                             Html::showToolTip($userdata["comment"],
+                                               ['link'    => $userdata["link"],
+                                                'display' => false]));
+
+         $data_user['link'] = $name;
+         $data['users'][]   = $data_user;
+      }
 
       // one user search for tickets
-      if (count($iterator_users) > 1) {
+      if (count($data['users']) > 1) {
          // mulitple user, no redirect and return a message
          $data['message'] = __("Multiple users found with this phone number", 'xivo');
-      } elseif (count($iterator_users) == 1) {
+      } elseif (count($data['users']) == 1) {
          $current_user     = current($data['users']);
          $users_id         = $current_user['id'];
          $iterator_tickets = $DB->request("SELECT glpi_tickets.id, glpi_tickets.name, glpi_tickets.content

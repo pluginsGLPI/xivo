@@ -20,8 +20,8 @@ switch ($_REQUEST['action']) {
       echo $xuc->getLoggedForm();
       break;
 
-   case 'comm_established':
-      $data = $xuc->commEstablished($_REQUEST);
+   case 'get_user_infos_by_phone':
+      $data = $xuc->getUserInfosByPhone($_REQUEST);
       echo json_encode($data);
       break;
 

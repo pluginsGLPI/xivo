@@ -11,6 +11,8 @@ var Xuc = function() {
 
    var callerNum       = null;
    var callerName      = ''
+   var callerGlpiInfos = {};
+   var redirectTo      = false;
 
    // click2call cache to avoid redundant ajax requests
    var users_cache     = {};
@@ -57,6 +59,10 @@ var Xuc = function() {
          .on("click", "#xuc_answer", function(e) {
             e.preventDefault();
             my_xuc.answer();
+         })
+         .on("click", "#xuc_hold", function(e) {
+            e.preventDefault();
+            my_xuc.hold();
          });
 
       if (my_xuc.retrieveXivoSession() !== false) {
@@ -410,7 +416,25 @@ var Xuc = function() {
       $("#xuc_call_titles div").hide();
       $("#xuc_ringing_title").show();
       $("#xivo_agent_button").addClass('ringing');
-      this.setCallerInformation();
+
+      $.ajax({
+         url: plugin_ajax_url,
+         method: "POST",
+         dataType: 'json',
+         data: {
+            'action': 'get_user_infos_by_phone',
+            'caller_num': my_xuc.callerNum
+         }
+      })
+      .done(function(data) {
+         console.log(data);
+         my_xuc.callerGlpiInfos = data;
+         my_xuc.displayCallerInformation();
+
+         if (data.redirect !== false) {
+            my_xuc.redirectTo = data.redirect
+         }
+      })
    };
 
    /**
@@ -419,24 +443,13 @@ var Xuc = function() {
    my_xuc.commEstablished = function() {
       $("#xuc_call_titles div").hide();
       $("#xuc_oncall_title").show();
+      // $("#xuc_hold").show();
       $("#xivo_agent_button").removeClass('ringing');
-      this.setCallerInformation();
+      this.displayCallerInformation();
 
-      $.ajax({
-         url: plugin_ajax_url,
-         method: "POST",
-         dataType: 'json',
-         data: {
-            'action': 'comm_established',
-            'caller_num': my_xuc.callerNum
-         }
-      })
-      .done(function(data) {
-         console.log(data);
-         if (data.redirect !== false) {
-            window.location = data.redirect;
-         }
-      })
+      if (my_xuc.redirectTo !== false) {
+         window.location = my_xuc.redirectTo;
+      }
    };
 
    /**
@@ -444,6 +457,7 @@ var Xuc = function() {
     */
    my_xuc.commReleased = function() {
       $("#xivo_agent_form").hide();
+      $("#xuc_hold").hide();
       $("#xuc_call_informations").hide();
       $("#xivo_agent_button").removeClass('ringing');
       my_xuc.callerNum = null;
@@ -452,10 +466,22 @@ var Xuc = function() {
       $("#xuc_caller_numname").html('');
    };
 
-   my_xuc.setCallerInformation = function() {
+   /**
+    * display caller inforamtion in GLPI UI
+    */
+   my_xuc.displayCallerInformation = function() {
       $("#xuc_call_informations").show();
       $("#xuc_caller_num").html(my_xuc.callerNum);
-      $("#xuc_caller_numname").html(my_xuc.callerName);
+
+      // display caller information (from glpi ajax request)
+      var html = ''
+      var data = my_xuc.callerGlpiInfos;
+      if (data.users.length == 1) {
+         var user = data.users[0];
+         html = user.link;
+      }
+
+      $('#xuc_caller_infos').html(html);
    };
 
    /**
@@ -471,6 +497,14 @@ var Xuc = function() {
     */
    my_xuc.answer = function() {
       Cti.answer();
+   };
+
+   /**
+    * Hold the current call on CTI
+    * Warning: the function doesn't seem to work at the moment.
+    */
+   my_xuc.hold = function() {
+      xc_webrtc.answer();
    };
 
    /**
