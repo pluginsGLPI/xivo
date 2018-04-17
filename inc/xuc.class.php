@@ -5,7 +5,7 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginXivoXuc {
-   static function getLoginForm() {
+   function getLoginForm() {
       $out = "<form id='xuc_login_form'>
          <h2>".__("Connect to XIVO", 'xivo')."</h2>
 
@@ -24,7 +24,7 @@ class PluginXivoXuc {
       return $out;
    }
 
-   static function getLoggedForm() {
+   function getLoggedForm() {
       $user = new User;
       $user->getFromDB($_SESSION['glpiID']);
       $picture = "";
@@ -72,5 +72,22 @@ class PluginXivoXuc {
       </div>";
 
       return $out;
+   }
+
+   function getCallLink($users_id = 0) {
+      $data = [
+         'phone'          => null,
+         'append_classes' => '',
+         'title'          => '',
+      ];
+      $user = new User;
+      if ($user->getFromDB($users_id)) {
+         if (!empty($user->fields['phone'])) {
+            $data['phone'] = $user->fields['phone'];
+            $data['title'] = sprintf(__("Call %s: %s"), $user->getName(), $user->fields['phone']);
+         }
+      }
+
+      return $data;
    }
 }

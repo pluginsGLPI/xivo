@@ -470,7 +470,7 @@ var Xuc = function() {
             return true;
          }
          deferreds.push($.ajax({
-            'url': '../plugins/xivo/ajax/user.php',
+            'url': plugin_ajax_url,
             'data': {
                'id': user_id,
                'action': 'get_call_link'
