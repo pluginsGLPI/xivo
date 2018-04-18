@@ -106,8 +106,8 @@ class PluginXivoConfig extends Config {
 
       echo self::showField([
          'inputtype' => 'yesno',
-         'width' => '80px',
-         'label'     => __("Popup", 'xivo'),
+         'width' => '200px',
+         'label'     => __("Auto-open user/ticket on call", 'xivo'),
          'attrs'     => [
             'name'  => 'enable_auto_open',
             'value' => $current_config['enable_auto_open'],

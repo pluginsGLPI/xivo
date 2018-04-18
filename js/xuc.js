@@ -3,6 +3,8 @@ var Xuc = function() {
    var password        = '';
    var phoneNumber     = '';
    var bearerToken     = '';
+   var callerGlpiInfos = {};
+   var lastState       = null;
 
    var logged          = false;
    var plugin_ajax_url = "";
@@ -11,7 +13,6 @@ var Xuc = function() {
 
    var callerNum       = null;
    var callerName      = ''
-   var callerGlpiInfos = {};
    var redirectTo      = false;
 
    // click2call cache to avoid redundant ajax requests
@@ -25,45 +26,7 @@ var Xuc = function() {
    my_xuc.init = function() {
       my_xuc.setAjaxUrl();
       my_xuc.retrieveXivoSession();
-
-      $("#c_preference ul #preferences_link")
-         .after("<li id='xivo_agent'>\
-                  <a class='fa fa-phone' id='xivo_agent_button'></a>\
-                  <i class='fa fa-circle' id='xivo_agent_status'></i>\
-                  <div id='xivo_agent_form'>empty</div>\
-                </li>");
-
-      $(document)
-         .on("click", "#xivo_agent_button", function() {
-            $("#xivo_agent_form").toggle();
-            if (!logged) {
-               my_xuc.loadLoginForm();
-            }
-         })
-         .on("submit", "#xuc_login_form", function(e) {
-            e.preventDefault();
-            my_xuc.xucSignIn();
-         })
-         .on("click", "#xuc_sign_in", function(e) {
-            e.preventDefault();
-            my_xuc.xucSignIn();
-         })
-         .on("click", "#xuc_sign_out", function(e) {
-            e.preventDefault();
-            my_xuc.xucSignOut();
-         })
-         .on("click", "#xuc_hangup", function(e) {
-            e.preventDefault();
-            my_xuc.hangup();
-         })
-         .on("click", "#xuc_answer", function(e) {
-            e.preventDefault();
-            my_xuc.answer();
-         })
-         .on("click", "#xuc_hold", function(e) {
-            e.preventDefault();
-            my_xuc.hold();
-         });
+      my_xuc.initAutoOpen();
 
       if (my_xuc.retrieveXivoSession() !== false) {
          $.when(my_xuc.checkTokenValidity())
@@ -77,6 +40,49 @@ var Xuc = function() {
             });
       }
    };
+
+   my_xuc.initAutoOpen = function() {
+      if (xivo_config.enable_auto_open) {
+         $("#c_preference ul #preferences_link")
+            .after("<li id='xivo_agent'>\
+                     <a class='fa fa-phone' id='xivo_agent_button'></a>\
+                     <i class='fa fa-circle' id='xivo_agent_status'></i>\
+                     <div id='xivo_agent_form'>empty</div>\
+                   </li>");
+
+         $(document)
+            .on("click", "#xivo_agent_button", function() {
+               $("#xivo_agent_form").toggle();
+               if (!logged) {
+                  my_xuc.loadLoginForm();
+               }
+            })
+            .on("submit", "#xuc_login_form", function(e) {
+               e.preventDefault();
+               my_xuc.xucSignIn();
+            })
+            .on("click", "#xuc_sign_in", function(e) {
+               e.preventDefault();
+               my_xuc.xucSignIn();
+            })
+            .on("click", "#xuc_sign_out", function(e) {
+               e.preventDefault();
+               my_xuc.xucSignOut();
+            })
+            .on("click", "#xuc_hangup", function(e) {
+               e.preventDefault();
+               my_xuc.hangup();
+            })
+            .on("click", "#xuc_answer", function(e) {
+               e.preventDefault();
+               my_xuc.answer();
+            })
+            .on("click", "#xuc_hold", function(e) {
+               e.preventDefault();
+               my_xuc.hold();
+            });
+      }
+   }
 
    my_xuc.setAjaxUrl = function() {
       plugin_ajax_url = "../plugins/xivo/ajax/xuc.php";
@@ -135,7 +141,9 @@ var Xuc = function() {
          });
 
          // intercept phones events and switch to adequate function
-         Cti.setHandler(Cti.MessageType.PHONEEVENT, my_xuc.phoneEvents);
+         if (xivo_config.enable_auto_open) {
+            Cti.setHandler(Cti.MessageType.PHONEEVENT, my_xuc.phoneEvents);
+         }
       });
    };
 
@@ -205,10 +213,12 @@ var Xuc = function() {
       var xivo_data = xivo_store.get('xivo');
 
       if (typeof xivo_data == "object") {
-         username    = xivo_data.username;
-         password    = xivo_data.password;
-         phoneNumber = xivo_data.phoneNumber;
-         bearerToken = xivo_data.bearerToken;
+         username        = xivo_data.username;
+         password        = xivo_data.password;
+         phoneNumber     = xivo_data.phoneNumber;
+         bearerToken     = xivo_data.bearerToken;
+         lastState       = xivo_data.lastState;
+         callerGlpiInfos = xivo_data.callerGlpiInfos;
 
          return true;
       }
@@ -228,10 +238,12 @@ var Xuc = function() {
     */
    my_xuc.saveXivoSession = function() {
       var xivo_data = {
-         'username':    username,
-         'password':    password,
-         'phoneNumber': phoneNumber,
-         'bearerToken': bearerToken
+         'username':        username,
+         'password':        password,
+         'phoneNumber':     phoneNumber,
+         'bearerToken':     bearerToken,
+         'lastState':       lastState,
+         'callerGlpiInfos': callerGlpiInfos
       }
       xivo_store.set('xivo', xivo_data);
    };
@@ -393,8 +405,9 @@ var Xuc = function() {
     * @param  Object event original CTI event
     */
    my_xuc.phoneEvents = function(event) {
-      my_xuc.callerNum = event.otherDN;
+      my_xuc.callerNum  = event.otherDN;
       my_xuc.callerName = event.otherDName;
+      my_xuc.lastState  = event.eventType;
       switch (event.eventType) {
          case "EventRinging":
             my_xuc.phoneRinging();
@@ -406,6 +419,8 @@ var Xuc = function() {
             my_xuc.commEstablished();
             break;
       }
+
+      my_xuc.saveXivoSession();
    };
 
    /**
@@ -429,6 +444,7 @@ var Xuc = function() {
       .done(function(data) {
          console.log(data);
          my_xuc.callerGlpiInfos = data;
+         my_xuc.saveXivoSession();
          my_xuc.displayCallerInformation();
 
          if (data.redirect !== false) {

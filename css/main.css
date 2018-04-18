@@ -290,7 +290,7 @@
    text-transform: uppercase;
 }
 
-/*#xuc_call_informations,*/
+#xuc_call_informations,
 #xuc_ringing_title,
 #xuc_oncall_title {
    display: none;

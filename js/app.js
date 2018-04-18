@@ -21,13 +21,5 @@ $(function() {
             xuc_obj.click2Call();
          });
       }
-
-      if (xivo_config.enable_presence) {
-
-      }
-
-      if (xivo_config.enable_auto_open) {
-
-      }
    });
 });
