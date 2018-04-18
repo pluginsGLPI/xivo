@@ -137,6 +137,22 @@
    opacity: 1;
 }
 
+.xivo_callto_link.AgentReady:before {
+   color: #9BC920;
+}
+.xivo_callto_link.AgentOnPause:before {
+   color: #FFB04A;
+}
+.xivo_callto_link.AgentDialing:before,
+.xivo_callto_link.AgentOnCall:before {
+   color: #D13224;
+}
+.xivo_callto_link.AgentOnWrapup:before {
+}
+.xivo_callto_link.AgentLoggedOut:before {
+   color: #000000;
+}
+
 #c_preference #xivo_agent_button.fa {
    font-size: 1.8em;
    cursor: pointer;

@@ -1,4 +1,6 @@
 var Xuc = function() {
+   var debugCTI        = false;
+
    var username        = '';
    var password        = '';
    var phoneNumber     = '';
@@ -12,7 +14,18 @@ var Xuc = function() {
 
    var userStatuses    = {};
 
-   var callerNum       = null;
+   // possible states
+   // * AgentReady
+   // * AgentOnPause
+   // * AgentOnCall
+   // * AgentDialing
+   // * AgentOnWrapup
+   // * AgentLoggedOut
+   //
+   // this var will be in this format {phonenum: state, ...}
+   var agentsState     = {};
+
+   var callerNum       = '';
    var callerName      = ''
    var redirectTo      = false;
 
@@ -110,7 +123,9 @@ var Xuc = function() {
     */
    my_xuc.initConnection = function() {
       $.when(my_xuc.loadLoggedForm()).then(function() {
-         //Cti.debugMsg = true;
+         if (debugCTI) {
+            Cti.debugMsg = true;
+         }
          Cti.clearHandlers();
 
          var wsurl = xivo_config.xuc_url.replace(/https*:\/\//, 'ws://')
@@ -140,6 +155,11 @@ var Xuc = function() {
             if (xivo_config.enable_auto_open) {
                // intercept phones events and switch to adequate function
                Cti.setHandler(Cti.MessageType.PHONEEVENT, my_xuc.phoneEvents);
+            }
+
+            if (xivo_config.enable_presence) {
+               Cti.setHandler(Cti.MessageType.AGENTSTATEEVENT, my_xuc.agentStateEventHandler);
+               Cti.getAgentStates();
             }
 
             // restore last state of ui (after a browser navigation for example)
@@ -179,6 +199,22 @@ var Xuc = function() {
       });
    };
 
+   my_xuc.agentStateEventHandler = function(agentState) {
+      var agent_num = agentState.phoneNb;
+      if (agent_num.length) {
+         console.log(agent_num, agentState.name);
+         agentsState[agent_num] = agentState.name;
+         my_xuc.saveXivoSession();
+         $('.xivo_callto_link')
+            .filter('[data-phone="'+ agent_num +'"]')
+            .removeClass (function (index, className) {
+               // remove class starting by 'Agent'
+               return (className.match (/\Agent\S+/g) || []).join(' ');
+            })
+            .addClass(agentState.name);
+      }
+   }
+
    /**
     * Callback triggerd when user status changes
     * @param  Object event the event passed by CTI on status change
@@ -217,14 +253,15 @@ var Xuc = function() {
       var xivo_data = xivo_store.get('xivo');
 
       if (typeof xivo_data == "object") {
-         username      = xivo_data.username;
-         password      = xivo_data.password;
-         phoneNumber   = xivo_data.phoneNumber;
-         bearerToken   = xivo_data.bearerToken;
-         lastState     = xivo_data.lastState;
-         lastStateDate = xivo_data.lastStateDate;
-         callerNum     = xivo_data.callerNum;
-         callerName    = xivo_data.callerName;
+         username      = ("username" in xivo_data      ? xivo_data.username : '');
+         password      = ("password" in xivo_data      ? xivo_data.password : '');
+         phoneNumber   = ("phoneNumber" in xivo_data   ? xivo_data.phoneNumber : '');
+         bearerToken   = ("bearerToken" in xivo_data   ? xivo_data.bearerToken : '');
+         lastState     = ("lastState" in xivo_data     ? xivo_data.lastState : null);
+         lastStateDate = ("lastStateDate" in xivo_data ? xivo_data.lastStateDate : null);
+         callerNum     = ("callerNum" in xivo_data     ? xivo_data.callerNum : '');
+         callerName    = ("callerName" in xivo_data    ? xivo_data.callerName : '');
+         agentsState   = ("agentsState" in xivo_data   ? xivo_data.agentsState : {});
 
          return true;
       }
@@ -244,14 +281,15 @@ var Xuc = function() {
     */
    my_xuc.saveXivoSession = function() {
       var xivo_data = {
-         'username':        username,
-         'password':        password,
-         'phoneNumber':     phoneNumber,
-         'bearerToken':     bearerToken,
-         'lastState':       lastState,
-         'lastStateDate':   lastStateDate,
-         'callerNum':       callerNum,
-         'callerName':      callerName,
+         'username':      username,
+         'password':      password,
+         'phoneNumber':   phoneNumber,
+         'bearerToken':   bearerToken,
+         'lastState':     lastState,
+         'lastStateDate': lastStateDate,
+         'callerNum':     callerNum,
+         'callerName':    callerName,
+         'agentsState':   agentsState,
       }
       xivo_store.set('xivo', xivo_data);
    };
@@ -389,12 +427,17 @@ var Xuc = function() {
          if ('phone' in data
              && data.phone != null) {
 
+            var agentState = '';
+            if (data.phone in agentsState) {
+               agentState = agentsState[data.phone];
+            }
+
             element
                .addClass("callto_link_added")
                .after("<span"
-                  + "' data-phone='" + data.phone
-                  + "' class='xivo_callto_link" + data.append_classes
-                  + "' title='" + data.title+ "'></a>");
+                  + " data-phone='" + data.phone + "'"
+                  + " class='xivo_callto_link " + agentState + "'"
+                  + " title='" + data.title+ "'></a>");
          }
       });
    };

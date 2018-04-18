@@ -83,7 +83,6 @@ class PluginXivoXuc {
    function getCallLink($users_id = 0) {
       $data = [
          'phone'          => null,
-         'append_classes' => '',
          'title'          => '',
       ];
       $user = new User;
