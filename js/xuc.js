@@ -5,6 +5,7 @@ var Xuc = function() {
    var bearerToken     = '';
    var callerGlpiInfos = {};
    var lastState       = null;
+   var lastStateDate   = null;
 
    var logged          = false;
    var plugin_ajax_url = "";
@@ -122,28 +123,28 @@ var Xuc = function() {
 
          Cti.setHandler(Cti.MessageType.LOGGEDON, function() {
             $("#xivo_agent_form").hide();
-         });
 
-         Cti.setHandler(Cti.MessageType.USERSTATUSES, my_xuc.setUserStatuses);
+            Cti.setHandler(Cti.MessageType.USERSTATUSES, my_xuc.setUserStatuses);
+            Cti.setHandler(Cti.MessageType.USERSTATUSUPDATE, my_xuc.userStatusUpdate);
+            Cti.setHandler(Cti.MessageType.PHONESTATUSUPDATE, function(event) {
+               if (event.status !== null) {
+                  $("#xuc_phone_status").val(event.status);
+               }
+            });
+            Cti.setHandler(Cti.MessageType.USERCONFIGUPDATE, function(event) {
+               if (event.fullName !== null) {
+                  $("#xuc_fullname").text(event.fullName);
+               }
+            });
 
-         Cti.setHandler(Cti.MessageType.USERSTATUSUPDATE, my_xuc.userStatusUpdate);
-
-         Cti.setHandler(Cti.MessageType.PHONESTATUSUPDATE, function(event) {
-            if (event.status !== null) {
-               $("#xuc_phone_status").val(event.status);
+            if (xivo_config.enable_auto_open) {
+               // intercept phones events and switch to adequate function
+               Cti.setHandler(Cti.MessageType.PHONEEVENT, my_xuc.phoneEvents);
             }
-         });
 
-         Cti.setHandler(Cti.MessageType.USERCONFIGUPDATE, function(event) {
-            if (event.fullName !== null) {
-               $("#xuc_fullname").text(event.fullName);
-            }
+            // restore last state of ui (after a browser navigation for example)
+            my_xuc.restoreLastState();
          });
-
-         // intercept phones events and switch to adequate function
-         if (xivo_config.enable_auto_open) {
-            Cti.setHandler(Cti.MessageType.PHONEEVENT, my_xuc.phoneEvents);
-         }
       });
    };
 
@@ -191,8 +192,11 @@ var Xuc = function() {
       })[0];
 
       $("#xivo_agent_button")
-         .removeClass()
          .addClass('logged fa fa-phone')
+         .removeClass (function (index, className) {
+            // remove class starting by 'status_'
+            return (className.match (/\bstatus_\S+/g) || []).join(' ');
+         })
          .addClass('status_' + current_status.name);
 
       $("#xivo_agent_status")
@@ -213,12 +217,14 @@ var Xuc = function() {
       var xivo_data = xivo_store.get('xivo');
 
       if (typeof xivo_data == "object") {
-         username        = xivo_data.username;
-         password        = xivo_data.password;
-         phoneNumber     = xivo_data.phoneNumber;
-         bearerToken     = xivo_data.bearerToken;
-         lastState       = xivo_data.lastState;
-         callerGlpiInfos = xivo_data.callerGlpiInfos;
+         username      = xivo_data.username;
+         password      = xivo_data.password;
+         phoneNumber   = xivo_data.phoneNumber;
+         bearerToken   = xivo_data.bearerToken;
+         lastState     = xivo_data.lastState;
+         lastStateDate = xivo_data.lastStateDate;
+         callerNum     = xivo_data.callerNum;
+         callerName    = xivo_data.callerName;
 
          return true;
       }
@@ -243,7 +249,9 @@ var Xuc = function() {
          'phoneNumber':     phoneNumber,
          'bearerToken':     bearerToken,
          'lastState':       lastState,
-         'callerGlpiInfos': callerGlpiInfos
+         'lastStateDate':   lastStateDate,
+         'callerNum':       callerNum,
+         'callerName':      callerName,
       }
       xivo_store.set('xivo', xivo_data);
    };
@@ -400,14 +408,29 @@ var Xuc = function() {
       Cti.dial(String(target_num), variables);
    };
 
+   my_xuc.restoreLastState = function() {
+      switch (lastState) {
+         case "EventRinging":
+         case "EventEstablished":
+            var event = {
+               otherDN: callerNum,
+               otherDName: callerName,
+               eventType: lastState
+            };
+            my_xuc.phoneEvents(event);
+            $("#xivo_agent_form").show();
+            break;
+      }
+   }
+
    /**
     * Callback triggered when phone status changes
     * @param  Object event original CTI event
     */
    my_xuc.phoneEvents = function(event) {
-      my_xuc.callerNum  = event.otherDN;
-      my_xuc.callerName = event.otherDName;
-      my_xuc.lastState  = event.eventType;
+      callerNum  = event.otherDN;
+      callerName = event.otherDName;
+      lastState  = event.eventType;
       switch (event.eventType) {
          case "EventRinging":
             my_xuc.phoneRinging();
@@ -438,18 +461,19 @@ var Xuc = function() {
          dataType: 'json',
          data: {
             'action': 'get_user_infos_by_phone',
-            'caller_num': my_xuc.callerNum
+            'caller_num': callerNum
          }
       })
       .done(function(data) {
-         console.log(data);
-         my_xuc.callerGlpiInfos = data;
+         callerGlpiInfos = data;
          my_xuc.saveXivoSession();
          my_xuc.displayCallerInformation();
 
          if (data.redirect !== false) {
-            my_xuc.redirectTo = data.redirect
+            redirectTo = data.redirect
          }
+
+         my_xuc.saveXivoSession();
       })
    };
 
@@ -463,8 +487,8 @@ var Xuc = function() {
       $("#xivo_agent_button").removeClass('ringing');
       this.displayCallerInformation();
 
-      if (my_xuc.redirectTo !== false) {
-         window.location = my_xuc.redirectTo;
+      if (redirectTo !== false) {
+         window.location = redirectTo;
       }
    };
 
@@ -476,8 +500,8 @@ var Xuc = function() {
       $("#xuc_hold").hide();
       $("#xuc_call_informations").hide();
       $("#xivo_agent_button").removeClass('ringing');
-      my_xuc.callerNum = null;
-      my_xuc.callerName = 'null';
+      callerNum = null;
+      callerName = 'null';
       $("#xuc_caller_num").html('');
       $("#xuc_caller_numname").html('');
    };
@@ -487,11 +511,11 @@ var Xuc = function() {
     */
    my_xuc.displayCallerInformation = function() {
       $("#xuc_call_informations").show();
-      $("#xuc_caller_num").html(my_xuc.callerNum);
+      $("#xuc_caller_num").html(callerNum);
 
       // display caller information (from glpi ajax request)
       var html = ''
-      var data = my_xuc.callerGlpiInfos;
+      var data = callerGlpiInfos;
       if (data.users.length == 1) {
          var user = data.users[0];
          html = user.link;
