@@ -148,17 +148,22 @@ class PluginXivoXuc {
                                              AND glpi_tickets_users.type = ".CommonITILActor::REQUESTER."
                                            WHERE glpi_tickets.status < ".CommonITILObject::SOLVED);
          $data['tickets'] = iterator_to_array($iterator_tickets);
+         $nb_tickets = count($iterator_tickets);
 
-         if (count($iterator_tickets) == 1) {
+         $ticket = new Ticket;
+         $user   = new User;
+         $user->getFromDB($users_id);
+
+         if ($nb_tickets == 1) {
             // if we have one user with one ticket, redirect to ticket
-            $ticket = new Ticket;
             $ticket->getFromDB(current($data['tickets'])['id']);
             $data['redirect'] = $ticket->getLinkURL();
-         } else {
-            // if we have one user without or with multiple tickets, redirect to user (on Ticket tab)
-            $user = new User;
-            $user->getFromDB($users_id);
+         } elseif ($nb_tickets > 1) {
+            // if we have one user with multiple tickets, redirect to user (on Ticket tab)
             $data['redirect'] = $user->getLinkURL().'&forcetab=Ticket$1';
+         } else {
+            // if the current user has no tickets, redirect to ticket creation form
+            $data['redirect'] = $ticket->getFormUrl().'?_users_id_requester='.$user->getID();
          }
       }
 
