@@ -15,8 +15,10 @@ var Xuc = function() {
    var userStatuses    = {};
 
    // possible states
+   // * AgentLogin
    // * AgentReady
    // * AgentOnPause
+   // * AgentRinging
    // * AgentOnCall
    // * AgentDialing
    // * AgentOnWrapup

@@ -75,8 +75,7 @@ function plugin_init_xivo() {
    ];
    $PLUGIN_HOOKS['add_javascript']['xivo'] = [
       'js/require.js',
-      'js/init.js.php',
-      'js/app.js',
+      'js/app.js.php',
       'js/common.js',
    ];
 

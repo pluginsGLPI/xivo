@@ -140,10 +140,12 @@
 .xivo_callto_link.AgentReady:before {
    color: #9BC920;
 }
+.xivo_callto_link.AgentLogin:before,
 .xivo_callto_link.AgentOnPause:before {
    color: #FFB04A;
 }
 .xivo_callto_link.AgentDialing:before,
+.xivo_callto_link.AgentRinging:before,
 .xivo_callto_link.AgentOnCall:before {
    color: #D13224;
 }
