@@ -15,10 +15,7 @@ $xivoconfig = json_encode(PluginXivoConfig::getConfig(), JSON_NUMERIC_CHECK);
 $JS = <<<JAVASCRIPT
 
 // pass php xivo config to javascript
-var xivo_config   = $xivoconfig;
-
-// prepare an url to test before loading all xuc libraries
-var test_xivo_url = xivo_config.xuc_url + "/xucassets/javascripts/cti.js";
+var xivo_config = $xivoconfig;
 
 // config requirejs for xivo xuc libs (some have dependencies)
 require.config({
@@ -55,40 +52,22 @@ $(function() {
       window.xivo_store = store;
    });
 
-   urlExists(test_xivo_url, function(exists) {
-      if (exists) {
-         require(xuc_libs, function() {
-            // call xuc integration
-            var xuc_obj = new Xuc();
-            xuc_obj.init();
+   require(xuc_libs, function() {
+      // call xuc integration
+      var xuc_obj = new Xuc();
+      xuc_obj.init();
 
-            // append 'callto:' links to domready events and also after tabs change
-            if (xivo_config.enable_click2call) {
-               users_cache = xivo_store.get('users_cache');
-               xuc_obj.click2Call();
-               $(".glpi_tabs").on("tabsload", function(event, ui) {
-                  xuc_obj.click2Call();
-               });
-            }
+      // append 'callto:' links to domready events and also after tabs change
+      if (xivo_config.enable_click2call) {
+         users_cache = xivo_store.get('users_cache');
+         xuc_obj.click2Call();
+         $(".glpi_tabs").on("tabsload", function(event, ui) {
+            xuc_obj.click2Call();
          });
-      } else {
-         console.log('Connection to xivo XUC failed');
       }
    });
 });
 
-urlExists = function(url, callback){
-   $.ajax({
-      type: 'HEAD',
-      url: url,
-      success: function(){
-         callback(true);
-      },
-      error: function() {
-         callback(false);
-      }
-   });
-};
 
 JAVASCRIPT;
 echo $JS;
