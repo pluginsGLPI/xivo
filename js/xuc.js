@@ -162,6 +162,7 @@ var Xuc = function() {
             if (xivo_config.enable_presence) {
                Cti.setHandler(Cti.MessageType.AGENTSTATEEVENT, my_xuc.agentStateEventHandler);
                Cti.getAgentStates();
+               Cti.subscribeToAgentEvents();
             }
 
             // restore last state of ui (after a browser navigation for example)
@@ -204,7 +205,7 @@ var Xuc = function() {
    my_xuc.agentStateEventHandler = function(agentState) {
       var agent_num = agentState.phoneNb;
       if (agent_num.length) {
-         console.log(agent_num, agentState.name);
+         // console.log(agent_num, agentState.name);
          agentsState[agent_num] = agentState.name;
          my_xuc.saveXivoSession();
          $('.xivo_callto_link')
