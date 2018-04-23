@@ -8,8 +8,8 @@ Here is the list of currently working/planned features:
 
 - [x] Phones inventory
 - [x] Lines inventory
-- [ ] Users presence
-- [ ] Auto-open tickets or users form
+- [x] Users presence
+- [x] Auto-open tickets or users form
 - [x] Click2Call (requires xivo client to handle `callto:` links)
 - [ ] Call logs
 - [ ] Directory
@@ -43,3 +43,5 @@ We need a webservices user with these minimal acl:
 
 <img src="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_phones.png?raw=true" alt="inventory of phones"  style="width: 250px;"/>
 <img src="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_lines.png?raw=true" alt="inventory of lines"  style="width: 250px;"/>
+<img src="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/xuc_integration.png?raw=true" alt="XUC integration"  style="width: 250px;"/>
+<img src="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/clic2calln.png?raw=true" alt="Click2Call"  style="width: 250px;"/>
