@@ -261,7 +261,7 @@ var Xuc = function() {
          phoneNumber   = ("phoneNumber" in xivo_data   ? xivo_data.phoneNumber : '');
          bearerToken   = ("bearerToken" in xivo_data   ? xivo_data.bearerToken : '');
          lastState     = ("lastState" in xivo_data     ? xivo_data.lastState : null);
-         lastStateDate = ("lastStateDate" in xivo_data ? xivo_data.lastStateDate : null);
+         lastStateDate = ("lastStateDate" in xivo_data ? new Date(xivo_data.lastStateDate) : null);
          callerNum     = ("callerNum" in xivo_data     ? xivo_data.callerNum : '');
          callerName    = ("callerName" in xivo_data    ? xivo_data.callerName : '');
          agentsState   = ("agentsState" in xivo_data   ? xivo_data.agentsState : {});
@@ -289,7 +289,7 @@ var Xuc = function() {
          'phoneNumber':   phoneNumber,
          'bearerToken':   bearerToken,
          'lastState':     lastState,
-         'lastStateDate': lastStateDate,
+         'lastStateDate': lastStateDate.toJSON(),
          'callerNum':     callerNum,
          'callerName':    callerName,
          'agentsState':   agentsState,
@@ -455,13 +455,18 @@ var Xuc = function() {
    };
 
    my_xuc.restoreLastState = function() {
+      var now = new Date;
+      if (Math.abs(now.getTime() - lastStateDate.getTime()) > (60 *  60 * 1000)) {
+         return false;
+      }
       switch (lastState) {
          case "EventRinging":
          case "EventEstablished":
             var event = {
                otherDN: callerNum,
                otherDName: callerName,
-               eventType: lastState
+               eventType: lastState,
+               lastStateDate: lastStateDate
             };
             my_xuc.phoneEvents(event);
             $("#xivo_agent_form").show();
@@ -474,9 +479,12 @@ var Xuc = function() {
     * @param  Object event original CTI event
     */
    my_xuc.phoneEvents = function(event) {
-      callerNum  = event.otherDN;
-      callerName = event.otherDName;
-      lastState  = event.eventType;
+      callerNum     = event.otherDN;
+      callerName    = event.otherDName;
+      lastState     = event.eventType;
+      if (typeof event.lastStateDate == "undefined") {
+         lastStateDate = new Date();
+      }
       switch (event.eventType) {
          case "EventRinging":
             my_xuc.phoneRinging();
