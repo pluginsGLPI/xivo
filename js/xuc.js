@@ -289,7 +289,7 @@ var Xuc = function() {
          'phoneNumber':   phoneNumber,
          'bearerToken':   bearerToken,
          'lastState':     lastState,
-         'lastStateDate': lastStateDate.toJSON(),
+         'lastStateDate': (lastStateDate instanceof Date ? lastStateDate.toJSON(): null),
          'callerNum':     callerNum,
          'callerName':    callerName,
          'agentsState':   agentsState,
