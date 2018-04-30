@@ -355,9 +355,7 @@ var Xuc = function() {
       my_xuc.loadLoginForm();
       my_xuc.destroyXivoSession();
       $("#xivo_agent_form").hide();
-      $("#xivo_agent_button")
-         .removeClass()
-         .addClass('fa fa-phone');
+      $("#xivo_agent_status").css('color', 'transparent');
       logged = false;
    };
 
