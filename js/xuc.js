@@ -96,6 +96,14 @@ var Xuc = function() {
             .on("click", "#xuc_hold", function(e) {
                e.preventDefault();
                my_xuc.hold();
+            })
+            .on("click", "#xuc_dial", function(e) {
+               e.preventDefault();
+               my_xuc.dial();
+            })
+            .on("click", "#xuc_transfer", function(e) {
+               e.preventDefault();
+               my_xuc.transfer();
             });
       }
    }
@@ -515,6 +523,8 @@ var Xuc = function() {
       $("#xivo_agent_form").show();
       $("#xuc_call_titles div").hide();
       $("#xuc_ringing_title").show();
+      $("#xuc_call_actions .auto_actions").show();
+      my_xuc.enableTransferAction();
       $("#xivo_agent_button").addClass('ringing');
 
       $.ajax({
@@ -545,8 +555,9 @@ var Xuc = function() {
    my_xuc.commEstablished = function() {
       $("#xuc_call_titles div").hide();
       $("#xuc_oncall_title").show();
-      // $("#xuc_hold").show();
+      $("#xuc_call_actions .auto_actions").show();
       $("#xivo_agent_button").removeClass('ringing');
+      my_xuc.enableTransferAction();
       this.displayCallerInformation();
 
       if (redirectTo !== false) {
@@ -561,11 +572,27 @@ var Xuc = function() {
       $("#xivo_agent_form").hide();
       $("#xuc_hold").hide();
       $("#xuc_call_informations").hide();
+      $("#xuc_call_actions .auto_actions").hide();
       $("#xivo_agent_button").removeClass('ringing');
+      my_xuc.enableDialAction();
       callerNum = null;
       callerName = 'null';
       $("#xuc_caller_num").html('');
       $("#xuc_caller_numname").html('');
+   };
+
+   my_xuc.enableTransferAction = function() {
+      $("#dial_phone_num_label").hide();
+      $("#xuc_dial").hide();
+      $("#transfer_phone_num_label").css('display', 'block');
+      $("#xuc_transfer").show();
+   };
+
+   my_xuc.enableDialAction = function() {
+      $("#dial_phone_num_label").css('display', 'block');
+      $("#xuc_dial").show();
+      $("#transfer_phone_num_label").hide();
+      $("#xuc_transfer").hide();
    };
 
    /**
@@ -607,6 +634,16 @@ var Xuc = function() {
     */
    my_xuc.hold = function() {
       xc_webrtc.answer();
+   };
+
+   my_xuc.dial = function() {
+      var num = $("#compose_phone_num").val();
+      Cti.dial(num);
+   };
+
+   my_xuc.transfer = function() {
+      var num = $("#compose_phone_num").val();
+      Cti.directTransfer(num);
    };
 
    /**

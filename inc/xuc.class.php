@@ -71,11 +71,34 @@ class PluginXivoXuc {
             <div><b>".__('Caller num:')."</b>&nbsp;<span id='xuc_caller_num'></span></div>
             <div id='xuc_caller_infos'></div>
          </div>
+      </div>
+      <div id='xuc_call_actions'>
          <h2>".__("Phone actions", 'xivo')."</h2>
          <div class='xuc_content'>
-            <i class='fa fa-phone-square fa-flip-horizontal' id='xuc_answer'></i>
-            <i class='fa fa-phone-square fa-rotate-90' id='xuc_hangup'></i>
-            <i class='fa fa-pause-circle' id='xuc_hold'></i>
+            <div class='auto_actions'>
+               <i class='fa fa-phone-square fa-flip-horizontal'
+                  id='xuc_answer'
+                  title='".__("Answer", 'xivo')."'></i>
+               <i class='fa fa-phone-square fa-rotate-90'
+                  id='xuc_hangup'
+                  title='".__("Hangup", 'xivo')."'></i>
+               <i class='fa fa-pause-circle'
+                  id='xuc_hold'
+                  title='".__("Hold", 'xivo')."'></i>
+            </div>
+            <div class='manual_actions'>
+               <label for='compose_phone_num'
+                      id='dial_phone_num_label'>".__("Dial number", 'xivo')."</label>
+               <label for='compose_phone_num'
+                      id='transfer_phone_num_label'>".__("Transfer to number", 'xivo')."</label>
+               <input type='text' id='compose_phone_num' />
+               <i class='fa fa-phone-square'
+                  id='xuc_dial'
+                  title='".__("Dial", 'xivo')."'></i>
+               <i class='fa fa-arrow-circle-right'
+                  id='xuc_transfer'
+                  title='".__("Transfer", 'xivo')."'></i>
+            </div>
          </div>
       </div>";
 

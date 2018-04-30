@@ -322,22 +322,58 @@
    margin-left: 10px;
 }
 
-#xuc_hangup {
-   color: #CB2F2F;
+#xuc_call_actions i.fa {
    font-size: 25px;
    cursor: pointer;
 }
 
+#xuc_call_actions i.fa:hover {
+   opacity: .8;
+}
+
+.auto_actions {
+   display: none;
+   margin-bottom: 5px;
+}
+
+#xuc_hangup {
+   color: #CB2F2F;
+}
+
 #xuc_hold {
    display: none; /* feature doesn't work in Cti*/
-   color: #ffa500;
-   font-size: 25px;
-   cursor: pointer;
 }
 
 #xuc_answer {
    display: none; /* feature doesn't work in Cti*/
    color: #4CA84C;
-   font-size: 25px;
-   cursor: pointer;
+}
+
+#xivo_agent_form #compose_phone_num {
+   display: inline-block;
+   float: left;
+}
+
+#xuc_call_actions .manual_actions i.fa {
+   font-size: 22px;
+   margin-top: -2px;
+   margin-left: 3px;
+   float: left;
+}
+
+#transfer_phone_num_label {
+   display: none;
+}
+
+#xuc_call_actions #xuc_dial {
+   color: #4CA84C;
+}
+
+#xivo_agent_form #transfer_phone_num_label {
+   display: none;
+}
+
+#xuc_call_actions #xuc_transfer {
+   color: #CB2F2F;
+   display: none;
 }
