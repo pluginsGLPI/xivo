@@ -19,6 +19,8 @@ class PluginXivoXuc {
          <input type='text' id='xuc_phoneNumber' size='6'>
 
          <input type='submit' class='submit' id='xuc_sign_in' value='".__("Connect")."'>
+
+         <div id='xuc_message'></div>
       </form>";
 
       return $out;

@@ -330,11 +330,21 @@ var Xuc = function() {
       password    = $("#xuc_password").val();
       phoneNumber = $("#xuc_phoneNumber").val();
 
-      $.when(my_xuc.loginOnXuc()).then(function(data) {
-         bearerToken = data.token;
-         my_xuc.saveXivoSession();
-         my_xuc.initConnection();
-      });
+      $("#xuc_message").html("");
+
+      $.when(my_xuc.loginOnXuc()).then(
+         function(data) { // doneFilter
+            bearerToken = data.token;
+            my_xuc.saveXivoSession();
+            my_xuc.initConnection();
+         },
+         function(data) { //failFilter
+            if (typeof data.responseJSON.message != "undefined") {
+               $("#xuc_message")
+                  .addClass('error')
+                  .html(data.responseJSON.message);
+            }
+         });
    };
 
    /**
