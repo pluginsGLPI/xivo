@@ -9,6 +9,8 @@ var Xuc = function() {
    var lastState       = null;
    var lastStateDate   = null;
 
+   var do_auto_open    = true;
+
    var logged          = false;
    var plugin_ajax_url = "";
 
@@ -560,8 +562,23 @@ var Xuc = function() {
       $("#xivo_agent_button").removeClass('ringing');
       my_xuc.enableTransferAction();
 
-      if (xivo_config.enable_auto_open) {
-         if (redirectTo !== false) {
+      if (xivo_config.enable_auto_open
+          && do_auto_open
+          && redirectTo !== false) {
+         if (xivo_config.auto_open_blank) {
+            var child = window.open(redirectTo, '_blank');
+
+            // stop auto_open in current instance to avoid multiple window opening
+            do_auto_open = false;
+
+            // monitor child closing event to re-start auto-open if needed
+            var child_timer = setInterval(function() {
+               if (child.closed) {
+                 clearInterval(child_timer);
+                 do_auto_open = true;
+               }
+            }, 1000);
+         } else {
             window.location = redirectTo;
          }
       }
