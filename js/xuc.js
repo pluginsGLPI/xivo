@@ -162,11 +162,10 @@ var Xuc = function() {
                }
             });
 
-            if (xivo_config.enable_auto_open) {
-               // intercept phones events and switch to adequate function
-               Cti.setHandler(Cti.MessageType.PHONEEVENT, my_xuc.phoneEvents);
-            }
+            // intercept phones events and switch to adequate function
+            Cti.setHandler(Cti.MessageType.PHONEEVENT, my_xuc.phoneEvents);
 
+            // enable status icon for known phone numbers
             if (xivo_config.enable_presence) {
                Cti.setHandler(Cti.MessageType.AGENTSTATEEVENT, my_xuc.agentStateEventHandler);
                Cti.getAgentStates();
@@ -342,7 +341,9 @@ var Xuc = function() {
 
       $.when(my_xuc.loginOnXuc()).then(
          function(data) { // doneFilter
-            bearerToken = data.token;
+            bearerToken   = data.token;
+            lastState     = null;
+            lastStateDate = null;
             my_xuc.saveXivoSession();
             my_xuc.initConnection();
          },
@@ -461,15 +462,6 @@ var Xuc = function() {
       });
    };
 
-   /**
-    * Launch on CTI a call with target_num parameter
-    * @param  String target_num the to call
-    */
-   my_xuc.dial = function(target_num) {
-      var variables = {};
-      Cti.dial(String(target_num), variables);
-   };
-
    my_xuc.restoreLastState = function() {
       var now = new Date;
       if (Math.abs(now.getTime() - lastStateDate.getTime()) > (60 *  60 * 1000)) {
@@ -501,12 +493,17 @@ var Xuc = function() {
       if (typeof event.lastStateDate == "undefined") {
          lastStateDate = new Date();
       }
+
+      console.log("Event: " + event.eventType);
       switch (event.eventType) {
          case "EventRinging":
             my_xuc.phoneRinging();
             break;
          case "EventReleased":
             my_xuc.commReleased();
+            break;
+         case "EventDialing":
+            my_xuc.commDialing();
             break;
          case "EventEstablished":
             my_xuc.commEstablished();
@@ -520,10 +517,7 @@ var Xuc = function() {
     * Callback triggered when phone is ringing
     */
    my_xuc.phoneRinging = function() {
-      $("#xivo_agent_form").show();
-      $("#xuc_call_titles div").hide();
-      $("#xuc_ringing_title").show();
-      $("#xuc_call_actions .auto_actions").show();
+      my_xuc.showDiv("#xuc_ringing_title");
       my_xuc.enableTransferAction();
       $("#xivo_agent_button").addClass('ringing');
 
@@ -550,18 +544,26 @@ var Xuc = function() {
    };
 
    /**
+    * Callback triggered when dialing number
+    */
+   my_xuc.commDialing = function() {
+      my_xuc.showDiv("#xuc_dialing_title");
+      $("#xuc_call_actions").hide();
+      my_xuc.displayCallerInformation();
+   };
+
+   /**
     * Callback triggered when a phone call etablished
     */
    my_xuc.commEstablished = function() {
-      $("#xuc_call_titles div").hide();
-      $("#xuc_oncall_title").show();
-      $("#xuc_call_actions .auto_actions").show();
+      my_xuc.showDiv("#xuc_oncall_title");
       $("#xivo_agent_button").removeClass('ringing');
       my_xuc.enableTransferAction();
-      this.displayCallerInformation();
 
-      if (redirectTo !== false) {
-         window.location = redirectTo;
+      if (xivo_config.enable_auto_open) {
+         if (redirectTo !== false) {
+            window.location = redirectTo;
+         }
       }
    };
 
@@ -579,19 +581,29 @@ var Xuc = function() {
       callerName = 'null';
       $("#xuc_caller_num").html('');
       $("#xuc_caller_numname").html('');
+      $("#dial_phone_num").val('');
+      $("#xuc_call_actions").show();
+   };
+
+   my_xuc.showDiv = function(titleToShow) {
+      $("#xivo_agent_form").show();
+      $("#xuc_call_titles div").hide();
+      $(titleToShow).show();
+      $("#auto_actions").show();
+      $("#xuc_call_actions").show();
    };
 
    my_xuc.enableTransferAction = function() {
-      $("#dial_phone_num_label").hide();
+      $("#dial_phone_num").hide();
       $("#xuc_dial").hide();
-      $("#transfer_phone_num_label").css('display', 'block');
+      $("#transfer_phone_num").show();
       $("#xuc_transfer").show();
    };
 
    my_xuc.enableDialAction = function() {
-      $("#dial_phone_num_label").css('display', 'block');
+      $("#dial_phone_num").show();
       $("#xuc_dial").show();
-      $("#transfer_phone_num_label").hide();
+      $("#transfer_phone_num").hide();
       $("#xuc_transfer").hide();
    };
 
@@ -605,7 +617,8 @@ var Xuc = function() {
       // display caller information (from glpi ajax request)
       var html = ''
       var data = callerGlpiInfos;
-      if (data.users.length == 1) {
+      if (data.length > 0
+          && data.users.length == 1) {
          var user = data.users[0];
          html = user.link;
       }
@@ -636,14 +649,28 @@ var Xuc = function() {
       xc_webrtc.answer();
    };
 
-   my_xuc.dial = function() {
-      var num = $("#compose_phone_num").val();
-      Cti.dial(num);
+   /**
+    * Launch on CTI a call with target_num parameter
+    * @param  String target_num the to call (if not set, we will get the val of #dial_phone_num)
+    */
+   my_xuc.dial = function(target_num) {
+      target_num = typeof target_num !== 'undefined'
+                     ? target_num
+                     : $("#dial_phone_num").val();
+      var variables = {};
+      Cti.dial(String(target_num), variables);
    };
 
-   my_xuc.transfer = function() {
-      var num = $("#compose_phone_num").val();
-      Cti.directTransfer(num);
+   /**
+    * Launch on CTI a transfer with target_num parameter
+    * @param  String target_num the to call (if not set, we will get the val of #transfer_phone_num)
+    */
+   my_xuc.transfer = function(target_num) {
+      target_num = typeof target_num !== 'undefined'
+                     ? target_num
+                     : $("#transfer_phone_num").val();
+      var variables = {};
+      Cti.directTransfer(String(target_num), variables);
    };
 
    /**

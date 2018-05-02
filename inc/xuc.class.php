@@ -66,17 +66,14 @@ class PluginXivoXuc {
          <h2 id='xuc_call_titles'>
             <div id='xuc_ringing_title'>".__("Incoming call", 'xivo')."</div>
             <div id='xuc_oncall_title'>".__("On call", 'xivo')."</div>
+            <div id='xuc_dialing_title'>".__("Dialing", 'xivo')."</div>
          </h2>
          <div class='xuc_content'>
             <div><b>".__('Caller num:')."</b>&nbsp;<span id='xuc_caller_num'></span></div>
             <div id='xuc_caller_infos'></div>
-         </div>
-      </div>
-      <div id='xuc_call_actions'>
-         <h2>".__("Phone actions", 'xivo')."</h2>
-         <div class='xuc_content'>
-            <div class='auto_actions'>
-               <i class='fa fa-phone-square fa-flip-horizontal'
+
+            <div id='auto_actions'>
+               <i class='fa fa-phone-square'
                   id='xuc_answer'
                   title='".__("Answer", 'xivo')."'></i>
                <i class='fa fa-phone-square fa-rotate-90'
@@ -86,12 +83,14 @@ class PluginXivoXuc {
                   id='xuc_hold'
                   title='".__("Hold", 'xivo')."'></i>
             </div>
+         </div>
+      </div>
+      <div id='xuc_call_actions'>
+         <h2>".__("Phone actions", 'xivo')."</h2>
+         <div class='xuc_content'>
             <div class='manual_actions'>
-               <label for='compose_phone_num'
-                      id='dial_phone_num_label'>".__("Dial number", 'xivo')."</label>
-               <label for='compose_phone_num'
-                      id='transfer_phone_num_label'>".__("Transfer to number", 'xivo')."</label>
-               <input type='text' id='compose_phone_num' />
+               <input type='text' class='input-inline' id='dial_phone_num' placeholder='".__("Dial number", 'xivo')."' />
+               <input type='text' class='input-inline' id='transfer_phone_num' placeholder='".__("Transfer to number", 'xivo')."' />
                <i class='fa fa-phone-square'
                   id='xuc_dial'
                   title='".__("Dial", 'xivo')."'></i>

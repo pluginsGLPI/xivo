@@ -322,16 +322,18 @@
    margin-left: 10px;
 }
 
-#xuc_call_actions i.fa {
-   font-size: 25px;
+#xuc_call_actions i.fa,
+#auto_actions i.fa {
+   font-size: 22px;
    cursor: pointer;
 }
 
-#xuc_call_actions i.fa:hover {
+#xuc_call_actions i.fa:hover,
+#auto_actions i.fa:hover {
    opacity: .8;
 }
 
-.auto_actions {
+#auto_actions {
    display: none;
    margin-bottom: 5px;
 }
@@ -349,27 +351,22 @@
    color: #4CA84C;
 }
 
-#xivo_agent_form #compose_phone_num {
+#xivo_agent_form .input-inline {
    display: inline-block;
    float: left;
 }
 
 #xuc_call_actions .manual_actions i.fa {
-   font-size: 22px;
    margin-top: -2px;
    margin-left: 3px;
    float: left;
-}
-
-#transfer_phone_num_label {
-   display: none;
 }
 
 #xuc_call_actions #xuc_dial {
    color: #4CA84C;
 }
 
-#xivo_agent_form #transfer_phone_num_label {
+#xivo_agent_form #transfer_phone_num {
    display: none;
 }
 
