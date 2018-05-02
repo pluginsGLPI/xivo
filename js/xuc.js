@@ -464,6 +464,9 @@ var Xuc = function() {
       });
    };
 
+   /**
+    * Restore last state of UI saved in local storage (after a redirection for example)
+    */
    my_xuc.restoreLastState = function() {
       var now = new Date;
       if (Math.abs(now.getTime() - lastStateDate.getTime()) > (60 *  60 * 1000)) {
@@ -519,48 +522,28 @@ var Xuc = function() {
     * Callback triggered when phone is ringing
     */
    my_xuc.phoneRinging = function() {
-      my_xuc.showDiv("#xuc_ringing_title");
+      my_xuc.showCallInformations("#xuc_ringing_title");
       my_xuc.enableTransferAction();
+      my_xuc.getCallerInformations();
       $("#xivo_agent_button").addClass('ringing');
-
-      $.ajax({
-         url: plugin_ajax_url,
-         method: "POST",
-         dataType: 'json',
-         data: {
-            'action': 'get_user_infos_by_phone',
-            'caller_num': callerNum
-         }
-      })
-      .done(function(data) {
-         callerGlpiInfos = data;
-         my_xuc.saveXivoSession();
-         my_xuc.displayCallerInformation();
-
-         if (data.redirect !== false) {
-            redirectTo = data.redirect
-         }
-
-         my_xuc.saveXivoSession();
-      })
    };
 
    /**
     * Callback triggered when dialing number
     */
    my_xuc.commDialing = function() {
-      my_xuc.showDiv("#xuc_dialing_title");
+      my_xuc.showCallInformations("#xuc_dialing_title");
       $("#xuc_call_actions").hide();
-      my_xuc.displayCallerInformation();
    };
 
    /**
     * Callback triggered when a phone call etablished
     */
    my_xuc.commEstablished = function() {
-      my_xuc.showDiv("#xuc_oncall_title");
+      my_xuc.showCallInformations("#xuc_oncall_title");
       $("#xivo_agent_button").removeClass('ringing');
       my_xuc.enableTransferAction();
+      my_xuc.getCallerInformations();
 
       if (xivo_config.enable_auto_open
           && do_auto_open
@@ -596,20 +579,29 @@ var Xuc = function() {
       my_xuc.enableDialAction();
       callerNum = null;
       callerName = 'null';
+      callerGlpiInfos = {};
       $("#xuc_caller_num").html('');
       $("#xuc_caller_numname").html('');
       $("#dial_phone_num").val('');
       $("#xuc_call_actions").show();
    };
 
-   my_xuc.showDiv = function(titleToShow) {
+   /**
+    * Show in GLPI UI the caller informations and also phone controls
+    * @param  String titleToShow title div selector to show
+    */
+   my_xuc.showCallInformations = function(titleToShow) {
       $("#xivo_agent_form").show();
       $("#xuc_call_titles div").hide();
       $(titleToShow).show();
       $("#auto_actions").show();
       $("#xuc_call_actions").show();
+      my_xuc.displayCallerInformations();
    };
 
+   /**
+    * Display transfer control (also hide dial control)
+    */
    my_xuc.enableTransferAction = function() {
       $("#dial_phone_num").hide();
       $("#xuc_dial").hide();
@@ -617,6 +609,9 @@ var Xuc = function() {
       $("#xuc_transfer").show();
    };
 
+   /**
+    * Display dial control (also hide transfer control)
+    */
    my_xuc.enableDialAction = function() {
       $("#dial_phone_num").show();
       $("#xuc_dial").show();
@@ -625,18 +620,44 @@ var Xuc = function() {
    };
 
    /**
-    * display caller inforamtion in GLPI UI
+    * triggers ajax query to retrieve caller informations by its phone number
     */
-   my_xuc.displayCallerInformation = function() {
+   my_xuc.getCallerInformations = function() {
+      $.ajax({
+         url: plugin_ajax_url,
+         method: "POST",
+         dataType: 'json',
+         data: {
+            'action': 'get_user_infos_by_phone',
+            'caller_num': callerNum
+         }
+      })
+      .done(function(data) {
+         callerGlpiInfos = data;
+         my_xuc.saveXivoSession();
+         my_xuc.displayCallerInformations();
+
+         if (data.redirect !== false) {
+            redirectTo = data.redirect
+         }
+
+         my_xuc.saveXivoSession();
+      });
+   };
+
+   /**
+    * display caller informations in GLPI UI
+    */
+   my_xuc.displayCallerInformations = function() {
       $("#xuc_call_informations").show();
       $("#xuc_caller_num").html(callerNum);
 
       // display caller information (from glpi ajax request)
       var html = ''
-      var data = callerGlpiInfos;
-      if (data.length > 0
-          && data.users.length == 1) {
-         var user = data.users[0];
+      if (typeof callerGlpiInfos == "object"
+          && 'users' in callerGlpiInfos
+          && callerGlpiInfos.users.length == 1) {
+         var user = callerGlpiInfos.users[0];
          html = user.link;
       }
 
