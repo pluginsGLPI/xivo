@@ -103,9 +103,21 @@ var Xuc = function() {
                e.preventDefault();
                my_xuc.dial();
             })
+            .on("keypress", "#dial_phone_num", function(e) {
+               if (e.which === 13) { //enter key
+                  e.preventDefault();
+                  my_xuc.dial();
+               }
+            })
             .on("click", "#xuc_transfer", function(e) {
                e.preventDefault();
                my_xuc.transfer();
+            })
+            .on("keypress", "#transfer_phone_num", function(e) {
+               if (e.which === 13) { //enter key
+                  e.preventDefault();
+                  my_xuc.transfer();
+               }
             });
       }
    }
