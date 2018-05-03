@@ -122,6 +122,15 @@ class PluginXivoConfig extends Config {
             'value' => $current_config['auto_open_blank'],
          ]
       ]);
+      echo self::showField([
+         'inputtype' => 'yesno',
+         'width' => '200px',
+         'label'     => __("Keep xuc session", 'xivo'),
+         'attrs'     => [
+            'name'  => 'xuc_local_store',
+            'value' => $current_config['xuc_local_store'],
+         ]
+      ]);
       echo "</div>"; // .inline_fields
       echo "<div class='inline_fields_clear'></div>";
 
@@ -477,6 +486,7 @@ class PluginXivoConfig extends Config {
          'enable_presence'   => 0,
          'enable_auto_open'  => 0,
          'auto_open_blank'   => 1,
+         'xuc_local_store'   => 1,
       ] as $key => $value) {
          if (!isset($current_config[$key])) {
             Config::setConfigurationValues('plugin:xivo', [$key => $value]);

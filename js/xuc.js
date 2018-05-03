@@ -264,7 +264,8 @@ var Xuc = function() {
    my_xuc.retrieveXivoSession = function() {
       var xivo_data = xivo_store.get('xivo');
 
-      if (typeof xivo_data == "object") {
+      if (xivo_data !== null
+          && typeof xivo_data == "object") {
          username      = ("username" in xivo_data      ? xivo_data.username : '');
          password      = ("password" in xivo_data      ? xivo_data.password : '');
          phoneNumber   = ("phoneNumber" in xivo_data   ? xivo_data.phoneNumber : '');

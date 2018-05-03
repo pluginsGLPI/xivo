@@ -21,6 +21,7 @@ var xivo_config = $xivoconfig;
 require.config({
    paths: {
       "xivo_plugin": '../plugins/xivo/js',
+      "store2": '../plugins/xivo/js/store2.min',
       "xuc_lib": xivo_config.xuc_url + '/xucassets/javascripts',
    },
    shim: {
@@ -48,8 +49,14 @@ $(function() {
       return false;
    }
 
-   require(["xivo_plugin/store.modern.min"], function(store) {
-      window.xivo_store = store;
+   require(['store2'], function(store) {
+      if (xivo_config.xuc_local_store) {
+         console.log("xivo plugin use local storage");
+         window.xivo_store = store.local;
+      } else {
+         console.log("xivo plugin use session storage");
+         window.xivo_store = store.session;
+      }
    });
 
    require(xuc_libs, function() {
