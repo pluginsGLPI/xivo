@@ -56,6 +56,9 @@ $(function() {
       } else {
          console.log("xivo plugin use session storage");
          window.xivo_store = store.session;
+
+         // load cross tab sessionStorage script
+         require(["xivo_plugin/sessionStorageTabs"]);
       }
    });
 
