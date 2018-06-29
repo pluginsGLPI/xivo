@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_XIVO_VERSION', '0.2.0');
+define('PLUGIN_XIVO_VERSION', '0.3.4');
 
 if (!defined("PLUGINXIVO_DIR")) {
    define("PLUGINXIVO_DIR", GLPI_ROOT . "/plugins/xivo");
@@ -54,23 +54,30 @@ function plugin_init_xivo() {
       return true;
    }
 
+   $xivoconfig = PluginXivoConfig::getConfig();
+
    // config page
    Plugin::registerClass('PluginXivoConfig', ['addtabon' => 'Config']);
    $PLUGIN_HOOKS['config_page']['xivo'] = 'front/config.form.php';
 
    // additional tabs
    Plugin::registerClass('PluginXivoPhone_Line',
-                         ['addtabon' => 'Phone']);
+                         ['addtabon' => ['Phone', 'Line']]);
 
    // add Line to GLPI types
    Plugin::registerClass('PluginXivoLine',
-                         ['linkuser_types' => 'Line',
-                          'contract_types' => 'Line',
-                          'document_types' => 'Line']);
+                         ['addtabon' => 'Line']);
 
    // css & js
-   $PLUGIN_HOOKS['add_css']['xivo'] = 'xivo.css';
-   $PLUGIN_HOOKS['add_javascript']['xivo'] = 'xivo.js';
+   $PLUGIN_HOOKS['add_css']['xivo'] = [
+      'css/animation.css',
+      'css/main.css'
+   ];
+   $PLUGIN_HOOKS['add_javascript']['xivo'] = [
+      'js/require.js',
+      'js/app.js.php',
+      'js/common.js',
+   ];
 
    // standard hooks
    $PLUGIN_HOOKS['item_purge']['xivo'] = [
@@ -80,12 +87,6 @@ function plugin_init_xivo() {
    // display autoinventory in phones
    $PLUGIN_HOOKS['autoinventory_information']['xivo'] = [
       'Phone' =>  ['PluginXivoPhone', 'displayAutoInventory'],
-   ];
-
-   // add menu hook
-   $PLUGIN_HOOKS['menu_toadd']['xivo'] = [
-      // insert into 'plugin menu'
-      'management' => 'PluginXivoLine'
    ];
 }
 
@@ -141,7 +142,7 @@ function plugin_xivo_check_config($verbose = false) {
    }
 
    if ($verbose) {
-      _e('Installed / not configured', 'xivo');
+      echo __('Installed / not configured', 'xivo');
    }
    return false;
 }
@@ -161,18 +162,4 @@ function plugin_xivo_recursive_remove_empty($haystack) {
    }
 
    return $haystack;
-}
-
-function xivoGetIdByField($itemtype = "", $field = "", $value = "") {
-   global $DB;
-
-   $query = "SELECT `id`
-             FROM `".$itemtype::getTable()."`
-             WHERE `$field` = '".addslashes($value)."'";
-   $result = $DB->query($query);
-
-   if ($DB->numrows($result) == 1) {
-      return $DB->result($result, 0, 'id');
-   }
-   return false;
 }

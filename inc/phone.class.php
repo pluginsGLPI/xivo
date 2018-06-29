@@ -1,4 +1,30 @@
 <?php
+/*
+ -------------------------------------------------------------------------
+ xivo plugin for GLPI
+ Copyright (C) 2017 by the xivo Development Team.
+
+ https://github.com/pluginsGLPI/xivo
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of xivo.
+
+ xivo is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ xivo is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with xivo. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ */
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -32,9 +58,9 @@ class PluginXivoPhone extends CommonDBTM {
       $contact_num      = '';
       if ($number_line) {
          $last_line   = end($device['lines']);
-         if (isset($last_line['caller_id_name'])) {
-            $contact     = $last_line['caller_id_name'];
-            $contact_num = $last_line['caller_id_num'];
+         if (isset($last_line['caller_name'])) {
+            $contact     = $last_line['caller_name'];
+            $contact_num = $last_line['caller_num'];
          }
       }
 
@@ -85,9 +111,10 @@ class PluginXivoPhone extends CommonDBTM {
          $phone->update($input);
 
          // add line in object table (to store xivo id)
-         $current_id = xivoGetIdByField(__CLASS__, 'xivo_id', $device['id']);
-         if ($current_id) {
-            $input_xivophone['id'] = $current_id;
+         if ($xivophone->getFromDBByCrit([
+            'xivo_id' => $device['id']
+         ])) {
+            $input_xivophone['id'] = $xivophone->getID();
             $xivophone->update($input_xivophone);
          } else {
             $input_xivophone['phones_id']   = $phones_id;
@@ -180,8 +207,8 @@ class PluginXivoPhone extends CommonDBTM {
       // import lines
       foreach ($device['lines'] as &$line) {
          // add or update assets
-         $plugin_xivo_lines_id         = PluginXivoLine::importSingle($line);
-         $line['plugin_xivo_lines_id'] = $plugin_xivo_lines_id;
+         $lines_id         = PluginXivoLine::importSingle($line);
+         $line['lines_id'] = $lines_id;
       }
 
       // import phone
@@ -243,11 +270,9 @@ class PluginXivoPhone extends CommonDBTM {
     */
    static function displayAutoInventory(Phone $phone) {
       $xivophone     = new self;
-      $xivophones_id = xivoGetIdByField(__CLASS__, 'phones_id', $phone->getID());
-      if ($xivophones_id) {
-         $xivophone->getFromDB($xivophones_id);
-         $form_url      = self::getFormURL();
-
+      if ($xivophone->getFromDBByCrit([
+         'phones_id' => $phone->getID()
+      ])) {
          echo "<h1 class='xivo_title'>".__('XIVO informations', 'xivo')."</h1>";
          echo "</td></tr>";
 
@@ -265,6 +290,7 @@ class PluginXivoPhone extends CommonDBTM {
 
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
+         $form_url = self::getFormURL();
          echo Html::link(__("Force synchronization"),
                          "$form_url?forcesync&xivo_id=".$xivophone->fields['xivo_id'],
                          ['class' => 'vsubmit']);
