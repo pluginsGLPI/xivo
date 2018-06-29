@@ -106,6 +106,16 @@ class PluginXivoConfig extends Config {
 
       echo self::showField([
          'inputtype' => 'yesno',
+         'width' => '80px',
+         'label'     => __("Callcenter features", 'xivo'),
+         'attrs'     => [
+            'name'  => 'enable_callcenter',
+            'value' => $current_config['enable_callcenter'],
+         ]
+      ]);
+
+      echo self::showField([
+         'inputtype' => 'yesno',
          'width' => '200px',
          'label'     => __("Auto-open user/ticket on call", 'xivo'),
          'attrs'     => [
@@ -485,6 +495,7 @@ class PluginXivoConfig extends Config {
          'enable_click2call' => 0,
          'enable_presence'   => 0,
          'enable_auto_open'  => 0,
+         'enable_callcenter' => 0,
          'auto_open_blank'   => 1,
          'xuc_local_store'   => 1,
       ] as $key => $value) {

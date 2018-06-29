@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_XIVO_VERSION', '0.3.3');
+define('PLUGIN_XIVO_VERSION', '0.3.4');
 
 if (!defined("PLUGINXIVO_DIR")) {
    define("PLUGINXIVO_DIR", GLPI_ROOT . "/plugins/xivo");
