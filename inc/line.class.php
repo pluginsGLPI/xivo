@@ -335,7 +335,6 @@ class PluginXivoLine extends CommonDBTM {
          $migration->dropField('glpi_plugin_xivo_lines', 'date_mod');
          $migration->addField('glpi_plugin_xivo_lines', 'lines_id', 'integer', ['after' => 'id']);
          $migration->changeField('glpi_plugin_xivo_lines', 'line_id', 'xivo_line_id', 'string');
-         $migration->addKey('glpi_plugin_xivo_lines', 'lines_id', 'lines_id', 'UNIQUE');
          $migration->migrationOneTable('glpi_plugin_xivo_lines');
 
          // migrate phone_lines
@@ -379,6 +378,9 @@ class PluginXivoLine extends CommonDBTM {
          }
 
          $migration->dropField('glpi_plugin_xivo_phones_lines', 'plugin_xivo_lines_id');
+
+         $migration->addKey('glpi_plugin_xivo_lines', 'lines_id', 'lines_id', 'UNIQUE');
+         $migration->migrationOneTable('glpi_plugin_xivo_lines');
       }
 
       return true;
