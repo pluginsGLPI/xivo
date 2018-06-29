@@ -26,11 +26,36 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include ("../../../inc/includes.php");
 
-Session::checkRight("phone", READ);
+header("Content-Type: text/html; charset=UTF-8");
+Html::header_nocache();
+Session::checkLoginUser();
 
-if (isset($_REQUEST["forcesync"])) {
-   PluginXivoPhone::forceSync($_REQUEST['xivo_id']);
-   Html::back();
+if (!isset($_REQUEST['action'])) {
+   exit;
+}
+
+$xuc = new PluginXivoXuc;
+switch ($_REQUEST['action']) {
+   case 'get_login_form':
+      echo $xuc->getLoginForm();
+      break;
+
+   case 'get_logged_form':
+      echo $xuc->getLoggedForm();
+      break;
+
+   case 'get_user_infos_by_phone':
+      $data = $xuc->getUserInfosByPhone($_REQUEST);
+      echo json_encode($data);
+      break;
+
+   case 'get_call_link':
+      $data = [];
+      if (isset($_REQUEST['id'])) {
+         $data = $xuc->getCallLink((int) $_REQUEST['id']);
+         echo json_encode($data);
+      }
+      break;
 }

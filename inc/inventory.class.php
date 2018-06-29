@@ -1,4 +1,30 @@
 <?php
+/*
+ -------------------------------------------------------------------------
+ xivo plugin for GLPI
+ Copyright (C) 2017 by the xivo Development Team.
+
+ https://github.com/pluginsGLPI/xivo
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of xivo.
+
+ xivo is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ xivo is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with xivo. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ */
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -38,14 +64,25 @@ class PluginXivoInventory extends CommonGLPI {
          return false;
       }
 
+      // check if import asset is enabled
+      if (!$xivoconfig['import_assets']) {
+         return true;
+      }
+
       // track execution time
       $time_start = microtime(true);
 
-      // retrieve devices
-      $devices = $apiclient->paginate('Devices');
+      // retrieve phones
+      $phones = [];
+      if ($xivoconfig['import_phones']) {
+         $phones = $apiclient->paginate('Devices');
+      }
 
       // retrieve lines
-      $lines = $apiclient->paginate('Lines');
+      $lines = [];
+      if ($xivoconfig['import_lines']) {
+         $lines = $apiclient->paginate('Lines');
+      }
 
       // retrieve users
       $users = $apiclient->paginate('Users');
@@ -68,9 +105,9 @@ class PluginXivoInventory extends CommonGLPI {
          }
 
          // add or update assets
-         $plugin_xivo_lines_id         = PluginXivoLine::importSingle($line);
-         $line['plugin_xivo_lines_id'] = $plugin_xivo_lines_id;
-         $totallines                  += (int) (bool) $plugin_xivo_lines_id;
+         $lines_id         = PluginXivoLine::importSingle($line);
+         $line['lines_id'] = $lines_id;
+         $totallines       += (int) (bool) $lines_id;
       }
 
       if ($totallines) {
@@ -80,34 +117,36 @@ class PluginXivoInventory extends CommonGLPI {
                                 $totallines));
       }
 
-      foreach ($devices as $index => &$device) {
-         // remove devices with missing mandatory informations
+      foreach ($phones as $index => &$phone) {
+         // remove phones with missing mandatory informations
          if (!$xivoconfig['import_empty_sn']
-             && empty($device['sn'])) {
-            unset($devices[$index]);
+             && empty($phone['sn'])) {
+            unset($phones[$index]);
             continue;
          }
          if (!$xivoconfig['import_empty_mac']
-             && empty($device['mac'])) {
-            unset($devices[$index]);
+             && empty($phone['mac'])) {
+            unset($phones[$index]);
             continue;
          }
          if (!$xivoconfig['import_notconfig']
-             && $device['status'] == self::NOT_CONFIGURED) {
-            unset($devices[$index]);
+             && $phone['status'] == self::NOT_CONFIGURED) {
+            unset($phones[$index]);
             continue;
          }
 
          // find possible lines for this device
-         $device['lines'] = [];
-         foreach ($lines as $line) {
-            if ($line['device_id'] == $device['id']) {
-               $device['lines'][] = $line;
+         $phone['lines'] = [];
+         if ($xivoconfig['import_phonelines']) {
+            foreach ($lines as $line) {
+               if ($line['device_id'] == $phone['id']) {
+                  $phone['lines'][] = $line;
+               }
             }
          }
 
          // add or update assets
-         $phones_id     = PluginXivoPhone::importSingle($device);
+         $phones_id     = PluginXivoPhone::importSingle($phone);
          $totaldevices += (int) (bool) $phones_id;
       }
 
