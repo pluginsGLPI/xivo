@@ -142,7 +142,7 @@ function plugin_xivo_check_config($verbose = false) {
    }
 
    if ($verbose) {
-      _e('Installed / not configured', 'xivo');
+      echo __('Installed / not configured', 'xivo');
    }
    return false;
 }

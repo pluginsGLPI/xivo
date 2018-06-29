@@ -1,4 +1,30 @@
 <?php
+/*
+ -------------------------------------------------------------------------
+ xivo plugin for GLPI
+ Copyright (C) 2017 by the xivo Development Team.
+
+ https://github.com/pluginsGLPI/xivo
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of xivo.
+
+ xivo is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ xivo is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with xivo. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ */
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -6,6 +32,7 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginXivoXuc {
    function getLoginForm() {
+      // prepare a form for js submitting
       $out = "<form id='xuc_login_form'>
          <h2>".__("Connect to XIVO", 'xivo')."</h2>
 
@@ -146,9 +173,14 @@ class PluginXivoXuc {
       $regex_num = $r_not_digit.implode($r_not_digit, str_split($caller_num)).$r_not_digit;
 
       // try to find user by its phone or mobile numbers
-      $iterator_users = $DB->request("SELECT id FROM glpi_users
-                                      WHERE phone  REGEXP '$regex_num'
-                                         OR mobile REGEXP '$regex_num'");
+      $iterator_users = $DB->request([
+         'SELECT' => ['id'],
+         'FROM'  => 'glpi_users',
+         'WHERE' => [
+            'phone'  => ['REGEXP', $regex_num],
+            'mobile' => ['REGEXP', $regex_num],
+         ]
+      ]);
       foreach ($iterator_users as $data_user) {
          $userdata = getUserName($data_user["id"], 2);
          $name     = "<b>".__("User found in GLPI:", 'xivo')."</b>".
@@ -169,12 +201,22 @@ class PluginXivoXuc {
       } elseif (count($data['users']) == 1) {
          $current_user     = current($data['users']);
          $users_id         = $current_user['id'];
-         $iterator_tickets = $DB->request("SELECT glpi_tickets.id, glpi_tickets.name, glpi_tickets.content
-                                           FROM glpi_tickets
-                                           INNER JOIN glpi_tickets_users
-                                             ON glpi_tickets_users.tickets_id = glpi_tickets.id
-                                             AND glpi_tickets_users.type = ".CommonITILActor::REQUESTER."
-                                           WHERE glpi_tickets.status < ".CommonITILObject::SOLVED);
+         $iterator_tickets = $DB->request([
+            'SELECT'     => ['glpi_tickets.id', 'glpi_tickets.name', 'glpi_tickets.content'],
+            'FROM'       => 'glpi_tickets',
+            'INNER JOIN' => [
+               'glpi_tickets_users' => [
+                  'FKEY' => [
+                     'glpi_tickets_users' => 'tickets_id',
+                     'glpi_tickets'       => 'id',
+                  ]
+               ]
+            ],
+            'WHERE'     => [
+               'glpi_tickets_users.type' => CommonITILActor::REQUESTER,
+               'glpi_tickets.status'     => ["<=", CommonITILObject::SOLVED],
+            ],
+         ]);
          $data['tickets'] = iterator_to_array($iterator_tickets);
          $nb_tickets = count($iterator_tickets);
 

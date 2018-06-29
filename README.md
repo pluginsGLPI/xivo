@@ -18,7 +18,7 @@ Please contact [Teclib'](http://www.teclib-group.com) by [mail](http://www.tecli
 
 ## Configuration
 
-This plugin was tested with a xivo version 16.12 and should working correctly for versions above 16.04.
+This plugin was tested with a xivo version 16.12 and should work correctly for versions above 16.04.
 Also not tested at all, but the plugin should also work with recent xivo forks.
 
 ### Inventory

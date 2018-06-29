@@ -1,4 +1,30 @@
 <?php
+/*
+ -------------------------------------------------------------------------
+ xivo plugin for GLPI
+ Copyright (C) 2017 by the xivo Development Team.
+
+ https://github.com/pluginsGLPI/xivo
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of xivo.
+
+ xivo is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ xivo is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with xivo. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ */
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -15,9 +41,11 @@ class PluginXivoLine extends CommonDBTM {
    function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
       switch ($item->getType()) {
          case "Line":
-            $nb = countElementsInTable(self::getTable(), "`lines_id` = ".$item->getID()
-            );
-            return self::createTabEntry(__("Xivo"));
+            $nb = 0;
+            if ($_SESSION['glpishow_count_on_tabs']) {
+               $nb = countElementsInTable(self::getTable(), "`lines_id` = ".$item->getID());
+            }
+            return self::createTabEntry(__("Xivo"), $nb);
       }
       return '';
    }
@@ -318,10 +346,14 @@ class PluginXivoLine extends CommonDBTM {
          $migration->migrationOneTable('glpi_plugin_xivo_phones_lines');
 
          // delete preference and logs
-         $DB->query("DELETE FROM `glpi_displaypreferences`
-                     WHERE `itemtype` = 'PluginXivoLine'");
-         $DB->query("DELETE FROM `glpi_logs`
-                     WHERE `itemtype` = 'PluginXivoLine'");
+         $displaypreference = new DisplayPreference;
+         $displaypreference->deleteByCriteria([
+            'itemtype' => 'PluginXivoLine',
+         ]);
+         $log = new Log;
+         $log->deleteByCriteria([
+            'itemtype' => 'PluginXivoLine',
+         ]);
 
          // migrate foreign key data
          foreach ($new_lines as $xivo_lines_id => $lines_id) {
