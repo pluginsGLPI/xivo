@@ -15,9 +15,9 @@ Here is the list of currently working/planned features:
 
 * [x] Phones inventory
 * [x] Lines inventory
-* [ ] Users presence
-* [ ] Auto-open tickets or users form
-* [ ] Click2call
+* [x] Users presence
+* [x] Auto-open tickets or users form
+* [x] Click2call
 * [ ] Call logs
 * [ ] Directory
 
@@ -29,9 +29,9 @@ Voici une list des fonctionnalités courantes / planifiées:
 
 * [x] Inventaire des téléphones
 * [x] Inventaire des lignes
-* [ ] Présence des utilisateurs
-* [ ] Auto ouverture des formulaires des tickets ou des utilisateurs
-* [ ] Appel sur clic
+* [x] Présence des utilisateurs
+* [x] Auto ouverture des formulaires des tickets ou des utilisateurs
+* [x] Appel sur clic
 * [ ] Historique des appels
 * [ ] Annuaire
 
@@ -47,6 +47,11 @@ Merci de contacter Teclib par mail (info@glpi-project.org) ou par téléphone (0
       <author>Alexandre Delaunay</author>
    </authors>
    <versions>
+      <version>
+         <num>0.3.4</num>
+         <compatibility>9.2</compatibility>
+         <compatibility>9.3</compatibility>
+      </version>
       <version>
          <num>0.2.0</num>
          <compatibility>9.2</compatibility>
