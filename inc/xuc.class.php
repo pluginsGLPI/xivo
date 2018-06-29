@@ -214,7 +214,7 @@ class PluginXivoXuc {
             ],
             'WHERE'     => [
                'glpi_tickets_users.type' => CommonITILActor::REQUESTER,
-               'glpi_tickets.status'     => ["<=", CommonITILObject::SOLVED],
+               'glpi_tickets.status'     => ["<", CommonITILObject::SOLVED],
             ],
          ]);
          $data['tickets'] = iterator_to_array($iterator_tickets);
