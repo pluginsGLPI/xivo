@@ -2,7 +2,7 @@
    <name>xivo</name>
    <key>xivo</key>
    <state>stable</state>
-   <logo>https://github.com/pluginsGLPI/xivo/raw/master/img/xivo.png</logo>
+   <logo>https://raw.githubusercontent.com/pluginsGLPI/xivo/master/xivo.png</logo>
    <description>
       <short>
          <en>Connector for GLPI with XIVO or WAZO</en>
