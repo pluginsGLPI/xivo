@@ -83,7 +83,7 @@ class PluginXivoPhone extends CommonDBTM {
       $input_xivophone = [
          'phones_id'         => $phones_id,
          'xivo_id'           => $device['id'],
-         'template'          => $device['template_id'],
+         'template'          => $device['template_id'] !== null ? $device['template_id'] : "",
          'date_mod'          => $_SESSION["glpi_currenttime"],
       ];
 
