@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_XIVO_VERSION', '0.3.4');
+define('PLUGIN_XIVO_VERSION', '0.3.5');
 
 if (!defined("PLUGINXIVO_DIR")) {
    define("PLUGINXIVO_DIR", GLPI_ROOT . "/plugins/xivo");
@@ -73,11 +73,14 @@ function plugin_init_xivo() {
       'css/animation.css',
       'css/main.css'
    ];
+
    $PLUGIN_HOOKS['add_javascript']['xivo'] = [
-      'js/require.js',
-      'js/app.js.php',
       'js/common.js',
    ];
+   if ($xivoconfig['enable_xuc']) {
+      $PLUGIN_HOOKS['add_javascript']['xivo'][] = 'js/require.js';
+      $PLUGIN_HOOKS['add_javascript']['xivo'][] = 'js/app.js.php';
+   }
 
    // standard hooks
    $PLUGIN_HOOKS['item_purge']['xivo'] = [
