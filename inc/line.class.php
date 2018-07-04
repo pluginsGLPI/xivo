@@ -193,7 +193,7 @@ class PluginXivoLine extends CommonDBTM {
       switch ($itemtype) {
          case "Phone":
             $options[$index] = [
-               'table'         => self::getTable(),
+               'table'         => "glpi_lines",
                'field'         => 'name',
                'name'          => __('Associated lines', 'xivo'),
                'datatype'      => 'itemlink',
