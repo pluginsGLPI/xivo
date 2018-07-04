@@ -48,6 +48,11 @@ Merci de contacter Teclib par mail (info@glpi-project.org) ou par téléphone (0
    </authors>
    <versions>
       <version>
+         <num>0.3.5</num>
+         <compatibility>9.2</compatibility>
+         <compatibility>9.3</compatibility>
+      </version>
+      <version>
          <num>0.3.4</num>
          <compatibility>9.2</compatibility>
          <compatibility>9.3</compatibility>
