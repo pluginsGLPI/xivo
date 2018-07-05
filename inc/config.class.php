@@ -79,7 +79,7 @@ class PluginXivoConfig extends Config {
          echo "<form name='form' action='".Toolbox::getItemTypeFormURL("Config")."' method='post'>";
       }
 
-      echo "<h1>".__("Configuration of XIVO integration")."</h1>";
+      echo "<h1>".__("Configuration of XIVO integration", 'xivo')."</h1>";
 
       echo "<h4>";
       echo self::showField([
