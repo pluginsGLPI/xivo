@@ -42,12 +42,12 @@ class PluginXivoPhone_Line extends CommonDBRelation {
       switch ($item->getType()) {
          case "Line":
             if ($_SESSION['glpishow_count_on_tabs']) {
-               $nb = countElementsInTable(self::getTable(), "lines_id = ".$item->getID());
+               $nb = countElementsInTable(self::getTable(), ['lines_id' => $item->getID()]);
             }
             return self::createTabEntry(Phone::getTypeName($nb), $nb);
          case "Phone":
             if ($_SESSION['glpishow_count_on_tabs']) {
-               $nb = countElementsInTable(self::getTable(), "phones_id = ".$item->getID());
+               $nb = countElementsInTable(self::getTable(), ['phones_id' => $item->getID()]);
             }
             return self::createTabEntry(PluginXivoLine::getTypeName($nb), $nb);
       }
