@@ -43,7 +43,7 @@ class PluginXivoLine extends CommonDBTM {
          case "Line":
             $nb = 0;
             if ($_SESSION['glpishow_count_on_tabs']) {
-               $nb = countElementsInTable(self::getTable(), "`lines_id` = ".$item->getID());
+               $nb = countElementsInTable(self::getTable(), ['lines_id' => $item->getID()]);
             }
             return self::createTabEntry(__("Xivo"), $nb);
       }
