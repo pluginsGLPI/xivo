@@ -38,7 +38,7 @@ class PluginXivoLine extends CommonDBTM {
       return _n("Line", "Lines", $nb, 'xivo');
    }
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       switch ($item->getType()) {
          case "Line":
             $nb = 0;
@@ -50,9 +50,7 @@ class PluginXivoLine extends CommonDBTM {
       return '';
    }
 
-   static function displayTabContentForItem(CommonGLPI $item,
-                                            $tabnum=1,
-                                            $withtemplate=0) {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       switch ($item->getType()) {
          case "Line":
             return self::showForLine($item, $withtemplate);

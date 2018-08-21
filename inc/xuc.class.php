@@ -198,7 +198,7 @@ class PluginXivoXuc {
       if (count($data['users']) > 1) {
          // mulitple user, no redirect and return a message
          $data['message'] = __("Multiple users found with this phone number", 'xivo');
-      } elseif (count($data['users']) == 1) {
+      } else if (count($data['users']) == 1) {
          $current_user     = current($data['users']);
          $users_id         = $current_user['id'];
          $iterator_tickets = $DB->request([
@@ -228,7 +228,7 @@ class PluginXivoXuc {
             // if we have one user with one ticket, redirect to ticket
             $ticket->getFromDB(current($data['tickets'])['id']);
             $data['redirect'] = $ticket->getLinkURL();
-         } elseif ($nb_tickets > 1) {
+         } else if ($nb_tickets > 1) {
             // if we have one user with multiple tickets, redirect to user (on Ticket tab)
             $data['redirect'] = $user->getLinkURL().'&forcetab=Ticket$1';
          } else {

@@ -401,7 +401,7 @@ var Xuc = function() {
             'login': username,
             'password': password
          }),
-         dataType: 'json'
+      dataType: 'json'
       });
    };
 
@@ -575,8 +575,8 @@ var Xuc = function() {
             // monitor child closing event to re-start auto-open if needed
             var child_timer = setInterval(function() {
                if (child.closed) {
-                 clearInterval(child_timer);
-                 do_auto_open = true;
+                  clearInterval(child_timer);
+                  do_auto_open = true;
                }
             }, 1000);
          } else {
