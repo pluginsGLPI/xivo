@@ -1,10 +1,13 @@
 {
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "require-dev": {
-        "glpi-project/tools": "^0.1.0"
+        "glpi-project/tools": "^0.1"
     },
     "require": {
         "guzzlehttp/guzzle": "^6.2"
+    },
+    "config": {
+        "platform": {
+            "php": "5.6"
+        }
     }
 }

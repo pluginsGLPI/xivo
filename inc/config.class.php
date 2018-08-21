@@ -32,7 +32,7 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginXivoConfig extends Config {
 
-   static function getTypeName($nb=0) {
+   static function getTypeName($nb = 0) {
       return __('Xivo', 'xivo');
    }
 
@@ -45,7 +45,7 @@ class PluginXivoConfig extends Config {
       return Config::getConfigurationValues('plugin:xivo');
    }
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       switch ($item->getType()) {
          case "Config":
             return self::createTabEntry(self::getTypeName());
@@ -53,9 +53,7 @@ class PluginXivoConfig extends Config {
       return '';
    }
 
-   static function displayTabContentForItem(CommonGLPI $item,
-                                            $tabnum=1,
-                                            $withtemplate=0) {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       switch ($item->getType()) {
          case "Config":
             return self::showForConfig($item, $withtemplate);
@@ -64,8 +62,7 @@ class PluginXivoConfig extends Config {
       return true;
    }
 
-   static function showForConfig(Config $config,
-                                     $withtemplate=0) {
+   static function showForConfig(Config $config, $withtemplate = 0) {
       global $CFG_GLPI;
 
       if (!self::canView()) {
@@ -289,7 +286,7 @@ class PluginXivoConfig extends Config {
       echo "</div>";
       echo "<div class='inline_fields_clear'></div>";
 
-       echo self::showField([
+      echo self::showField([
          'inputtype' => 'yesno',
          'label'     => __("Import lines", 'xivo'),
          'attrs'     => [

@@ -28,6 +28,11 @@
 
 define('PLUGIN_XIVO_VERSION', '0.3.5');
 
+// Minimal GLPI version, inclusive
+define('PLUGIN_XIVO_MIN_GLPI', '9.2');
+// Maximum GLPI version, exclusive
+define('PLUGIN_XIVO_MAX_GLPI', '9.4');
+
 if (!defined("PLUGINXIVO_DIR")) {
    define("PLUGINXIVO_DIR", GLPI_ROOT . "/plugins/xivo");
 }
@@ -101,6 +106,7 @@ function plugin_init_xivo() {
  * @return array
  */
 function plugin_version_xivo() {
+
    return [
       'name'           => 'xivo',
       'version'        => PLUGIN_XIVO_VERSION,
@@ -109,8 +115,8 @@ function plugin_version_xivo() {
       'homepage'       => '',
       'requirements'   => [
          'glpi' => [
-            'min' => '9.2',
-            'dev' => true
+            'min' => PLUGIN_XIVO_MIN_GLPI,
+            'max' => PLUGIN_XIVO_MAX_GLPI,
          ]
       ]
    ];
@@ -123,10 +129,23 @@ function plugin_version_xivo() {
  * @return boolean
  */
 function plugin_xivo_check_prerequisites() {
-   $version = rtrim(GLPI_VERSION, '-dev');
-   if (version_compare($version, '9.2', 'lt')) {
-      echo "This plugin requires GLPI 9.2";
-      return false;
+
+   //Version check is not done by core in GLPI < 9.2 but has to be delegated to core in GLPI >= 9.2.
+   if (!method_exists('Plugin', 'checkGlpiVersion')) {
+      $version = preg_replace('/^((\d+\.?)+).*$/', '$1', GLPI_VERSION);
+      $matchMinGlpiReq = version_compare($version, PLUGIN_XIVO_MIN_GLPI, '>=');
+      $matchMaxGlpiReq = version_compare($version, PLUGIN_XIVO_MAX_GLPI, '<');
+
+      if (!$matchMinGlpiReq || !$matchMaxGlpiReq) {
+         echo vsprintf(
+            'This plugin requires GLPI >= %1$s and < %2$s.',
+            [
+               PLUGIN_XIVO_MIN_GLPI,
+               PLUGIN_XIVO_MAX_GLPI,
+            ]
+         );
+         return false;
+      }
    }
 
    return true;

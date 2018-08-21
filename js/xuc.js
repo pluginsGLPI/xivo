@@ -203,17 +203,24 @@ var Xuc = function() {
             .append("<option data-color='"+item.color+"' value='"+item.name+"'>"+ item.longName + "</option>");
       });
 
-      // TODO: in 9.3, check if this declaration is still valid (select2 upgraded 4.0)
-      $("#xuc_user_status").select2({
-         'width': '180px',
-         'minimumResultsForSearch': -1,
-         'formatResult': function(status) {
-            var option = status.element;
-            var color = $(option).data('color');
+      var formatStatus = function (status) {
+         var option = status.element;
+         var color = $(option).data('color');
 
-            return "<i class='fa fa-circle' style='color: "+color+"'></i>&nbsp;"
-                   + status.text.toUpperCase();
-         },
+         var template = "<span>"
+            + "<i class='fa fa-circle' style='color: "+color+"'></i>&nbsp;"
+            + status.text.toUpperCase()
+            + "</span>";
+         return $(template);
+      };
+
+      $("#xuc_user_status").select2({
+         width: '180px',
+         minimumResultsForSearch: -1,
+         formatResult: formatStatus,
+         formatSelection: formatStatus,
+         templateResult: formatStatus,
+         templateSelection: formatStatus
       });
 
       // set cti event on change select
@@ -263,9 +270,7 @@ var Xuc = function() {
          .css('color', current_status.color);
 
       if (event.status !== null) {
-         //$("#xuc_user_status").val(current_status.name);
-         // TODO 9.3 moved to select2 version 4, the following line could be broken
-         $("#xuc_user_status").select2("val", current_status.name);
+         $("#xuc_user_status").val(current_status.name).trigger('change');
       }
    };
 
@@ -396,7 +401,7 @@ var Xuc = function() {
             'login': username,
             'password': password
          }),
-         dataType: 'json'
+      dataType: 'json'
       });
    };
 
@@ -570,8 +575,8 @@ var Xuc = function() {
             // monitor child closing event to re-start auto-open if needed
             var child_timer = setInterval(function() {
                if (child.closed) {
-                 clearInterval(child_timer);
-                 do_auto_open = true;
+                  clearInterval(child_timer);
+                  do_auto_open = true;
                }
             }, 1000);
          } else {
