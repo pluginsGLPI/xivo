@@ -5,10 +5,25 @@
    <logo>https://raw.githubusercontent.com/pluginsGLPI/xivo/master/xivo.png</logo>
    <description>
       <short>
+         <cs>Napojení GLPI na XIVO nebo WAZO</cs>
          <en>Connector for GLPI with XIVO or WAZO</en>
          <fr>Connecteur GLPI avec XIVO ou WAZO</fr>
       </short>
       <long>
+         <cs>Napojení GLPI na XIVO nebo WAZO
+
+Toto je seznam nyní dostupných/plánovaných funkcí:
+
+* [x] Inventorizace telefonů
+* [x] Inventarizace linek
+* [x] Přítomnost uživatelů
+* [x] Automatické otvírání požadavků nebo formulářů uživatele
+* [x] Zavolání kliknutím
+* [ ] Výpis hovorů
+* [ ] Adresář kontaktů
+
+Pokud byste stáli o přidání dalších, obraťte se na Teclib e-mailem (info@glpi-project.org) nebo telefonicky (+33 1 79 97 02 78).
+         </cs>
          <en>Connector for GLPI with XIVO or WAZO
 
 Here is the list of currently working/planned features:
@@ -68,12 +83,19 @@ Merci de contacter Teclib par mail (info@glpi-project.org) ou par téléphone (0
       </version>
    </versions>
    <langs>
+      <lang>cs_CZ</lang>
       <lang>en_GB</lang>
-      <lang>fr_FR</lang>
       <lang>es_AR</lang>
+      <lang>fr_FR</lang>
    </langs>
    <license>GPL V3+</license>
    <tags>
+      <cs>
+         <tag>Inventura</tag>
+         <tag>Import</tag>
+         <tag>Telefony</tag>
+         <tag>Linky</tag>
+      </cs>
       <en>
          <tag>Inventory</tag>
          <tag>Import</tag>
