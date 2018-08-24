@@ -152,7 +152,12 @@ var Xuc = function() {
          }
          Cti.clearHandlers();
 
-         var wsurl = xivo_config.xuc_url.replace(/https*:\/\//, 'ws://')
+         var protocol = "ws";
+         if (xivo_config.xuc_secure) {
+            protocol = "wss";
+         }
+
+         var wsurl = xivo_config.xuc_url.replace(/https*:\/\//, protocol+'://')
                         + "/xuc/api/2.0/cti?token="+bearerToken;
          Cti.WebSocket.init(wsurl, username, phoneNumber);
 

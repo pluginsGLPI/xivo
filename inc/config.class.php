@@ -104,6 +104,14 @@ class PluginXivoConfig extends Config {
             'placeholder'  => 'https://xup_ip:8090',
          ]
       ]);
+      echo self::showField([
+         'inputtype' => 'yesno',
+         'label'     => __("Secure connection to WebSocket", 'xivo'),
+         'attrs'     => [
+            'name'  => 'xuc_secure',
+            'value' => $current_config['xuc_secure'],
+         ]
+      ]);
 
       echo "<div class='xivo_config_block inline_fields sub_config'>";
       echo "<h5>".__("Features")."</h5>";
@@ -515,6 +523,7 @@ class PluginXivoConfig extends Config {
          'default_entity'    => 0,
          'enable_xuc'        => 0,
          'xuc_url'           => '',
+         'xuc_secure'        => 0,
          'enable_click2call' => 0,
          'enable_presence'   => 0,
          'enable_auto_open'  => 0,
