@@ -44,7 +44,7 @@ var Xuc = function() {
    my_xuc.init = function() {
       my_xuc.setAjaxUrl();
       my_xuc.retrieveXivoSession();
-      my_xuc.initAutoOpen();
+      my_xuc.initAgentForm();
 
       if (my_xuc.retrieveXivoSession() !== false) {
          $.when(my_xuc.checkTokenValidity())
@@ -59,67 +59,65 @@ var Xuc = function() {
       }
    };
 
-   my_xuc.initAutoOpen = function() {
-      if (xivo_config.enable_auto_open) {
-         $("#c_preference ul #preferences_link")
-            .after("<li id='xivo_agent'>\
-                     <a class='fa fa-phone' id='xivo_agent_button'></a>\
-                     <i class='fa fa-circle' id='xivo_agent_status'></i>\
-                     <div id='xivo_agent_form'>empty</div>\
-                   </li>");
+   my_xuc.initAgentForm = function() {
+      $("#c_preference ul #preferences_link")
+         .after("<li id='xivo_agent'>\
+                  <a class='fa fa-phone' id='xivo_agent_button'></a>\
+                  <i class='fa fa-circle' id='xivo_agent_status'></i>\
+                  <div id='xivo_agent_form'>empty</div>\
+                </li>");
 
-         $(document)
-            .on("click", "#xivo_agent_button", function() {
-               $("#xivo_agent_form").toggle();
-               if (!logged) {
-                  my_xuc.loadLoginForm();
-               }
-            })
-            .on("submit", "#xuc_login_form", function(e) {
-               e.preventDefault();
-               my_xuc.xucSignIn();
-            })
-            .on("click", "#xuc_sign_in", function(e) {
-               e.preventDefault();
-               my_xuc.xucSignIn();
-            })
-            .on("click", "#xuc_sign_out", function(e) {
-               e.preventDefault();
-               my_xuc.xucSignOut();
-            })
-            .on("click", "#xuc_hangup", function(e) {
-               e.preventDefault();
-               my_xuc.hangup();
-            })
-            .on("click", "#xuc_answer", function(e) {
-               e.preventDefault();
-               my_xuc.answer();
-            })
-            .on("click", "#xuc_hold", function(e) {
-               e.preventDefault();
-               my_xuc.hold();
-            })
-            .on("click", "#xuc_dial", function(e) {
+      $(document)
+         .on("click", "#xivo_agent_button", function() {
+            $("#xivo_agent_form").toggle();
+            if (!logged) {
+               my_xuc.loadLoginForm();
+            }
+         })
+         .on("submit", "#xuc_login_form", function(e) {
+            e.preventDefault();
+            my_xuc.xucSignIn();
+         })
+         .on("click", "#xuc_sign_in", function(e) {
+            e.preventDefault();
+            my_xuc.xucSignIn();
+         })
+         .on("click", "#xuc_sign_out", function(e) {
+            e.preventDefault();
+            my_xuc.xucSignOut();
+         })
+         .on("click", "#xuc_hangup", function(e) {
+            e.preventDefault();
+            my_xuc.hangup();
+         })
+         .on("click", "#xuc_answer", function(e) {
+            e.preventDefault();
+            my_xuc.answer();
+         })
+         .on("click", "#xuc_hold", function(e) {
+            e.preventDefault();
+            my_xuc.hold();
+         })
+         .on("click", "#xuc_dial", function(e) {
+            e.preventDefault();
+            my_xuc.dial();
+         })
+         .on("keypress", "#dial_phone_num", function(e) {
+            if (e.which === 13) { //enter key
                e.preventDefault();
                my_xuc.dial();
-            })
-            .on("keypress", "#dial_phone_num", function(e) {
-               if (e.which === 13) { //enter key
-                  e.preventDefault();
-                  my_xuc.dial();
-               }
-            })
-            .on("click", "#xuc_transfer", function(e) {
+            }
+         })
+         .on("click", "#xuc_transfer", function(e) {
+            e.preventDefault();
+            my_xuc.transfer();
+         })
+         .on("keypress", "#transfer_phone_num", function(e) {
+            if (e.which === 13) { //enter key
                e.preventDefault();
                my_xuc.transfer();
-            })
-            .on("keypress", "#transfer_phone_num", function(e) {
-               if (e.which === 13) { //enter key
-                  e.preventDefault();
-                  my_xuc.transfer();
-               }
-            });
-      }
+            }
+         });
    }
 
    my_xuc.setAjaxUrl = function() {
