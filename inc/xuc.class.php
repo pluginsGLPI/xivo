@@ -177,8 +177,10 @@ class PluginXivoXuc {
          'SELECT' => ['id'],
          'FROM'  => 'glpi_users',
          'WHERE' => [
-            'phone'  => ['REGEXP', $regex_num],
-            'mobile' => ['REGEXP', $regex_num],
+            'OR' => [
+               'phone'  => ['REGEXP', $regex_num],
+               'mobile' => ['REGEXP', $regex_num],
+            ]
          ]
       ]);
       foreach ($iterator_users as $data_user) {
