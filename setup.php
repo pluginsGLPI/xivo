@@ -83,7 +83,12 @@ function plugin_init_xivo() {
       'js/common.js',
    ];
    if ($xivoconfig['enable_xuc']) {
-      $PLUGIN_HOOKS['add_javascript']['xivo'][] = 'js/require.js';
+      $PLUGIN_HOOKS['add_javascript']['xivo'][] = 'js/xivo/callback.js';
+      $PLUGIN_HOOKS['add_javascript']['xivo'][] = 'js/xivo/membership.js';
+      $PLUGIN_HOOKS['add_javascript']['xivo'][] = 'js/xivo/cti.js';
+      $PLUGIN_HOOKS['add_javascript']['xivo'][] = 'js/store2.min.js';
+      $PLUGIN_HOOKS['add_javascript']['xivo'][] = 'js/sessionStorageTabs.js';
+      $PLUGIN_HOOKS['add_javascript']['xivo'][] = 'js/xuc.js';
       $PLUGIN_HOOKS['add_javascript']['xivo'][] = 'js/app.js.php';
    }
 
