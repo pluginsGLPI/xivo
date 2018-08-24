@@ -583,7 +583,10 @@ var Xuc = function() {
                }
             }, 1000);
          } else {
-            window.location = redirectTo;
+            // only if window is visible (curent tab of browser)
+            if (!document.hidden) {
+               window.location = redirectTo;
+            }
          }
       }
    };
