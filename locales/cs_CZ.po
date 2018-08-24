@@ -10,13 +10,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-24 15:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: alexandre delaunay <delaunay.alexandre@gmail.com>, 2017\n"
-"Language-Team: English (United States) (https://www.transifex.com/teclib/teams/28042/en_US/)\n"
+"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>, 2018\n"
+"Language-Team: Czech (Czech Republic) (https://www.transifex.com/teclib/teams/28042/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: en_US\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: cs_CZ\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #: inc/config.class.php:36
 msgid "Xivo"
@@ -108,103 +108,109 @@ msgstr ""
 
 #: inc/config.class.php:367
 msgid "Last Error"
-msgstr "Last Error"
+msgstr "Poslední chyba"
 
 #: inc/config.class.php:377
 msgid "Auth token"
-msgstr "Auth token"
+msgstr "Ověřovací token"
 
 #: inc/config.class.php:383
 msgid "ACL"
-msgstr "ACL"
+msgstr "ACL seznam"
 
 #: inc/inventory.class.php:39
 msgid "Import Xivo assets"
-msgstr "Import Xivo assets"
+msgstr "Importovat Xivo zařízení"
 
 #: inc/inventory.class.php:114
 #, php-format
 msgid "%1$d line imported"
 msgid_plural "%1$d lines imported"
-msgstr[0] "%1$d line imported"
-msgstr[1] "%1$d lines imported"
+msgstr[0] "%1$d linka importována"
+msgstr[1] "%1$d linky importovány"
+msgstr[2] "%1$d linek importováno"
+msgstr[3] "%1$d linky importovány"
 
 #: inc/inventory.class.php:154
 #, php-format
 msgid "%1$d phone imported"
 msgid_plural "%1$d phones imported"
-msgstr[0] "%1$d phone imported"
-msgstr[1] "%1$d phones imported"
+msgstr[0] "%1$d telefon importován"
+msgstr[1] "%1$d telefony importovány"
+msgstr[2] "%1$d telefonů importováno"
+msgstr[3] "%1$d telefony importovány "
 
 #: inc/line.class.php:38
 msgid "Line"
 msgid_plural "Lines"
-msgstr[0] "Line"
-msgstr[1] "Lines"
+msgstr[0] "Linka"
+msgstr[1] "Linky"
+msgstr[2] "Linek"
+msgstr[3] "Linky"
 
 #: inc/line.class.php:142 inc/line.class.php:216 inc/phone_line.class.php:266
 msgid "Protocol"
-msgstr "Protocol"
+msgstr "Protokol"
 
 #: inc/line.class.php:146 inc/line.class.php:264
 msgid "Xivo line_id"
-msgstr "Xivo line_id"
+msgstr "XIVO identifikátor linky"
 
 #: inc/line.class.php:153 inc/line.class.php:224
 msgid "Provisioning extension"
-msgstr "Provisioning extension"
+msgstr "Linka zajištění"
 
 #: inc/line.class.php:157 inc/line.class.php:232 inc/phone_line.class.php:269
 msgid "Provisioning code"
-msgstr "Provisioning code"
+msgstr "Kód zajištění"
 
 #: inc/line.class.php:164 inc/line.class.php:240
 msgid "Device slot"
-msgstr "Device slot"
+msgstr "Slot telefonu"
 
 #: inc/line.class.php:168 inc/line.class.php:248
 msgid "Position"
-msgstr "Position"
+msgstr "Pozice"
 
 #: inc/line.class.php:175 inc/line.class.php:256
 msgid "Registrar"
-msgstr "Registrar"
+msgstr "Registrátor"
 
 #: inc/line.class.php:196
 msgid "Associated lines"
-msgstr "Associated lines"
+msgstr "Přiřazené linky"
 
 #: inc/phone_line.class.php:111
 msgid "Add a phone"
-msgstr "Add a phone"
+msgstr "Přidat telefon"
 
 #: inc/phone_line.class.php:233
 msgid "Add a line"
-msgstr "Add a line"
+msgstr "Přidat linku"
 
 #: inc/phone_line.class.php:270
 msgid "Caller num"
-msgstr "Caller num"
+msgstr "Číslo volajícího"
 
 #: inc/phone_line.class.php:271
 msgid "Caller name"
-msgstr "Caller name"
+msgstr "Jméno volajícího"
 
 #: inc/phone.class.php:276
 msgid "XIVO informations"
-msgstr "XIVO informations"
+msgstr "Informace z XIVO"
 
 #: inc/phone.class.php:280
 msgid "Xivo ID"
-msgstr "Xivo ID"
+msgstr "XIVO identifikátor"
 
 #: inc/phone.class.php:282
 msgid "Template"
-msgstr "Template"
+msgstr "Šablona"
 
 #: inc/phone.class.php:287
 msgid "Last synchronisation"
-msgstr "Last synchronisation"
+msgstr "Minulá sychronizace"
 
 #: inc/apiclient.class.php:97
 msgid "REST API access"
@@ -212,23 +218,23 @@ msgstr ""
 
 #: inc/apiclient.class.php:99
 msgid "Get phone devices"
-msgstr "Get phone devices"
+msgstr "Získat telefonní zařízení"
 
 #: inc/apiclient.class.php:101
 msgid "Get single device"
-msgstr "Get single device"
+msgstr "Získat jedno zařízení"
 
 #: inc/apiclient.class.php:111
 msgid "Get lines"
-msgstr "Get lines"
+msgstr "Získat linky"
 
 #: inc/apiclient.class.php:113
 msgid "Get single line"
-msgstr "Get single line"
+msgstr "Získat jednu linku"
 
 #: inc/apiclient.class.php:119
 msgid "Get users"
-msgstr "Get users"
+msgstr "Získat uživatele"
 
 #: inc/xuc.class.php:37
 msgid "Connect to XIVO"
@@ -312,4 +318,4 @@ msgstr ""
 
 #: setup.php:174
 msgid "Installed / not configured"
-msgstr "Installed / not configured"
+msgstr "Nainstalováno/nenastaveno"
