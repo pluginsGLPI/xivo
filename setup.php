@@ -82,7 +82,9 @@ function plugin_init_xivo() {
    $PLUGIN_HOOKS['add_javascript']['xivo'] = [
       'js/common.js',
    ];
-   if ($xivoconfig['enable_xuc']) {
+   if ($xivoconfig['enable_xuc']
+       && (Session::getCurrentInterface() == "central"
+           || $xivoconfig['enable_xuc_selfservice'])) {
       $PLUGIN_HOOKS['add_javascript']['xivo'][] = 'js/xivo/callback.js';
       $PLUGIN_HOOKS['add_javascript']['xivo'][] = 'js/xivo/membership.js';
       $PLUGIN_HOOKS['add_javascript']['xivo'][] = 'js/xivo/cti.js';

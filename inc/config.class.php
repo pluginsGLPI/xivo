@@ -112,6 +112,14 @@ class PluginXivoConfig extends Config {
             'value' => $current_config['xuc_secure'],
          ]
       ]);
+      echo self::showField([
+         'inputtype' => 'yesno',
+         'label'     => __("Enable for Self-service users", 'xivo'),
+         'attrs'     => [
+            'name'      => 'enable_xuc_selfservice',
+            'value'     => $current_config['enable_xuc_selfservice'],
+         ]
+      ]);
 
       echo "<div class='xivo_config_block inline_fields sub_config'>";
       echo "<h5>".__("Features")."</h5>";
@@ -509,27 +517,28 @@ class PluginXivoConfig extends Config {
       // fill config table with default values if missing
       foreach ([
          // api access
-         'import_assets'     => 0,
-         'import_phones'     => 0,
-         'import_lines'      => 0,
-         'import_phonelines' => 0,
-         'api_url'           => '',
-         'api_username'      => '',
-         'api_password'      => '',
-         'api_ssl_check'     => 1,
-         'import_empty_sn'   => 0,
-         'import_empty_mac'  => 0,
-         'import_notconfig'  => 0,
-         'default_entity'    => 0,
-         'enable_xuc'        => 0,
-         'xuc_url'           => '',
-         'xuc_secure'        => 0,
-         'enable_click2call' => 0,
-         'enable_presence'   => 0,
-         'enable_auto_open'  => 0,
-         'enable_callcenter' => 0,
-         'auto_open_blank'   => 1,
-         'xuc_local_store'   => 1,
+         'import_assets'          => 0,
+         'import_phones'          => 0,
+         'import_lines'           => 0,
+         'import_phonelines'      => 0,
+         'api_url'                => '',
+         'api_username'           => '',
+         'api_password'           => '',
+         'api_ssl_check'          => 1,
+         'import_empty_sn'        => 0,
+         'import_empty_mac'       => 0,
+         'import_notconfig'       => 0,
+         'default_entity'         => 0,
+         'enable_xuc'             => 0,
+         'enable_xuc_selfservice' => 0,
+         'xuc_url'                => '',
+         'xuc_secure'             => 0,
+         'enable_click2call'      => 0,
+         'enable_presence'        => 0,
+         'enable_auto_open'       => 0,
+         'enable_callcenter'      => 0,
+         'auto_open_blank'        => 1,
+         'xuc_local_store'        => 1,
       ] as $key => $value) {
          if (!isset($current_config[$key])) {
             Config::setConfigurationValues('plugin:xivo', [$key => $value]);
