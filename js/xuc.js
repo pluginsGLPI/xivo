@@ -452,9 +452,19 @@ var Xuc = function() {
       });
 
       // event for callto icons
+      var clicked = false;
       $(document)
          .on("click", "#page .xivo_callto_link", function() {
-            my_xuc.dial($(this).data('phone'));
+            // only fire dial event if not already fired a short time ago
+            if (!clicked) {
+               my_xuc.dial($(this).data('phone'));
+               clicked = true;
+            }
+
+            // after a short time, indicate we can reclick on a callto link
+            setTimeout(function() {
+               clicked = false;
+            }, 3000);
          });
    };
 
