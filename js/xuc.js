@@ -693,6 +693,16 @@ var Xuc = function() {
     */
    my_xuc.hangup = function() {
       Cti.hangup();
+
+      // if gui still in call mode, reset stuff after a while
+      setTimeout(function() {
+         if ($("#xuc_hangup").length) {
+            my_xuc.commReleased();
+            lastState     = null;
+            lastStateDate = null;
+            my_xuc.saveXivoSession();
+         }
+      }, 250);
    };
 
    /**
