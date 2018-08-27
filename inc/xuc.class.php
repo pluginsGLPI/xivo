@@ -64,9 +64,9 @@ class PluginXivoXuc {
       $current_config = PluginXivoConfig::getConfig();
 
       $out = "<form id='xuc_logged_form'>
-         <h2>".
+         <h2>
+            <i id='xuc_sign_out' class='fa fa-power-off pointer'></i>".
             __("XIVO connected", 'xivo')."&nbsp;
-            <i id='xuc_sign_out' class='fa fa-power-off pointer'></i>
          </h2>
 
          <div id='xuc_user_info'>
