@@ -170,7 +170,7 @@ class PluginXivoXuc {
       }
 
       $r_not_digit = "[^0-9]*";
-      $regex_num = $r_not_digit.implode($r_not_digit, str_split($caller_num)).$r_not_digit;
+      $regex_num = "^".$r_not_digit.implode($r_not_digit, str_split($caller_num)).$r_not_digit."$";
 
       // try to find user by its phone or mobile numbers
       $iterator_users = $DB->request([
