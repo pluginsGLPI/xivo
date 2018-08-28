@@ -83,7 +83,7 @@ function plugin_init_xivo() {
       'js/common.js',
    ];
    if ($xivoconfig['enable_xuc']
-       && (Session::getCurrentInterface() == "central"
+       && ($_SESSION['glpiactiveprofile']['interface'] == "central"
            || $xivoconfig['enable_xuc_selfservice'])) {
       $PLUGIN_HOOKS['add_javascript']['xivo'][] = 'js/xivo/callback.js';
       $PLUGIN_HOOKS['add_javascript']['xivo'][] = 'js/xivo/membership.js';
