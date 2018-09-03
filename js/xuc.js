@@ -230,6 +230,10 @@ var Xuc = function() {
       // double event watching (one for glpi9.3 and select2 v4, second for glpi9.2 and select2 v3.5)
       $('#xuc_user_status').on('select2:select select2-selecting', function (e) {
          var optionSelected = $(this).find("option:selected").val();
+         // 9.2 compatibility
+         if ("val" in e) {
+            optionSelected = e.val;
+         }
          Cti.changeUserStatus(optionSelected);
       });
    };
