@@ -143,7 +143,8 @@ class PluginXivoConfig extends Config {
          ]
       ]);
 
-      echo self::showField([
+      // hide call center option not used anymore by xivo software (keep it btw)
+      /*echo self::showField([
          'inputtype' => 'yesno',
          'width' => '80px',
          'label'     => __("Callcenter features", 'xivo'),
@@ -151,7 +152,7 @@ class PluginXivoConfig extends Config {
             'name'  => 'enable_callcenter',
             'value' => $current_config['enable_callcenter'],
          ]
-      ]);
+      ]);*/
 
       echo self::showField([
          'inputtype' => 'yesno',

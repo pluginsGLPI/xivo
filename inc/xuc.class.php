@@ -76,12 +76,13 @@ class PluginXivoXuc {
             <div class='floating_text'>
                <div id='xuc_fullname'></div>
                <div id='xuc_statuses'>";
-      if ($current_config['enable_callcenter']) {
+      // not used anymore by xivo (avencall), keep it btw
+      /*if ($current_config['enable_callcenter']) {
          $out .= "<div>
                      <label for='xuc_user_status'>".__("User", 'xivo')."</label>
                      <select id='xuc_user_status'></select>
                   </div>";
-      }
+      }*/
       $out .= "   <div>
                      <label for='xuc_phone_status'>".__("Phone", 'xivo')."</label>
                      <input type='text' id='xuc_phone_status' readonly>
