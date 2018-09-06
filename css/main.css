@@ -121,6 +121,7 @@
    display: inline-block;
    margin-left: 2px;
    cursor: pointer;
+   color: #B6B6B6;
 }
 .xivo_callto_link:before {
    position: absolute;
@@ -129,7 +130,6 @@
    content: "\f098";
    font-family:'FontAwesome';
    font-size: 15px;
-   color: #9E9E9E;
    opacity: .8;
 }
 

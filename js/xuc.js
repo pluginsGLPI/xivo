@@ -166,7 +166,10 @@ var Xuc = function() {
          Cti.setHandler(Cti.MessageType.LOGGEDON, function() {
             $("#xivo_agent_form").hide();
 
+            // get list of status for users
             Cti.setHandler(Cti.MessageType.USERSTATUSES, my_xuc.setUserStatuses);
+
+            // callback for user's status change
             Cti.setHandler(Cti.MessageType.USERSTATUSUPDATE, my_xuc.userStatusUpdate);
             Cti.setHandler(Cti.MessageType.PHONESTATUSUPDATE, function(event) {
                if (event.status !== null) {
@@ -179,14 +182,27 @@ var Xuc = function() {
                }
             });
 
-            // intercept phones events and switch to adequate function
+            // intercept current user's phone events to swith status in panel
             Cti.setHandler(Cti.MessageType.PHONEEVENT, my_xuc.phoneEvents);
 
             // enable status icon for known phone numbers
             if (xivo_config.enable_presence) {
-               Cti.setHandler(Cti.MessageType.AGENTSTATEEVENT, my_xuc.agentStateEventHandler);
-               Cti.getAgentStates();
-               Cti.subscribeToAgentEvents();
+               // intercept agent event (Deprecated, but keep it)
+               //Cti.setHandler(Cti.MessageType.AGENTSTATEEVENT, my_xuc.agentStateEventHandler);
+               //Cti.getAgentStates();
+               //Cti.subscribeToAgentEvents();
+
+               // intercept phone events
+               Cti.setHandler(Cti.MessageType.PHONEHINTSTATUSEVENT, my_xuc.phoneHintsEvents);
+
+               // Intercept Directory result search to parse phones status
+               Cti.setHandler(Cti.MessageType.DIRECTORYRESULT, my_xuc.directoryResultHandler);
+
+               // force subscribing to events for all phones found in user directory
+               // by triggering an empty search
+               setTimeout(function() {
+                  Cti.directoryLookUp("");
+               }, 200);
             }
 
             // restore last state of ui (after a browser navigation for example)
@@ -251,6 +267,32 @@ var Xuc = function() {
                return (className.match (/\Agent\S+/g) || []).join(' ');
             })
             .addClass(agentState.name);
+      }
+   }
+
+   my_xuc.phoneHintsEvents = function(event) {
+      my_xuc.setPhonePresence(event.number, event.status);
+   }
+
+   my_xuc.directoryResultHandler = function(directory) {
+      if ("entries" in directory) {
+         $.each(directory.entries, function(index, entry) {
+            var phone_number = entry.entry[1];
+            my_xuc.setPhonePresence(phone_number, entry.status);
+         });
+      }
+   }
+
+   my_xuc.setPhonePresence = function(phone_num, phone_status) {
+      if (phone_status in Cti.PhoneStatusColors) {
+         var status_color = Cti.PhoneStatusColors[phone_status];
+         if (status_color == "#F2F2F2") {
+            status_color = "#B6B6B6";
+         }
+
+         $('.xivo_callto_link')
+            .filter('[data-phone="'+ phone_num +'"]')
+            .css('color', status_color);
       }
    }
 
@@ -454,6 +496,10 @@ var Xuc = function() {
       $.when.apply($, my_xuc.getUsers(users_id)).then(function() {
          xivo_store.set('users_cache', users_cache);
          my_xuc.appendCalltoIcons(elements);
+
+         // force subscribing to events for all phones found in user directory
+         // by triggering an empty search
+         Cti.directoryLookUp("");
       });
 
       // event for callto icons
@@ -535,7 +581,6 @@ var Xuc = function() {
          lastStateDate = new Date();
       }
 
-      console.log("Event: " + event.eventType);
       switch (event.eventType) {
          case "EventRinging":
             my_xuc.phoneRinging();
