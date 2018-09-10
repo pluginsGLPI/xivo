@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 15:03+0000\n"
+"POT-Creation-Date: 2018-09-10 10:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: polar147 <andrei_simoni@hotmail.com>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/teclib/teams/28042/pt_BR/)\n"
@@ -50,71 +50,67 @@ msgstr ""
 msgid "Presence"
 msgstr ""
 
-#: inc/config.class.php:149
-msgid "Callcenter features"
-msgstr ""
-
-#: inc/config.class.php:159
+#: inc/config.class.php:160
 msgid "Auto-open user/ticket on call"
 msgstr ""
 
-#: inc/config.class.php:168
+#: inc/config.class.php:169
 msgid "Auto-open in new window"
 msgstr ""
 
-#: inc/config.class.php:177
+#: inc/config.class.php:178
 msgid "Keep xuc session"
 msgstr ""
 
-#: inc/config.class.php:191
+#: inc/config.class.php:192
 msgid "Import assets into GLPI inventory"
 msgstr ""
 
-#: inc/config.class.php:207
+#: inc/config.class.php:208
 msgid "API REST url"
 msgstr ""
 
-#: inc/config.class.php:262
+#: inc/config.class.php:263
 msgid "Import phones"
 msgstr ""
 
-#: inc/config.class.php:274
+#: inc/config.class.php:275
 msgid "Also import phones with"
 msgstr ""
 
-#: inc/config.class.php:278
+#: inc/config.class.php:279
 msgid "empty serial"
 msgstr ""
 
-#: inc/config.class.php:287
+#: inc/config.class.php:288
 msgid "empty mac"
 msgstr ""
 
-#: inc/config.class.php:296
+#: inc/config.class.php:297
 msgid "'not_configured' state"
 msgstr ""
 
-#: inc/config.class.php:307
+#: inc/config.class.php:308
 msgid "Import lines"
 msgstr ""
 
-#: inc/config.class.php:321
+#: inc/config.class.php:322
 msgid "Import phones-lines relation"
 msgstr ""
 
-#: inc/config.class.php:346
+#: inc/config.class.php:347
 msgid "REST API status"
 msgstr ""
 
-#: inc/config.class.php:367
+#: inc/config.class.php:368
 msgid "Last Error"
 msgstr "Último erro"
 
-#: inc/config.class.php:377
+#: inc/config.class.php:378
 msgid "Auth token"
 msgstr "Token de autenticação"
 
-#: inc/config.class.php:383
+#: inc/config.class.php:384
 msgid "ACL"
 msgstr "ACL"
 
@@ -246,67 +242,63 @@ msgstr ""
 msgid "XIVO phone number"
 msgstr ""
 
-#: inc/xuc.class.php:68
+#: inc/xuc.class.php:69
 msgid "XIVO connected"
 msgstr ""
 
-#: inc/xuc.class.php:81
-msgid "User"
-msgstr ""
-
-#: inc/xuc.class.php:86
+#: inc/xuc.class.php:87
 msgid "Phone"
 msgstr ""
 
-#: inc/xuc.class.php:98
+#: inc/xuc.class.php:99
 msgid "Incoming call"
 msgstr ""
 
-#: inc/xuc.class.php:99
+#: inc/xuc.class.php:100
 msgid "On call"
 msgstr ""
 
-#: inc/xuc.class.php:100
+#: inc/xuc.class.php:101
 msgid "Dialing"
 msgstr ""
 
-#: inc/xuc.class.php:109
+#: inc/xuc.class.php:110
 msgid "Answer"
 msgstr ""
 
-#: inc/xuc.class.php:112
+#: inc/xuc.class.php:113
 msgid "Hangup"
 msgstr ""
 
-#: inc/xuc.class.php:115
+#: inc/xuc.class.php:116
 msgid "Hold"
 msgstr ""
 
-#: inc/xuc.class.php:120
+#: inc/xuc.class.php:121
 msgid "Phone actions"
 msgstr ""
 
-#: inc/xuc.class.php:123
+#: inc/xuc.class.php:124
 msgid "Dial number"
 msgstr ""
 
-#: inc/xuc.class.php:124
+#: inc/xuc.class.php:125
 msgid "Transfer to number"
 msgstr ""
 
-#: inc/xuc.class.php:127
+#: inc/xuc.class.php:128
 msgid "Dial"
 msgstr ""
 
-#: inc/xuc.class.php:130
+#: inc/xuc.class.php:131
 msgid "Transfer"
 msgstr ""
 
-#: inc/xuc.class.php:188
+#: inc/xuc.class.php:189
 msgid "User found in GLPI:"
 msgstr ""
 
-#: inc/xuc.class.php:202
+#: inc/xuc.class.php:203
 msgid "Multiple users found with this phone number"
 msgstr ""
 
