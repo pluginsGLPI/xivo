@@ -578,6 +578,10 @@ var Xuc = function() {
     * Restore last state of UI saved in local storage (after a redirection for example)
     */
    my_xuc.restoreLastState = function() {
+      if (lastStateDate === null) {
+         return false;
+      }
+
       var now = new Date;
       if (Math.abs(now.getTime() - lastStateDate.getTime()) > (60 *  60 * 1000)) {
          return false;
