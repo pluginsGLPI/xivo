@@ -515,7 +515,7 @@ var Xuc = function() {
             // after a short time, indicate we can reclick on a callto link
             setTimeout(function() {
                clicked = false;
-            }, 3000);
+            }, 5000);
          });
    };
 
