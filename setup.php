@@ -59,10 +59,11 @@ function plugin_init_xivo() {
    $plugin = new Plugin();
    if (!$plugin->isInstalled('xivo')
        || !$plugin->isActivated('xivo')
-       || !Session::getLoginUserID() ) {
+       || !Session::getLoginUserID()) {
       return true;
    }
 
+   //get plugin config
    $xivoconfig = PluginXivoConfig::getConfig();
 
    // config page

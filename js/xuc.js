@@ -16,6 +16,9 @@ var Xuc = function() {
 
    var userStatuses    = {};
 
+   var xivo_config     = {};
+   var xivo_store      = {};
+
    // possible states
    // * AgentLogin
    // * AgentReady
@@ -39,9 +42,28 @@ var Xuc = function() {
    var my_xuc = this;
 
    /**
-    * Init UI in GLPI
+    * Set storage var from xivo config
+    * @return {void
     */
-   my_xuc.init = function() {
+   my_xuc.detectStore = function() {
+      // load session storage
+      if (my_xuc.xivo_config.xuc_local_store) {
+         console.log("xivo plugin use local storage");
+         my_xuc.xivo_store = store.local;
+      } else {
+         console.log("xivo plugin use session storage");
+         my_xuc.xivo_store = store.session;
+      }
+   }
+
+   /**
+    * Init UI in GLPI
+    * @param  {Object} xivo_config the current xivo configuration
+    * @return {void}
+    */
+   my_xuc.init = function(xivo_config) {
+      my_xuc.xivo_config = xivo_config;
+      my_xuc.detectStore();
       my_xuc.setAjaxUrl();
       my_xuc.retrieveXivoSession();
       my_xuc.initAgentForm();
@@ -117,6 +139,11 @@ var Xuc = function() {
                e.preventDefault();
                my_xuc.transfer();
             }
+         })
+         .on("click", "#deconnexion", function(e) {
+            if (!my_xuc.xivo_config.xuc_local_store) {
+               my_xuc.destroyXivoSession();
+            }
          });
    }
 
@@ -131,7 +158,7 @@ var Xuc = function() {
    my_xuc.checkTokenValidity = function() {
       return $.ajax({
          type: "GET",
-         url: xivo_config.xuc_url + "/xuc/api/2.0/auth/check",
+         url: my_xuc.xivo_config.xuc_url + "/xuc/api/2.0/auth/check",
          dataType: 'json',
          beforeSend : function(xhr) {
             xhr.setRequestHeader('Authorization', 'Bearer ' + bearerToken);
@@ -151,11 +178,11 @@ var Xuc = function() {
          Cti.clearHandlers();
 
          var protocol = "ws";
-         if (xivo_config.xuc_secure) {
+         if (my_xuc.xivo_config.xuc_secure) {
             protocol = "wss";
          }
 
-         var wsurl = xivo_config.xuc_url.replace(/https*:\/\//, protocol+'://')
+         var wsurl = my_xuc.xivo_config.xuc_url.replace(/https*:\/\//, protocol+'://')
                         + "/xuc/api/2.0/cti?token="+bearerToken;
          Cti.WebSocket.init(wsurl, username, phoneNumber);
 
@@ -186,7 +213,7 @@ var Xuc = function() {
             Cti.setHandler(Cti.MessageType.PHONEEVENT, my_xuc.phoneEvents);
 
             // enable status icon for known phone numbers
-            if (xivo_config.enable_presence) {
+            if (my_xuc.xivo_config.enable_presence) {
                // intercept agent event (Deprecated, but keep it)
                //Cti.setHandler(Cti.MessageType.AGENTSTATEEVENT, my_xuc.agentStateEventHandler);
                //Cti.getAgentStates();
@@ -329,7 +356,7 @@ var Xuc = function() {
     * @return bool
     */
    my_xuc.retrieveXivoSession = function() {
-      var xivo_data = xivo_store.get('xivo');
+      var xivo_data = my_xuc.xivo_store.get('xivo');
 
       if (xivo_data !== null
           && typeof xivo_data == "object") {
@@ -353,7 +380,7 @@ var Xuc = function() {
     * Clear Xivo data in LocalStorage
     */
    my_xuc.destroyXivoSession = function() {
-      xivo_store.remove('xivo');
+      my_xuc.xivo_store.remove('xivo');
    };
 
    /**
@@ -371,7 +398,7 @@ var Xuc = function() {
          'callerName':    callerName,
          'agentsState':   agentsState,
       }
-      xivo_store.set('xivo', xivo_data);
+      my_xuc.xivo_store.set('xivo', xivo_data);
    };
 
    /**
@@ -443,9 +470,10 @@ var Xuc = function() {
     * @return Ajax Promise
     */
    my_xuc.loginOnXuc = function() {
+      console.log(my_xuc);
       return $.ajax({
          type: "POST",
-         url: xivo_config.xuc_url + "/xuc/api/2.0/auth/login",
+         url: my_xuc.xivo_config.xuc_url + "/xuc/api/2.0/auth/login",
          contentType: "application/json",
          data: JSON.stringify({
             'login': username,
@@ -463,7 +491,7 @@ var Xuc = function() {
       var elements = [],
           users_id = [];
 
-      users_cache = xivo_store.get('users_cache') || {};
+      users_cache = my_xuc.xivo_store.get('users_cache') || {};
 
       // found all dropdowns tooltips icons
       $("#page a[id^=comment_link_users_id]:not(.callto_link_added)").each(function(index) {
@@ -494,7 +522,7 @@ var Xuc = function() {
       // deferred ajax calls to retrieve users informations (phone, title, etc)
       // and when done, append 'callto:' links
       $.when.apply($, my_xuc.getUsers(users_id)).then(function() {
-         xivo_store.set('users_cache', users_cache);
+         my_xuc.xivo_store.set('users_cache', users_cache);
          my_xuc.appendCalltoIcons(elements);
 
          // force subscribing to events for all phones found in user directory
@@ -626,10 +654,10 @@ var Xuc = function() {
       my_xuc.enableTransferAction();
       my_xuc.getCallerInformations();
 
-      if (xivo_config.enable_auto_open
+      if (my_xuc.xivo_config.enable_auto_open
           && do_auto_open
           && redirectTo !== false) {
-         if (xivo_config.auto_open_blank) {
+         if (my_xuc.xivo_config.auto_open_blank) {
             var child = window.open(redirectTo, '_blank');
 
             // stop auto_open in current instance to avoid multiple window opening
