@@ -10,12 +10,21 @@ if (!$plugin->isInstalled("xivo")
    exit;
 }
 
+// retrieve plugin config
 $xivoconfig = json_encode(PluginXivoConfig::getConfig(), JSON_NUMERIC_CHECK);
+
+//check constants to disable builtin features
+$enable_presence = PLUGIN_XIVO_ENABLE_PRESENCE;
+$enable_callcenter = PLUGIN_XIVO_ENABLE_CALLCENTER;
 
 $JS = <<<JAVASCRIPT
 
 // pass php xivo config to javascript
 var xivo_config = $xivoconfig;
+
+// disable features from constants
+xivo_config.enable_presence &= $enable_presence;
+xivo_config.enable_callcenter &= $enable_callcenter;
 
 $(function() {
    // load session storage

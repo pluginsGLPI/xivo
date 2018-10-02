@@ -133,26 +133,29 @@ class PluginXivoConfig extends Config {
          ]
       ]);
 
-      echo self::showField([
-         'inputtype' => 'yesno',
-         'width' => '80px',
-         'label'     => __("Presence", 'xivo'),
-         'attrs'     => [
-            'name'  => 'enable_presence',
-            'value' => $current_config['enable_presence'],
-         ]
-      ]);
+      if (PLUGIN_XIVO_ENABLE_PRESENCE) {
+         echo self::showField([
+            'inputtype' => 'yesno',
+            'width' => '80px',
+            'label'     => __("Presence", 'xivo'),
+            'attrs'     => [
+               'name'  => 'enable_presence',
+               'value' => $current_config['enable_presence'],
+            ]
+         ]);
+      }
 
-      // hide call center option not used anymore by xivo software (keep it btw)
-      /*echo self::showField([
-         'inputtype' => 'yesno',
-         'width' => '80px',
-         'label'     => __("Callcenter features", 'xivo'),
-         'attrs'     => [
-            'name'  => 'enable_callcenter',
-            'value' => $current_config['enable_callcenter'],
-         ]
-      ]);*/
+      if (PLUGIN_XIVO_ENABLE_CALLCENTER) {
+         echo self::showField([
+            'inputtype' => 'yesno',
+            'width' => '80px',
+            'label'     => __("Callcenter features", 'xivo'),
+            'attrs'     => [
+               'name'  => 'enable_callcenter',
+               'value' => $current_config['enable_callcenter'],
+            ]
+         ]);
+      }
 
       echo self::showField([
          'inputtype' => 'yesno',
@@ -488,7 +491,7 @@ class PluginXivoConfig extends Config {
       if ($with_api) {
          $apiclient = new PluginXivoAPIClient;
          $apiclient->connect();
-         $statuses = $apiclient->status();
+         //$statuses = $apiclient->status();
          $valid_api = !in_array(false, $apiclient->status());
       }
 
