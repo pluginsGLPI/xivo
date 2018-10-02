@@ -26,7 +26,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_XIVO_VERSION', '0.3.8');
+define('PLUGIN_XIVO_VERSION', '0.3.9');
 
 // Minimal GLPI version, inclusive
 define('PLUGIN_XIVO_MIN_GLPI', '9.2');
