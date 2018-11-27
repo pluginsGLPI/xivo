@@ -308,10 +308,24 @@ class PluginXivoPhone_Line extends CommonDBRelation {
    }
 
    static function importAll($phone_lines = [], $phones_id = 0) {
+      global $DB;
+
       $my_phone_line = new self;
 
       // check existing relation for phone
-      $current_lines = $my_phone_line->find("`phones_id` = $phones_id");
+      $current_lines_iterator = $DB->request(
+         [
+            'FROM'  => self::getTable(),
+            'WHERE' => [
+               'phones_id' => $phones_id
+            ],
+         ]
+      );
+
+      $current_lines = [];
+      foreach ($current_lines_iterator as $current_line) {
+         $current_lines[$current_line['id']] = $current_line;
+      }
 
       // import all relations
       foreach ($phone_lines as $phone_line) {
