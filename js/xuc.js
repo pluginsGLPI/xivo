@@ -4,6 +4,7 @@ var Xuc = function() {
    var username        = '';
    var password        = '';
    var phoneNumber     = '';
+   var pageNumbers     = [];
    var bearerToken     = '';
    var callerGlpiInfos = {};
    var lastState       = null;
@@ -48,10 +49,10 @@ var Xuc = function() {
    my_xuc.detectStore = function() {
       // load session storage
       if (my_xuc.xivo_config.xuc_local_store) {
-         console.log("xivo plugin use local storage");
+         console.debug("xivo plugin use local storage");
          my_xuc.xivo_store = store.local;
       } else {
-         console.log("xivo plugin use session storage");
+         console.debug("xivo plugin use session storage");
          my_xuc.xivo_store = store.session;
       }
    }
@@ -214,22 +215,11 @@ var Xuc = function() {
 
             // enable status icon for known phone numbers
             if (my_xuc.xivo_config.enable_presence) {
-               // intercept agent event (Deprecated, but keep it)
-               //Cti.setHandler(Cti.MessageType.AGENTSTATEEVENT, my_xuc.agentStateEventHandler);
-               //Cti.getAgentStates();
-               //Cti.subscribeToAgentEvents();
-
+               console.debug("enable_presence");
                // intercept phone events
                Cti.setHandler(Cti.MessageType.PHONEHINTSTATUSEVENT, my_xuc.phoneHintsEvents);
 
-               // Intercept Directory result search to parse phones status
-               Cti.setHandler(Cti.MessageType.DIRECTORYRESULT, my_xuc.directoryResultHandler);
-
-               // force subscribing to events for all phones found in user directory
-               // by triggering an empty search
-               setTimeout(function() {
-                  Cti.directoryLookUp("");
-               }, 200);
+               Cti.subscribeToPhoneHints(pageNumbers);
             }
 
             // restore last state of ui (after a browser navigation for example)
@@ -284,7 +274,7 @@ var Xuc = function() {
    my_xuc.agentStateEventHandler = function(agentState) {
       var agent_num = agentState.phoneNb;
       if (agent_num.length) {
-         // console.log(agent_num, agentState.name);
+         console.debug(agent_num, agentState.name);
          agentsState[agent_num] = agentState.name;
          my_xuc.saveXivoSession();
          $('.xivo_callto_link')
@@ -470,7 +460,7 @@ var Xuc = function() {
     * @return Ajax Promise
     */
    my_xuc.loginOnXuc = function() {
-      console.log(my_xuc);
+      console.debug(my_xuc);
       return $.ajax({
          type: "POST",
          url: my_xuc.xivo_config.xuc_url + "/xuc/api/2.0/auth/login",
@@ -525,9 +515,10 @@ var Xuc = function() {
          my_xuc.xivo_store.set('users_cache', users_cache);
          my_xuc.appendCalltoIcons(elements);
 
-         // force subscribing to events for all phones found in user directory
-         // by triggering an empty search
-         Cti.directoryLookUp("");
+         // add phone numbers for phone hints subscribe
+         Object.keys(users_cache).map(function(user_id) {
+            pageNumbers.push(users_cache[user_id].phone);
+         });
       });
 
       // event for callto icons

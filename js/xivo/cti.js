@@ -346,6 +346,11 @@ var Cti = {
         var message = Cti.WebsocketMessageFactory.createMessageFromArgs(Cti.WebsocketMessageFactory.getUserCallHistoryCmd, args);
         this.sendCallback(message);
     },
+    getUserCallHistoryByDays: function(days) {
+        var args = {'days' : days};
+        var message = Cti.WebsocketMessageFactory.createMessageFromArgs(Cti.WebsocketMessageFactory.getUserCallHistoryByDaysCmd, args);
+        this.sendCallback(message);
+    },
     getQueueCallHistory: function(queue, size) {
         var args = {'queue': queue, 'size' : size};
         var message = Cti.WebsocketMessageFactory.createMessageFromArgs(Cti.WebsocketMessageFactory.getQueueCallHistoryCmd, args);
@@ -379,7 +384,26 @@ var Cti = {
     getCurrentCallsPhoneEvents: function() {
         var message = Cti.WebsocketMessageFactory.createGetCurrentCallsPhoneEvents();
         this.sendCallback(message);
-    }
+    },
+    sendDtmf: function(key) {
+        var args = {'key' : key};
+        var message = Cti.WebsocketMessageFactory.createMessageFromArgs(Cti.WebsocketMessageFactory.sendDtmf, args);
+        this.sendCallback(message);
+    },
+    sendFlashTextMessage: function(to, seq, message) {
+        var m = Cti.WebsocketMessageFactory.createFlashTextMessage(to, seq, message);
+        this.sendCallback(m);
+    },
+    subscribeToPhoneHints: function(phoneNumbers) {
+        var args = {'phoneNumbers' : phoneNumbers};
+        var message = Cti.WebsocketMessageFactory.createMessageFromArgs(Cti.WebsocketMessageFactory.subscribeToPhoneHints, args);
+        this.sendCallback(message);
+    },
+    unsubscribeFromAllPhoneHints: function() {
+        var message = Cti.WebsocketMessageFactory.createMessage(Cti.WebsocketMessageFactory.unsubscribeFromAllPhoneHints);
+        this.sendCallback(message);
+    },
+
 };
 Cti.ctiTopics = {};
 
@@ -414,6 +438,7 @@ Cti.MessageType = {
     CONFERENCEPARTICIPANTEVENT: "ConferenceParticipantEvent",
     CONFERENCECOMMANDERROR: "ConferenceCommandError",
     CALLHISTORY: "CallHistory",
+    CALLHISTORYBYDAYS: "CallHistoryByDays",
     CUSTOMERCALLHISTORY: "CustomerCallHistoryResponseWithId",
     FAVORITES: "Favorites",
     FAVORITEUPDATED: "FavoriteUpdated",
@@ -423,6 +448,8 @@ Cti.MessageType = {
     LINECONFIG: "LineConfig",
     AUTHENTICATIONTOKEN: "AuthenticationToken",
     RIGHTPROFILE: "RightProfile",
+    FLASHTEXTEVENT: "FlashTextEvent",
+    WEBRTCCMD: "WebRTCCmd"
 };
 
 Cti.PhoneStatus = {
@@ -505,6 +532,7 @@ Cti.WebsocketMessageFactory = {
     busyFwd: "busyFwd",
     getAgentCallHistoryCmd: "getAgentCallHistory",
     getUserCallHistoryCmd: "getUserCallHistory",
+    getUserCallHistoryByDaysCmd: "getUserCallHistoryByDays",
     getQueueCallHistoryCmd: "getQueueCallHistory",
     findCustomerCallHistoryCmd: "findCustomerCallHistory",
     setAgentGroupCmd: "setAgentGroup",
@@ -514,6 +542,25 @@ Cti.WebsocketMessageFactory = {
     removeFavoriteCmd: "removeFavorite",
     setDataCmd: "setData",
     getCurrentCallsPhoneEvents: "getCurrentCallsPhoneEvents",
+    flashTextBrowserRequest: "flashTextBrowserRequest",
+    sendDtmf: "sendDtmf",
+    subscribeToPhoneHints: "subscribeToPhoneHints",
+    unsubscribeFromAllPhoneHints: "unsubscribeFromAllPhoneHints",
+
+
+    createFlashTextRequest: function(requestType) {
+      var m = this.createMessage(this.flashTextBrowserRequest);
+      m.request = requestType;
+      return m;
+    },
+
+    createFlashTextMessage: function(to, seq, message) {
+      var m = this.createFlashTextRequest("FlashTextDirectMessage");
+      m.sequence = seq;
+      m.to = {"username": to};
+      m.message = message;
+      return m;
+    },
 
     createAgentLogin : function(agentPhoneNumber, agentid) {
         var message = this.createMessage(this.agentLoginCmd);
@@ -751,7 +798,7 @@ Cti.WebSocket = (function() {
     var heartbeat_msg = JSON.stringify(Cti.WebsocketMessageFactory.createPing());
 
 
-    setSocketHandlers = function(socket) {
+    var setSocketHandlers = function(socket) {
         socket.onopen = function() {
             socketState.status = "opened";
             Cti.Topic(Cti.MessageType.LINKSTATUSUPDATE).publish(socketState);
