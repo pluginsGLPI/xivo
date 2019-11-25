@@ -8,7 +8,7 @@ Here is the list of currently working/planned features:
 
 - [x] Phones inventory
 - [x] Lines inventory
-- [x] Users presence
+- [x] Users presence (since xivo deneb version)
 - [x] Auto-open tickets or users form
 - [x] Click2Call (requires xivo client to handle `callto:` links)
 - [ ] Call logs
@@ -18,8 +18,7 @@ Please contact [Teclib'](http://www.teclib-group.com) by [mail](http://www.tecli
 
 ## Configuration
 
-This plugin was tested with xivo versions [16.12, 2018.05.03] and should work correctly for versions above 16.04.
-Also not tested at all, but the plugin should also work with recent xivo forks.
+This plugin was tested with xivo versions [16.12, 2018.05.03, 2019.12.03] and should work correctly for versions above 16.04.
 
 ### Inventory
 
