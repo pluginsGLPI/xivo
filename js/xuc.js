@@ -481,10 +481,12 @@ var Xuc = function() {
       var elements = [],
           users_id = [];
 
+      console.debug("init click2Call");
+
       users_cache = my_xuc.xivo_store.get('users_cache') || {};
 
       // found all dropdowns tooltips icons
-      $("#page a[id^=comment_link_users_id]:not(.callto_link_added)").each(function(index) {
+      $("#page a[id^=comment_link_users_id]:not(.callto_link_added)").each(function() {
          var that    = $(this);
          var user_id = that.parent().children('input[type=hidden]').val();
 
@@ -496,7 +498,7 @@ var Xuc = function() {
       });
 
       // found all user links (like in ticket form page)
-      $("#page a[id^=tooltiplink]:not(.callto_link_added)").each(function(index) {
+      $("#page a[id^=tooltiplink]:not(.callto_link_added)").each(function() {
          var that    = $(this);
          var matches = that.attr('href').match(/user.form.php\?id=(\d+)/);
          if (matches !== null && matches.length > 1) {

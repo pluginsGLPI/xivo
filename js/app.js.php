@@ -28,7 +28,7 @@ xivo_config.enable_callcenter &= $enable_callcenter;
 
 $(function() {
    // call xuc integration
-   var xuc_obj = new Xuc();
+   xuc_obj = new Xuc();
    xuc_obj.init(xivo_config);
 
    // append 'callto:' links to domready events and also after tabs change
