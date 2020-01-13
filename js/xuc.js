@@ -219,6 +219,7 @@ var Xuc = function() {
                // intercept phone events
                Cti.setHandler(Cti.MessageType.PHONEHINTSTATUSEVENT, my_xuc.phoneHintsEvents);
 
+               console.debug("subscribe to these numbers", pageNumbers);
                Cti.subscribeToPhoneHints(pageNumbers);
             }
 
@@ -301,6 +302,7 @@ var Xuc = function() {
    }
 
    my_xuc.setPhonePresence = function(phone_num, phone_status) {
+      console.debug('receieve PHONEHINTSTATUSEVENT: ', phone_num, phone_status);
       if (phone_status in Cti.PhoneStatusColors) {
          var status_color = Cti.PhoneStatusColors[phone_status];
          if (status_color == "#F2F2F2") {
@@ -308,7 +310,7 @@ var Xuc = function() {
          }
 
          $('.xivo_callto_link')
-            .filter('[data-phone="'+ phone_num +'"]')
+            .filter('[data-phone="'+ phone_num +'"], [data-phone2="'+ phone_num +'"]')
             .css('color', status_color);
       }
    }
@@ -514,12 +516,18 @@ var Xuc = function() {
       // deferred ajax calls to retrieve users informations (phone, title, etc)
       // and when done, append 'callto:' links
       $.when.apply($, my_xuc.getUsers(users_id)).then(function() {
+         console.debug("users for this page retrieved:", users_cache);
+
          my_xuc.xivo_store.set('users_cache', users_cache);
          my_xuc.appendCalltoIcons(elements);
 
          // add phone numbers for phone hints subscribe
          Object.keys(users_cache).map(function(user_id) {
             pageNumbers.push(users_cache[user_id].phone);
+
+            if (users_cache[user_id].phone2 !== "") {
+               pageNumbers.push(users_cache[user_id].phone2);
+            }
          });
       });
 
@@ -561,6 +569,8 @@ var Xuc = function() {
                .addClass("callto_link_added")
                .after("<span"
                   + " data-phone='" + data.phone + "'"
+                  + " data-mobile='" + data.mobile + "'"
+                  + " data-phone2='" + data.phone2 + "'"
                   + " class='xivo_callto_link " + agentState + "'"
                   + " title='" + data.title+ "'></a>");
          }

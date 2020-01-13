@@ -138,13 +138,17 @@ class PluginXivoXuc {
    function getCallLink($users_id = 0) {
       $data = [
          'phone'          => null,
+         'phone2'         => null,
+         'mobile'         => null,
          'title'          => '',
       ];
       $user = new User;
       if ($user->getFromDB($users_id)) {
          if (!empty($user->fields['phone'])) {
-            $data['phone'] = $user->fields['phone'];
-            $data['title'] = sprintf(__("Call %s: %s"), $user->getName(), $user->fields['phone']);
+            $data['phone']  = $user->fields['phone'];
+            $data['phone2'] = $user->fields['phone2'];
+            $data['mobile'] = $user->fields['mobile'];
+            $data['title']  = sprintf(__("Call %s: %s"), $user->getName(), $user->fields['phone']);
          }
       }
 
