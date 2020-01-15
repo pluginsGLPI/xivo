@@ -523,9 +523,15 @@ var Xuc = function() {
 
          // add phone numbers for phone hints subscribe
          Object.keys(users_cache).map(function(user_id) {
-            pageNumbers.push(users_cache[user_id].phone);
+            if (users_cache[user_id].phone !== null
+                && users_cache[user_id].phone !== ""
+                && users_cache[user_id].phone !== undefined) {
+               pageNumbers.push(users_cache[user_id].phone);
+            }
 
-            if (users_cache[user_id].phone2 !== "") {
+            if (users_cache[user_id].phone2 !== null
+                 && users_cache[user_id].phone2 !== ""
+                 && users_cache[user_id].phone2 !== undefined) {
                pageNumbers.push(users_cache[user_id].phone2);
             }
          });
