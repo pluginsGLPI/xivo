@@ -51,6 +51,7 @@ Merci de contacter Teclib par mail (info@glpi-project.org) ou par téléphone (0
          <num>0.3.5</num>
          <compatibility>9.2</compatibility>
          <compatibility>9.3</compatibility>
+         <download_url>https://github.com/pluginsGLPI/xivo/releases/download/0.3.5/glpi-xivo-0.3.5.tar.bz2</download_url>
       </version>
       <version>
          <num>0.3.4</num>
