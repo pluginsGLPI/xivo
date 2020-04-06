@@ -149,7 +149,7 @@ var Xuc = function() {
    }
 
    my_xuc.setAjaxUrl = function() {
-      plugin_ajax_url = "../plugins/xivo/ajax/xuc.php";
+      plugin_ajax_url = CFG_GLPI.root_doc+"/"+GLPI_PLUGINS_PATH.mreporting+"/ajax/xuc.php";
    };
 
    /**

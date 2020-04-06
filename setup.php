@@ -26,10 +26,10 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_XIVO_VERSION', '0.4.3');
+define('PLUGIN_XIVO_VERSION', '1.0.0');
 
 // Minimal GLPI version, inclusive
-define('PLUGIN_XIVO_MIN_GLPI', '9.2');
+define('PLUGIN_XIVO_MIN_GLPI', '9.5');
 // Maximum GLPI version, exclusive
 define('PLUGIN_XIVO_MAX_GLPI', '9.6');
 
@@ -38,7 +38,7 @@ define('PLUGIN_XIVO_ENABLE_PRESENCE', '1');
 define('PLUGIN_XIVO_ENABLE_CALLCENTER', '0');
 
 if (!defined("PLUGINXIVO_DIR")) {
-   define("PLUGINXIVO_DIR", GLPI_ROOT . "/plugins/xivo");
+   define("PLUGINXIVO_DIR", __DIR__);
 }
 
 /**
@@ -133,54 +133,6 @@ function plugin_version_xivo() {
       ]
    ];
 }
-
-/**
- * Check pre-requisites before install
- * OPTIONNAL, but recommanded
- *
- * @return boolean
- */
-function plugin_xivo_check_prerequisites() {
-
-   //Version check is not done by core in GLPI < 9.2 but has to be delegated to core in GLPI >= 9.2.
-   if (!method_exists('Plugin', 'checkGlpiVersion')) {
-      $version = preg_replace('/^((\d+\.?)+).*$/', '$1', GLPI_VERSION);
-      $matchMinGlpiReq = version_compare($version, PLUGIN_XIVO_MIN_GLPI, '>=');
-      $matchMaxGlpiReq = version_compare($version, PLUGIN_XIVO_MAX_GLPI, '<');
-
-      if (!$matchMinGlpiReq || !$matchMaxGlpiReq) {
-         echo vsprintf(
-            'This plugin requires GLPI >= %1$s and < %2$s.',
-            [
-               PLUGIN_XIVO_MIN_GLPI,
-               PLUGIN_XIVO_MAX_GLPI,
-            ]
-         );
-         return false;
-      }
-   }
-
-   return true;
-}
-
-/**
- * Check configuration process
- *
- * @param boolean $verbose Whether to display message on failure. Defaults to false
- *
- * @return boolean
- */
-function plugin_xivo_check_config($verbose = false) {
-   if (true) { // Your configuration check
-      return true;
-   }
-
-   if ($verbose) {
-      echo __('Installed / not configured', 'xivo');
-   }
-   return false;
-}
-
 
 function plugin_xivo_recursive_remove_empty($haystack) {
    foreach ($haystack as $key => $value) {
