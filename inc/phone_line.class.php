@@ -96,7 +96,7 @@ class PluginXivoPhone_Line extends CommonDBRelation {
 
       $result    = $DB->query($query);
       if ($number = $DB->numrows($result)) {
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             $phones[$data['phones_id']] = $data;
             $used[$data['phones_id']]   = $data['phones_id'];
          }
@@ -218,7 +218,7 @@ class PluginXivoPhone_Line extends CommonDBRelation {
 
       $result    = $DB->query($query);
       if ($number = $DB->numrows($result)) {
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             $lines[$data['lines_id']] = $data;
             $used[$data['lines_id']]  = $data['lines_id'];
          }
