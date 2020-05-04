@@ -5,11 +5,11 @@
    <logo>https://raw.githubusercontent.com/pluginsGLPI/xivo/master/xivo.png</logo>
    <description>
       <short>
-         <en>Connector for GLPI with XIVO or WAZO</en>
-         <fr>Connecteur GLPI avec XIVO ou WAZO</fr>
+         <en>Connector for GLPI with XIVO</en>
+         <fr>Connecteur GLPI avec XIVO</fr>
       </short>
       <long>
-         <en>Connector for GLPI with XIVO or WAZO
+         <en>Connector for GLPI with XIVO
 
 Here is the list of currently working/planned features:
 
@@ -23,7 +23,7 @@ Here is the list of currently working/planned features:
 
 Please contact Teclib' by mail (info@glpi-project.org) or phone (+33 1 79 97 02 78) if you want informations for developing futures one.
          </en>
-         <fr>Connecteur GLPI avec XIVO ou WAZO
+         <fr>Connecteur GLPI avec XIVO
 
 Voici une list des fonctionnalités courantes / planifiées:
 
