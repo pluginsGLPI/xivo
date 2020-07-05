@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-12 11:23+0000\n"
+"POT-Creation-Date: 2020-07-05 11:50+0000\n"
 "PO-Revision-Date: 2017-04-03 14:32+0000\n"
 "Last-Translator: Rui Melo <viper5000pt@gmail.com>, 2019\n"
 "Language-Team: Portuguese (Portugal) (https://www.transifex.com/teclib/teams/28042/pt_PT/)\n"
@@ -20,6 +20,202 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_PT\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: front/phonecall.php:32
+msgid "Xivo plugin not activated"
+msgstr ""
+
+#: inc/phone.class.php:307
+msgid "XIVO informations"
+msgstr "Informaçoes Xivo"
+
+#: inc/phone.class.php:311
+msgid "Xivo ID"
+msgstr "ID Xivo"
+
+#: inc/phone.class.php:313
+msgid "Template"
+msgstr "Modelo"
+
+#: inc/phone.class.php:318
+msgid "Last synchronisation"
+msgstr "Última sincronização"
+
+#: inc/apiclient.class.php:97
+msgid "REST API access"
+msgstr "Acesso à API REST"
+
+#: inc/apiclient.class.php:99
+msgid "Get phone devices"
+msgstr "Listar aparelhos telefônicos"
+
+#: inc/apiclient.class.php:101
+msgid "Get single device"
+msgstr "Listar um único dispositivo"
+
+#: inc/apiclient.class.php:111
+msgid "Get lines"
+msgstr "Listar linhas"
+
+#: inc/apiclient.class.php:113
+msgid "Get single line"
+msgstr "Listar uma única linha telefônica"
+
+#: inc/apiclient.class.php:119
+msgid "Get users"
+msgstr "Listar usuários"
+
+#: inc/inventory.class.php:39
+msgid "Import Xivo assets"
+msgstr "Importar ativos Xivo"
+
+#: inc/inventory.class.php:114
+#, php-format
+msgid "%1$d line imported"
+msgid_plural "%1$d lines imported"
+msgstr[0] "%1$d linha importada"
+msgstr[1] "%1$d linhas importadas"
+
+#: inc/inventory.class.php:154
+#, php-format
+msgid "%1$d phone imported"
+msgid_plural "%1$d phones imported"
+msgstr[0] "%1$d telefone importado"
+msgstr[1] "%1$d telefones importados"
+
+#: inc/xuc.class.php:37
+msgid "Connect to XIVO"
+msgstr "Conetar a XIVO"
+
+#: inc/xuc.class.php:39
+msgid "XIVO username"
+msgstr "Nome de utilizador XIVO"
+
+#: inc/xuc.class.php:42
+msgid "XIVO password"
+msgstr "Senha XIVO"
+
+#: inc/xuc.class.php:45
+msgid "XIVO phone number"
+msgstr "Número de Telemóvel XIVO"
+
+#: inc/xuc.class.php:69
+msgid "XIVO connected"
+msgstr "Ligado a XIVO"
+
+#: inc/xuc.class.php:81
+msgid "User"
+msgstr ""
+
+#: inc/xuc.class.php:86
+msgid "Phone"
+msgstr "Telefone"
+
+#: inc/xuc.class.php:98
+msgid "Incoming call"
+msgstr "Chamada recebida"
+
+#: inc/xuc.class.php:99
+msgid "On call"
+msgstr "Em chamada"
+
+#: inc/xuc.class.php:100
+msgid "Dialing"
+msgstr "Marcando"
+
+#: inc/xuc.class.php:109
+msgid "Answer"
+msgstr "Resposta"
+
+#: inc/xuc.class.php:112
+msgid "Hangup"
+msgstr "Desligar"
+
+#: inc/xuc.class.php:115
+msgid "Hold"
+msgstr "Espera"
+
+#: inc/xuc.class.php:120
+msgid "Phone actions"
+msgstr "Ações por telefone"
+
+#: inc/xuc.class.php:123
+msgid "Dial number"
+msgstr "Introduza o número"
+
+#: inc/xuc.class.php:124
+msgid "Transfer to number"
+msgstr "Transferir para o número"
+
+#: inc/xuc.class.php:127
+msgid "Dial"
+msgstr "Marcar"
+
+#: inc/xuc.class.php:130
+msgid "Transfer"
+msgstr "Transferir"
+
+#: inc/xuc.class.php:192
+msgid "User found in GLPI:"
+msgstr "Utilizador encontrado em GLPI:"
+
+#: inc/xuc.class.php:206
+msgid "Multiple users found with this phone number"
+msgstr "Vários utilizadores encontrados com este número de telefone"
+
+#: inc/phone_line.class.php:111
+msgid "Add a phone"
+msgstr "Adicionar telefone"
+
+#: inc/phone_line.class.php:233
+msgid "Add a line"
+msgstr "Adicionar linha"
+
+#: inc/phone_line.class.php:266 inc/line.class.php:142 inc/line.class.php:216
+msgid "Protocol"
+msgstr "Protocolo"
+
+#: inc/phone_line.class.php:269 inc/line.class.php:157 inc/line.class.php:232
+msgid "Provisioning code"
+msgstr "Provisioning code"
+
+#: inc/phone_line.class.php:270
+msgid "Caller num"
+msgstr "Número de quem liga"
+
+#: inc/phone_line.class.php:271
+msgid "Caller name"
+msgstr "Nome de quem liga"
+
+#: inc/line.class.php:38
+msgid "Line"
+msgid_plural "Lines"
+msgstr[0] "Linha"
+msgstr[1] "Linhas"
+
+#: inc/line.class.php:146 inc/line.class.php:264
+msgid "Xivo line_id"
+msgstr "Xivo line_id"
+
+#: inc/line.class.php:153 inc/line.class.php:224
+msgid "Provisioning extension"
+msgstr "Provisioning extension"
+
+#: inc/line.class.php:164 inc/line.class.php:240
+msgid "Device slot"
+msgstr "Slot de dispositivo"
+
+#: inc/line.class.php:168 inc/line.class.php:248
+msgid "Position"
+msgstr "Posição"
+
+#: inc/line.class.php:175 inc/line.class.php:256
+msgid "Registrar"
+msgstr "Registar"
+
+#: inc/line.class.php:196
+msgid "Associated lines"
+msgstr "Linhas associadas"
 
 #: inc/config.class.php:36
 msgid "Xivo"
@@ -120,199 +316,3 @@ msgstr "Token de autenticação"
 #: inc/config.class.php:387
 msgid "ACL"
 msgstr "ACL"
-
-#: inc/inventory.class.php:39
-msgid "Import Xivo assets"
-msgstr "Importar ativos Xivo"
-
-#: inc/inventory.class.php:114
-#, php-format
-msgid "%1$d line imported"
-msgid_plural "%1$d lines imported"
-msgstr[0] "%1$d linha importada"
-msgstr[1] "%1$d linhas importadas"
-
-#: inc/inventory.class.php:154
-#, php-format
-msgid "%1$d phone imported"
-msgid_plural "%1$d phones imported"
-msgstr[0] "%1$d telefone importado"
-msgstr[1] "%1$d telefones importados"
-
-#: inc/line.class.php:38
-msgid "Line"
-msgid_plural "Lines"
-msgstr[0] "Linha"
-msgstr[1] "Linhas"
-
-#: inc/line.class.php:142 inc/line.class.php:216 inc/phone_line.class.php:266
-msgid "Protocol"
-msgstr "Protocolo"
-
-#: inc/line.class.php:146 inc/line.class.php:264
-msgid "Xivo line_id"
-msgstr "Xivo line_id"
-
-#: inc/line.class.php:153 inc/line.class.php:224
-msgid "Provisioning extension"
-msgstr "Provisioning extension"
-
-#: inc/line.class.php:157 inc/line.class.php:232 inc/phone_line.class.php:269
-msgid "Provisioning code"
-msgstr "Provisioning code"
-
-#: inc/line.class.php:164 inc/line.class.php:240
-msgid "Device slot"
-msgstr "Slot de dispositivo"
-
-#: inc/line.class.php:168 inc/line.class.php:248
-msgid "Position"
-msgstr "Posição"
-
-#: inc/line.class.php:175 inc/line.class.php:256
-msgid "Registrar"
-msgstr "Registar"
-
-#: inc/line.class.php:196
-msgid "Associated lines"
-msgstr "Linhas associadas"
-
-#: inc/phone_line.class.php:111
-msgid "Add a phone"
-msgstr "Adicionar telefone"
-
-#: inc/phone_line.class.php:233
-msgid "Add a line"
-msgstr "Adicionar linha"
-
-#: inc/phone_line.class.php:270
-msgid "Caller num"
-msgstr "Número de quem liga"
-
-#: inc/phone_line.class.php:271
-msgid "Caller name"
-msgstr "Nome de quem liga"
-
-#: inc/phone.class.php:307
-msgid "XIVO informations"
-msgstr "Informaçoes Xivo"
-
-#: inc/phone.class.php:311
-msgid "Xivo ID"
-msgstr "ID Xivo"
-
-#: inc/phone.class.php:313
-msgid "Template"
-msgstr "Modelo"
-
-#: inc/phone.class.php:318
-msgid "Last synchronisation"
-msgstr "Última sincronização"
-
-#: inc/apiclient.class.php:97
-msgid "REST API access"
-msgstr "Acesso à API REST"
-
-#: inc/apiclient.class.php:99
-msgid "Get phone devices"
-msgstr "Listar aparelhos telefônicos"
-
-#: inc/apiclient.class.php:101
-msgid "Get single device"
-msgstr "Listar um único dispositivo"
-
-#: inc/apiclient.class.php:111
-msgid "Get lines"
-msgstr "Listar linhas"
-
-#: inc/apiclient.class.php:113
-msgid "Get single line"
-msgstr "Listar uma única linha telefônica"
-
-#: inc/apiclient.class.php:119
-msgid "Get users"
-msgstr "Listar usuários"
-
-#: inc/xuc.class.php:37
-msgid "Connect to XIVO"
-msgstr "Conetar a XIVO"
-
-#: inc/xuc.class.php:39
-msgid "XIVO username"
-msgstr "Nome de utilizador XIVO"
-
-#: inc/xuc.class.php:42
-msgid "XIVO password"
-msgstr "Senha XIVO"
-
-#: inc/xuc.class.php:45
-msgid "XIVO phone number"
-msgstr "Número de Telemóvel XIVO"
-
-#: inc/xuc.class.php:69
-msgid "XIVO connected"
-msgstr "Ligado a XIVO"
-
-#: inc/xuc.class.php:81
-msgid "User"
-msgstr ""
-
-#: inc/xuc.class.php:86
-msgid "Phone"
-msgstr "Telefone"
-
-#: inc/xuc.class.php:98
-msgid "Incoming call"
-msgstr "Chamada recebida"
-
-#: inc/xuc.class.php:99
-msgid "On call"
-msgstr "Em chamada"
-
-#: inc/xuc.class.php:100
-msgid "Dialing"
-msgstr "Marcando"
-
-#: inc/xuc.class.php:109
-msgid "Answer"
-msgstr "Resposta"
-
-#: inc/xuc.class.php:112
-msgid "Hangup"
-msgstr "Desligar"
-
-#: inc/xuc.class.php:115
-msgid "Hold"
-msgstr "Espera"
-
-#: inc/xuc.class.php:120
-msgid "Phone actions"
-msgstr "Ações por telefone"
-
-#: inc/xuc.class.php:123
-msgid "Dial number"
-msgstr "Introduza o número"
-
-#: inc/xuc.class.php:124
-msgid "Transfer to number"
-msgstr "Transferir para o número"
-
-#: inc/xuc.class.php:127
-msgid "Dial"
-msgstr "Marcar"
-
-#: inc/xuc.class.php:130
-msgid "Transfer"
-msgstr "Transferir"
-
-#: inc/xuc.class.php:188
-msgid "User found in GLPI:"
-msgstr "Utilizador encontrado em GLPI:"
-
-#: inc/xuc.class.php:202
-msgid "Multiple users found with this phone number"
-msgstr "Vários utilizadores encontrados com este número de telefone"
-
-#: setup.php:179
-msgid "Installed / not configured"
-msgstr "Instalado / não configurado"
