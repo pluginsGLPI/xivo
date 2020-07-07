@@ -37,26 +37,24 @@ class PluginXivoPhone_Line extends CommonDBRelation {
    static public $itemtype_2 = 'Line';
    static public $items_id_2 = 'lines_id';
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       $nb = 0;
       switch ($item->getType()) {
          case "Line":
             if ($_SESSION['glpishow_count_on_tabs']) {
-               $nb = countElementsInTable(self::getTable(), "lines_id = ".$item->getID());
+               $nb = countElementsInTable(self::getTable(), ['lines_id' => $item->getID()]);
             }
             return self::createTabEntry(Phone::getTypeName($nb), $nb);
          case "Phone":
             if ($_SESSION['glpishow_count_on_tabs']) {
-               $nb = countElementsInTable(self::getTable(), "phones_id = ".$item->getID());
+               $nb = countElementsInTable(self::getTable(), ['phones_id' => $item->getID()]);
             }
             return self::createTabEntry(PluginXivoLine::getTypeName($nb), $nb);
       }
       return '';
    }
 
-   static function displayTabContentForItem(CommonGLPI $item,
-                                            $tabnum=1,
-                                            $withtemplate=0) {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       switch ($item->getType()) {
          case "Line":
             return self::showForLine($item, $withtemplate);
@@ -67,7 +65,7 @@ class PluginXivoPhone_Line extends CommonDBRelation {
       return true;
    }
 
-   static function showForLine(Line $line, $withtemplate=0) {
+   static function showForLine(Line $line, $withtemplate = 0) {
       global $DB;
 
       $lines_id = $line->fields['id'];
@@ -98,7 +96,7 @@ class PluginXivoPhone_Line extends CommonDBRelation {
 
       $result    = $DB->query($query);
       if ($number = $DB->numrows($result)) {
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             $phones[$data['phones_id']] = $data;
             $used[$data['phones_id']]   = $data['phones_id'];
          }
@@ -128,8 +126,8 @@ class PluginXivoPhone_Line extends CommonDBRelation {
       echo "<div class='spaced'>";
       if ($canedit && $number) {
          Html::openMassiveActionsForm('mass'.__CLASS__.$rand);
-         $massiveactionparams = array('num_displayed' => $number,
-                                      'container'     => 'mass'.__CLASS__.$rand);
+         $massiveactionparams = ['num_displayed' => $number,
+                                 'container'     => 'mass'.__CLASS__.$rand];
          Html::showMassiveActions($massiveactionparams);
       }
       echo "<table class='tab_cadre_fixe'>";
@@ -151,7 +149,7 @@ class PluginXivoPhone_Line extends CommonDBRelation {
       $header_end .= "</tr>";
       echo $header_begin.$header_top.$header_end;
 
-      $used = array();
+      $used = [];
       foreach ($phones as $data) {
          echo "<tr class='tab_bg_1'>";
          if ($canedit) {
@@ -188,7 +186,7 @@ class PluginXivoPhone_Line extends CommonDBRelation {
       echo "</div>";
    }
 
-   static function showForPhone(Phone $phone, $withtemplate=0) {
+   static function showForPhone(Phone $phone, $withtemplate = 0) {
       global $DB;
 
       $phones_id = $phone->fields['id'];
@@ -220,7 +218,7 @@ class PluginXivoPhone_Line extends CommonDBRelation {
 
       $result    = $DB->query($query);
       if ($number = $DB->numrows($result)) {
-         while ($data = $DB->fetch_assoc($result)) {
+         while ($data = $DB->fetchAssoc($result)) {
             $lines[$data['lines_id']] = $data;
             $used[$data['lines_id']]  = $data['lines_id'];
          }
@@ -250,8 +248,8 @@ class PluginXivoPhone_Line extends CommonDBRelation {
       echo "<div class='spaced'>";
       if ($canedit && $number) {
          Html::openMassiveActionsForm('mass'.__CLASS__.$rand);
-         $massiveactionparams = array('num_displayed' => $number,
-                                      'container'     => 'mass'.__CLASS__.$rand);
+         $massiveactionparams = ['num_displayed' => $number,
+                                 'container'     => 'mass'.__CLASS__.$rand];
          Html::showMassiveActions($massiveactionparams);
       }
       echo "<table class='tab_cadre_fixe'>";
@@ -274,7 +272,7 @@ class PluginXivoPhone_Line extends CommonDBRelation {
       $header_end .= "</tr>";
       echo $header_begin.$header_top.$header_end;
 
-      $used = array();
+      $used = [];
       foreach ($lines as $data) {
          echo "<tr class='tab_bg_1'>";
          if ($canedit) {
@@ -310,10 +308,24 @@ class PluginXivoPhone_Line extends CommonDBRelation {
    }
 
    static function importAll($phone_lines = [], $phones_id = 0) {
+      global $DB;
+
       $my_phone_line = new self;
 
       // check existing relation for phone
-      $current_lines = $my_phone_line->find("`phones_id` = $phones_id");
+      $current_lines_iterator = $DB->request(
+         [
+            'FROM'  => self::getTable(),
+            'WHERE' => [
+               'phones_id' => $phones_id
+            ],
+         ]
+      );
+
+      $current_lines = [];
+      foreach ($current_lines_iterator as $current_line) {
+         $current_lines[$current_line['id']] = $current_line;
+      }
 
       // import all relations
       foreach ($phone_lines as $phone_line) {
@@ -380,7 +392,7 @@ class PluginXivoPhone_Line extends CommonDBRelation {
                   `lines_id` INT(11) NOT NULL DEFAULT 0,
                   PRIMARY KEY                 (`id`),
                   UNIQUE INDEX `unicity` (`phones_id`, `lines_id`)
-               ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+               ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
             $DB->query($query) or die ($DB->error());
       }
 

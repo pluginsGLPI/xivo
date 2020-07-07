@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-04 09:36+0200\n"
+"POT-Creation-Date: 2020-07-05 11:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,178 +18,298 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: setup.php:142
-msgid "Installed / not configured"
+#: front/phonecall.php:32
+msgid "Xivo plugin not activated"
 msgstr ""
 
-#: inc/line.class.php:12
-msgid "Line"
-msgid_plural "Lines"
-msgstr[0] ""
-msgstr[1] ""
-
-#: inc/line.class.php:78 inc/line.class.php:170 inc/phone_line.class.php:237
-msgid "Protocol"
+#: inc/phone.class.php:307
+msgid "XIVO informations"
 msgstr ""
 
-#: inc/line.class.php:85 inc/line.class.php:177
-msgid "Provisioning extension"
+#: inc/phone.class.php:311
+msgid "Xivo ID"
 msgstr ""
 
-#: inc/line.class.php:89 inc/line.class.php:184 inc/phone_line.class.php:240
-msgid "Provisioning code"
+#: inc/phone.class.php:313
+msgid "Template"
 msgstr ""
 
-#: inc/line.class.php:96 inc/line.class.php:191
-msgid "Device slot"
+#: inc/phone.class.php:318
+msgid "Last synchronisation"
 msgstr ""
 
-#: inc/line.class.php:100 inc/line.class.php:198
-msgid "Position"
+#: inc/apiclient.class.php:97
+msgid "REST API access"
 msgstr ""
 
-#: inc/line.class.php:107 inc/line.class.php:205 inc/phone_line.class.php:241
-msgid "Caller num"
-msgstr ""
-
-#: inc/line.class.php:121 inc/line.class.php:212 inc/phone_line.class.php:242
-msgid "Caller name"
-msgstr ""
-
-#: inc/line.class.php:135 inc/line.class.php:227
-msgid "Registrar"
-msgstr ""
-
-#: inc/line.class.php:142 inc/line.class.php:234
-msgid "Xivo line_id"
-msgstr ""
-
-#: inc/line.class.php:241
-msgid "Associated phones"
-msgstr ""
-
-#: inc/line.class.php:297
-msgid "Associated lines"
-msgstr ""
-
-#: inc/phone_line.class.php:83
-msgid "Add a phone"
-msgstr ""
-
-#: inc/phone_line.class.php:204
-msgid "Add a line"
-msgstr ""
-
-#: inc/apiclient.class.php:71
-msgid "Api access"
-msgstr ""
-
-#: inc/apiclient.class.php:72
+#: inc/apiclient.class.php:99
 msgid "Get phone devices"
 msgstr ""
 
-#: inc/apiclient.class.php:74
+#: inc/apiclient.class.php:101
 msgid "Get single device"
 msgstr ""
 
-#: inc/apiclient.class.php:84
+#: inc/apiclient.class.php:111
 msgid "Get lines"
 msgstr ""
 
-#: inc/apiclient.class.php:86
+#: inc/apiclient.class.php:113
 msgid "Get single line"
 msgstr ""
 
-#: inc/apiclient.class.php:92
+#: inc/apiclient.class.php:119
 msgid "Get users"
 msgstr ""
 
-#: inc/config.class.php:10
-msgid "Xivo"
-msgstr ""
-
-#: inc/config.class.php:60
-msgid "Import phone devices"
-msgstr ""
-
-#: inc/config.class.php:74
-msgid "API url"
-msgstr ""
-
-#: inc/config.class.php:82
-msgid "API username"
-msgstr ""
-
-#: inc/config.class.php:91
-msgid "API password"
-msgstr ""
-
-#: inc/config.class.php:100
-msgid "API check SSL"
-msgstr ""
-
-#: inc/config.class.php:108
-msgid "Import devices with empty serial number"
-msgstr ""
-
-#: inc/config.class.php:116
-msgid "Import devices with empty mac"
-msgstr ""
-
-#: inc/config.class.php:124
-msgid "Import 'not_configured' devices"
-msgstr ""
-
-#: inc/config.class.php:133
-msgid "Default entity"
-msgstr ""
-
-#: inc/config.class.php:157
-msgid "API XIVO status"
-msgstr ""
-
-#: inc/config.class.php:178
-msgid "Last Error"
-msgstr ""
-
-#: inc/config.class.php:188
-msgid "Auth token"
-msgstr ""
-
-#: inc/config.class.php:194
-msgid "ACL"
-msgstr ""
-
-#: inc/inventory.class.php:13
+#: inc/inventory.class.php:39
 msgid "Import Xivo assets"
 msgstr ""
 
-#: inc/inventory.class.php:77
+#: inc/inventory.class.php:114
 #, php-format
 msgid "%1$d line imported"
 msgid_plural "%1$d lines imported"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/inventory.class.php:115
+#: inc/inventory.class.php:154
 #, php-format
 msgid "%1$d phone imported"
 msgid_plural "%1$d phones imported"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/phone.class.php:251
-msgid "XIVO informations"
+#: inc/xuc.class.php:37
+msgid "Connect to XIVO"
 msgstr ""
 
-#: inc/phone.class.php:255
-msgid "Xivo ID"
+#: inc/xuc.class.php:39
+msgid "XIVO username"
 msgstr ""
 
-#: inc/phone.class.php:257
-msgid "Template"
+#: inc/xuc.class.php:42
+msgid "XIVO password"
 msgstr ""
 
-#: inc/phone.class.php:262
-msgid "Last synchronisation"
+#: inc/xuc.class.php:45
+msgid "XIVO phone number"
+msgstr ""
+
+#: inc/xuc.class.php:69
+msgid "XIVO connected"
+msgstr ""
+
+#: inc/xuc.class.php:81
+msgid "User"
+msgstr ""
+
+#: inc/xuc.class.php:86
+msgid "Phone"
+msgstr ""
+
+#: inc/xuc.class.php:98
+msgid "Incoming call"
+msgstr ""
+
+#: inc/xuc.class.php:99
+msgid "On call"
+msgstr ""
+
+#: inc/xuc.class.php:100
+msgid "Dialing"
+msgstr ""
+
+#: inc/xuc.class.php:109
+msgid "Answer"
+msgstr ""
+
+#: inc/xuc.class.php:112
+msgid "Hangup"
+msgstr ""
+
+#: inc/xuc.class.php:115
+msgid "Hold"
+msgstr ""
+
+#: inc/xuc.class.php:120
+msgid "Phone actions"
+msgstr ""
+
+#: inc/xuc.class.php:123
+msgid "Dial number"
+msgstr ""
+
+#: inc/xuc.class.php:124
+msgid "Transfer to number"
+msgstr ""
+
+#: inc/xuc.class.php:127
+msgid "Dial"
+msgstr ""
+
+#: inc/xuc.class.php:130
+msgid "Transfer"
+msgstr ""
+
+#: inc/xuc.class.php:192
+msgid "User found in GLPI:"
+msgstr ""
+
+#: inc/xuc.class.php:206
+msgid "Multiple users found with this phone number"
+msgstr ""
+
+#: inc/phone_line.class.php:111
+msgid "Add a phone"
+msgstr ""
+
+#: inc/phone_line.class.php:233
+msgid "Add a line"
+msgstr ""
+
+#: inc/phone_line.class.php:266 inc/line.class.php:142 inc/line.class.php:216
+msgid "Protocol"
+msgstr ""
+
+#: inc/phone_line.class.php:269 inc/line.class.php:157 inc/line.class.php:232
+msgid "Provisioning code"
+msgstr ""
+
+#: inc/phone_line.class.php:270
+msgid "Caller num"
+msgstr ""
+
+#: inc/phone_line.class.php:271
+msgid "Caller name"
+msgstr ""
+
+#: inc/line.class.php:38
+msgid "Line"
+msgid_plural "Lines"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/line.class.php:146 inc/line.class.php:264
+msgid "Xivo line_id"
+msgstr ""
+
+#: inc/line.class.php:153 inc/line.class.php:224
+msgid "Provisioning extension"
+msgstr ""
+
+#: inc/line.class.php:164 inc/line.class.php:240
+msgid "Device slot"
+msgstr ""
+
+#: inc/line.class.php:168 inc/line.class.php:248
+msgid "Position"
+msgstr ""
+
+#: inc/line.class.php:175 inc/line.class.php:256
+msgid "Registrar"
+msgstr ""
+
+#: inc/line.class.php:196
+msgid "Associated lines"
+msgstr ""
+
+#: inc/config.class.php:36
+msgid "Xivo"
+msgstr ""
+
+#: inc/config.class.php:79
+msgid "Configuration of XIVO integration"
+msgstr ""
+
+#: inc/config.class.php:84
+msgid "XUC integration (click2call, presence, etc)"
+msgstr ""
+
+#: inc/config.class.php:100
+msgid "XUC url (with port)"
+msgstr ""
+
+#: inc/config.class.php:109
+msgid "Secure connection to WebSocket"
+msgstr ""
+
+#: inc/config.class.php:117
+msgid "Enable for Self-service users"
+msgstr ""
+
+#: inc/config.class.php:129
+msgid "Click2call"
+msgstr ""
+
+#: inc/config.class.php:140
+msgid "Presence"
+msgstr ""
+
+#: inc/config.class.php:152
+msgid "Callcenter features"
+msgstr ""
+
+#: inc/config.class.php:163
+msgid "Auto-open user/ticket on call"
+msgstr ""
+
+#: inc/config.class.php:172
+msgid "Auto-open in new window"
+msgstr ""
+
+#: inc/config.class.php:181
+msgid "Keep xuc session"
+msgstr ""
+
+#: inc/config.class.php:195
+msgid "Import assets into GLPI inventory"
+msgstr ""
+
+#: inc/config.class.php:211
+msgid "API REST url"
+msgstr ""
+
+#: inc/config.class.php:266
+msgid "Import phones"
+msgstr ""
+
+#: inc/config.class.php:278
+msgid "Also import phones with"
+msgstr ""
+
+#: inc/config.class.php:282
+msgid "empty serial"
+msgstr ""
+
+#: inc/config.class.php:291
+msgid "empty mac"
+msgstr ""
+
+#: inc/config.class.php:300
+msgid "'not_configured' state"
+msgstr ""
+
+#: inc/config.class.php:311
+msgid "Import lines"
+msgstr ""
+
+#: inc/config.class.php:325
+msgid "Import phones-lines relation"
+msgstr ""
+
+#: inc/config.class.php:350
+msgid "REST API status"
+msgstr ""
+
+#: inc/config.class.php:371
+msgid "Last Error"
+msgstr ""
+
+#: inc/config.class.php:381
+msgid "Auth token"
+msgstr ""
+
+#: inc/config.class.php:387
+msgid "ACL"
 msgstr ""

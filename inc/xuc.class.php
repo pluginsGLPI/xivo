@@ -64,9 +64,9 @@ class PluginXivoXuc {
       $current_config = PluginXivoConfig::getConfig();
 
       $out = "<form id='xuc_logged_form'>
-         <h2>".
+         <h2>
+            <i id='xuc_sign_out' class='fa fa-power-off pointer'></i>".
             __("XIVO connected", 'xivo')."&nbsp;
-            <i id='xuc_sign_out' class='fa fa-power-off pointer'></i>
          </h2>
 
          <div id='xuc_user_info'>
@@ -76,7 +76,7 @@ class PluginXivoXuc {
             <div class='floating_text'>
                <div id='xuc_fullname'></div>
                <div id='xuc_statuses'>";
-      if ($current_config['enable_callcenter']) {
+      if ($current_config['enable_callcenter'] && PLUGIN_XIVO_ENABLE_CALLCENTER) {
          $out .= "<div>
                      <label for='xuc_user_status'>".__("User", 'xivo')."</label>
                      <select id='xuc_user_status'></select>
@@ -138,13 +138,17 @@ class PluginXivoXuc {
    function getCallLink($users_id = 0) {
       $data = [
          'phone'          => null,
+         'phone2'         => null,
+         'mobile'         => null,
          'title'          => '',
       ];
       $user = new User;
       if ($user->getFromDB($users_id)) {
          if (!empty($user->fields['phone'])) {
-            $data['phone'] = $user->fields['phone'];
-            $data['title'] = sprintf(__("Call %s: %s"), $user->getName(), $user->fields['phone']);
+            $data['phone']  = $user->fields['phone'];
+            $data['phone2'] = $user->fields['phone2'];
+            $data['mobile'] = $user->fields['mobile'];
+            $data['title']  = sprintf(__("Call %s: %s"), $user->getName(), $user->fields['phone']);
          }
       }
 
@@ -170,15 +174,17 @@ class PluginXivoXuc {
       }
 
       $r_not_digit = "[^0-9]*";
-      $regex_num = $r_not_digit.implode($r_not_digit, str_split($caller_num)).$r_not_digit;
+      $regex_num = "^".$r_not_digit.implode($r_not_digit, str_split($caller_num)).$r_not_digit."$";
 
       // try to find user by its phone or mobile numbers
       $iterator_users = $DB->request([
          'SELECT' => ['id'],
          'FROM'  => 'glpi_users',
          'WHERE' => [
-            'phone'  => ['REGEXP', $regex_num],
-            'mobile' => ['REGEXP', $regex_num],
+            'OR' => [
+               'phone'  => ['REGEXP', $regex_num],
+               'mobile' => ['REGEXP', $regex_num],
+            ]
          ]
       ]);
       foreach ($iterator_users as $data_user) {
@@ -198,7 +204,7 @@ class PluginXivoXuc {
       if (count($data['users']) > 1) {
          // mulitple user, no redirect and return a message
          $data['message'] = __("Multiple users found with this phone number", 'xivo');
-      } elseif (count($data['users']) == 1) {
+      } else if (count($data['users']) == 1) {
          $current_user     = current($data['users']);
          $users_id         = $current_user['id'];
          $iterator_tickets = $DB->request([
@@ -228,7 +234,7 @@ class PluginXivoXuc {
             // if we have one user with one ticket, redirect to ticket
             $ticket->getFromDB(current($data['tickets'])['id']);
             $data['redirect'] = $ticket->getLinkURL();
-         } elseif ($nb_tickets > 1) {
+         } else if ($nb_tickets > 1) {
             // if we have one user with multiple tickets, redirect to user (on Ticket tab)
             $data['redirect'] = $user->getLinkURL().'&forcetab=Ticket$1';
          } else {

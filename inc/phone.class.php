@@ -83,7 +83,7 @@ class PluginXivoPhone extends CommonDBTM {
       $input_xivophone = [
          'phones_id'         => $phones_id,
          'xivo_id'           => $device['id'],
-         'template'          => $device['template_id'],
+         'template'          => $device['template_id'] !== null ? $device['template_id'] : "",
          'date_mod'          => $_SESSION["glpi_currenttime"],
       ];
 
@@ -166,23 +166,54 @@ class PluginXivoPhone extends CommonDBTM {
     * @return array              the netport tree
     */
    static function getFullNetworkPort($phones_id = 0) {
-      $networkport_inst = new NetworkPort();
-      $networkname_inst = new NetworkName();
-      $ipaddress_inst   = new IPAddress();
-      $found_networkports = $networkport_inst->find("`itemtype` = 'Phone'
-                                                     AND `items_id` = '$phones_id'");
 
-      foreach ($found_networkports as $networkports_id => &$networkport) {
-         $found_networknames = $networkname_inst->find("`itemtype` = 'NetworkPort'
-                                                        AND `items_id` = '$networkports_id'");
+      global $DB;
 
-         foreach ($found_networknames as $networknames_id => &$networkname) {
-            $found_ipaddresses = $ipaddress_inst->find("`itemtype` = 'NetworkName'
-                                                         AND `items_id` = '$networknames_id'");
+      $networports_iterator = $DB->request(
+         [
+            'FROM'  => NetworkPort::getTable(),
+            'WHERE' => [
+               'itemtype' => 'Phone',
+               'items_id' => $phones_id,
+            ]
+         ]
+      );
 
-            $networkname['ipaddresses'] = array_values($found_ipaddresses);
+      $found_networkports = [];
+
+      foreach ($networports_iterator as $networkport) {
+         $networknames_iterator = $DB->request(
+            [
+               'FROM'  => NetworkName::getTable(),
+               'WHERE' => [
+                  'itemtype' => 'NetworkPort',
+                  'items_id' => $networkport['id'],
+               ]
+            ]
+         );
+
+         $networkport['networknames'] = [];
+
+         foreach ($networknames_iterator as $networkname) {
+
+            $ipaddresses_iterator = $DB->request(
+               [
+                  'FROM'  => IPAddress::getTable(),
+                  'WHERE' => [
+                     'itemtype' => 'NetworkName',
+                     'items_id' => $networkname['id'],
+                  ]
+               ]
+            );
+
+            $networkname['ipaddresses'] = [];
+            foreach ($ipaddresses_iterator as $ipaddress) {
+               $networkname['ipaddresses'][] = $ipaddress;
+            }
             $networkport['networknames'][] = $networkname;
          }
+
+         $found_networkports[$networkport['id']] = $networkport;
       }
 
       return $found_networkports;
@@ -323,7 +354,7 @@ class PluginXivoPhone extends CommonDBTM {
                   PRIMARY KEY     (`id`),
                   KEY `phones_id` (`phones_id`),
                   KEY `xivo_id`   (`xivo_id`)
-               ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+               ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
             $DB->query($query) or die ($DB->error());
       }
 

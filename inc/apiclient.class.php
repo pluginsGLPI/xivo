@@ -364,7 +364,7 @@ class PluginXivoAPIClient extends CommonGLPI {
     * @param  string $method   Http verb (ex: GET, POST, etc)
     * @return array  data returned by the api
     */
-   function httpQuery($resource = '', $params = array(), $method = 'GET') {
+   function httpQuery($resource = '', $params = [], $method = 'GET') {
       global $CFG_GLPI;
 
       // declare default params

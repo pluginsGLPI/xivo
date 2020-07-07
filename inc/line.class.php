@@ -38,21 +38,19 @@ class PluginXivoLine extends CommonDBTM {
       return _n("Line", "Lines", $nb, 'xivo');
    }
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       switch ($item->getType()) {
          case "Line":
             $nb = 0;
             if ($_SESSION['glpishow_count_on_tabs']) {
-               $nb = countElementsInTable(self::getTable(), "`lines_id` = ".$item->getID());
+               $nb = countElementsInTable(self::getTable(), ['lines_id' => $item->getID()]);
             }
             return self::createTabEntry(__("Xivo"), $nb);
       }
       return '';
    }
 
-   static function displayTabContentForItem(CommonGLPI $item,
-                                            $tabnum=1,
-                                            $withtemplate=0) {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       switch ($item->getType()) {
          case "Line":
             return self::showForLine($item, $withtemplate);
@@ -193,7 +191,7 @@ class PluginXivoLine extends CommonDBTM {
       switch ($itemtype) {
          case "Phone":
             $options[$index] = [
-               'table'         => self::getTable(),
+               'table'         => "glpi_lines",
                'field'         => 'name',
                'name'          => __('Associated lines', 'xivo'),
                'datatype'      => 'itemlink',
@@ -299,7 +297,7 @@ class PluginXivoLine extends CommonDBTM {
                   `xivo_line_id`           VARCHAR(255) NOT NULL DEFAULT '',
                   PRIMARY KEY        (`id`),
                   KEY `lines_id`     (`lines_id`)
-               ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+               ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
             $DB->query($query) or die ($DB->error());
       }
 

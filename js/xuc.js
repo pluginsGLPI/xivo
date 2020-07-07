@@ -4,6 +4,7 @@ var Xuc = function() {
    var username        = '';
    var password        = '';
    var phoneNumber     = '';
+   var pageNumbers     = [];
    var bearerToken     = '';
    var callerGlpiInfos = {};
    var lastState       = null;
@@ -15,6 +16,9 @@ var Xuc = function() {
    var plugin_ajax_url = "";
 
    var userStatuses    = {};
+
+   var xivo_config     = {};
+   var xivo_store      = {};
 
    // possible states
    // * AgentLogin
@@ -39,12 +43,31 @@ var Xuc = function() {
    var my_xuc = this;
 
    /**
-    * Init UI in GLPI
+    * Set storage var from xivo config
+    * @return {void
     */
-   my_xuc.init = function() {
+   my_xuc.detectStore = function() {
+      // load session storage
+      if (my_xuc.xivo_config.xuc_local_store) {
+         console.debug("xivo plugin use local storage");
+         my_xuc.xivo_store = store.local;
+      } else {
+         console.debug("xivo plugin use session storage");
+         my_xuc.xivo_store = store.session;
+      }
+   }
+
+   /**
+    * Init UI in GLPI
+    * @param  {Object} xivo_config the current xivo configuration
+    * @return {void}
+    */
+   my_xuc.init = function(xivo_config) {
+      my_xuc.xivo_config = xivo_config;
+      my_xuc.detectStore();
       my_xuc.setAjaxUrl();
       my_xuc.retrieveXivoSession();
-      my_xuc.initAutoOpen();
+      my_xuc.initAgentForm();
 
       if (my_xuc.retrieveXivoSession() !== false) {
          $.when(my_xuc.checkTokenValidity())
@@ -59,71 +82,74 @@ var Xuc = function() {
       }
    };
 
-   my_xuc.initAutoOpen = function() {
-      if (xivo_config.enable_auto_open) {
-         $("#c_preference ul #preferences_link")
-            .after("<li id='xivo_agent'>\
-                     <a class='fa fa-phone' id='xivo_agent_button'></a>\
-                     <i class='fa fa-circle' id='xivo_agent_status'></i>\
-                     <div id='xivo_agent_form'>empty</div>\
-                   </li>");
+   my_xuc.initAgentForm = function() {
+      $("#c_preference ul #preferences_link")
+         .after("<li id='xivo_agent'>\
+                  <a class='fa fa-phone' id='xivo_agent_button'></a>\
+                  <i class='fa fa-circle' id='xivo_agent_status'></i>\
+                  <div id='xivo_agent_form'>empty</div>\
+                </li>");
 
-         $(document)
-            .on("click", "#xivo_agent_button", function() {
-               $("#xivo_agent_form").toggle();
-               if (!logged) {
-                  my_xuc.loadLoginForm();
-               }
-            })
-            .on("submit", "#xuc_login_form", function(e) {
-               e.preventDefault();
-               my_xuc.xucSignIn();
-            })
-            .on("click", "#xuc_sign_in", function(e) {
-               e.preventDefault();
-               my_xuc.xucSignIn();
-            })
-            .on("click", "#xuc_sign_out", function(e) {
-               e.preventDefault();
-               my_xuc.xucSignOut();
-            })
-            .on("click", "#xuc_hangup", function(e) {
-               e.preventDefault();
-               my_xuc.hangup();
-            })
-            .on("click", "#xuc_answer", function(e) {
-               e.preventDefault();
-               my_xuc.answer();
-            })
-            .on("click", "#xuc_hold", function(e) {
-               e.preventDefault();
-               my_xuc.hold();
-            })
-            .on("click", "#xuc_dial", function(e) {
+      $(document)
+         .on("click", "#xivo_agent_button", function() {
+            $("#xivo_agent_form").toggle();
+            if (!logged) {
+               my_xuc.loadLoginForm();
+            }
+         })
+         .on("submit", "#xuc_login_form", function(e) {
+            e.preventDefault();
+            my_xuc.xucSignIn();
+         })
+         .on("click", "#xuc_sign_in", function(e) {
+            e.preventDefault();
+            my_xuc.xucSignIn();
+         })
+         .on("click", "#xuc_sign_out", function(e) {
+            e.preventDefault();
+            my_xuc.xucSignOut();
+         })
+         .on("click", "#xuc_hangup", function(e) {
+            e.preventDefault();
+            my_xuc.hangup();
+         })
+         .on("click", "#xuc_answer", function(e) {
+            e.preventDefault();
+            my_xuc.answer();
+         })
+         .on("click", "#xuc_hold", function(e) {
+            e.preventDefault();
+            my_xuc.hold();
+         })
+         .on("click", "#xuc_dial", function(e) {
+            e.preventDefault();
+            my_xuc.dial();
+         })
+         .on("keypress", "#dial_phone_num", function(e) {
+            if (e.which === 13) { //enter key
                e.preventDefault();
                my_xuc.dial();
-            })
-            .on("keypress", "#dial_phone_num", function(e) {
-               if (e.which === 13) { //enter key
-                  e.preventDefault();
-                  my_xuc.dial();
-               }
-            })
-            .on("click", "#xuc_transfer", function(e) {
+            }
+         })
+         .on("click", "#xuc_transfer", function(e) {
+            e.preventDefault();
+            my_xuc.transfer();
+         })
+         .on("keypress", "#transfer_phone_num", function(e) {
+            if (e.which === 13) { //enter key
                e.preventDefault();
                my_xuc.transfer();
-            })
-            .on("keypress", "#transfer_phone_num", function(e) {
-               if (e.which === 13) { //enter key
-                  e.preventDefault();
-                  my_xuc.transfer();
-               }
-            });
-      }
+            }
+         })
+         .on("click", "#deconnexion", function(e) {
+            if (!my_xuc.xivo_config.xuc_local_store) {
+               my_xuc.destroyXivoSession();
+            }
+         });
    }
 
    my_xuc.setAjaxUrl = function() {
-      plugin_ajax_url = "../plugins/xivo/ajax/xuc.php";
+      plugin_ajax_url = CFG_GLPI.root_doc+"/"+GLPI_PLUGINS_PATH.mreporting+"/ajax/xuc.php";
    };
 
    /**
@@ -133,7 +159,7 @@ var Xuc = function() {
    my_xuc.checkTokenValidity = function() {
       return $.ajax({
          type: "GET",
-         url: xivo_config.xuc_url + "/xuc/api/2.0/auth/check",
+         url: my_xuc.xivo_config.xuc_url + "/xuc/api/2.0/auth/check",
          dataType: 'json',
          beforeSend : function(xhr) {
             xhr.setRequestHeader('Authorization', 'Bearer ' + bearerToken);
@@ -152,7 +178,12 @@ var Xuc = function() {
          }
          Cti.clearHandlers();
 
-         var wsurl = xivo_config.xuc_url.replace(/https*:\/\//, 'ws://')
+         var protocol = "ws";
+         if (my_xuc.xivo_config.xuc_secure) {
+            protocol = "wss";
+         }
+
+         var wsurl = my_xuc.xivo_config.xuc_url.replace(/https*:\/\//, protocol+'://')
                         + "/xuc/api/2.0/cti?token="+bearerToken;
          Cti.WebSocket.init(wsurl, username, phoneNumber);
 
@@ -163,7 +194,10 @@ var Xuc = function() {
          Cti.setHandler(Cti.MessageType.LOGGEDON, function() {
             $("#xivo_agent_form").hide();
 
+            // get list of status for users
             Cti.setHandler(Cti.MessageType.USERSTATUSES, my_xuc.setUserStatuses);
+
+            // callback for user's status change
             Cti.setHandler(Cti.MessageType.USERSTATUSUPDATE, my_xuc.userStatusUpdate);
             Cti.setHandler(Cti.MessageType.PHONESTATUSUPDATE, function(event) {
                if (event.status !== null) {
@@ -176,14 +210,17 @@ var Xuc = function() {
                }
             });
 
-            // intercept phones events and switch to adequate function
+            // intercept current user's phone events to swith status in panel
             Cti.setHandler(Cti.MessageType.PHONEEVENT, my_xuc.phoneEvents);
 
             // enable status icon for known phone numbers
-            if (xivo_config.enable_presence) {
-               Cti.setHandler(Cti.MessageType.AGENTSTATEEVENT, my_xuc.agentStateEventHandler);
-               Cti.getAgentStates();
-               Cti.subscribeToAgentEvents();
+            if (my_xuc.xivo_config.enable_presence) {
+               console.debug("enable_presence");
+               // intercept phone events
+               Cti.setHandler(Cti.MessageType.PHONEHINTSTATUSEVENT, my_xuc.phoneHintsEvents);
+
+               console.debug("subscribe to these numbers", pageNumbers);
+               Cti.subscribeToPhoneHints(pageNumbers);
             }
 
             // restore last state of ui (after a browser navigation for example)
@@ -203,22 +240,34 @@ var Xuc = function() {
             .append("<option data-color='"+item.color+"' value='"+item.name+"'>"+ item.longName + "</option>");
       });
 
-      // TODO: in 9.3, check if this declaration is still valid (select2 upgraded 4.0)
-      $("#xuc_user_status").select2({
-         'width': '180px',
-         'minimumResultsForSearch': -1,
-         'formatResult': function(status) {
-            var option = status.element;
-            var color = $(option).data('color');
+      var formatStatus = function (status) {
+         var option = status.element;
+         var color = $(option).data('color');
 
-            return "<i class='fa fa-circle' style='color: "+color+"'></i>&nbsp;"
-                   + status.text.toUpperCase();
-         },
+         var template = "<span>"
+            + "<i class='fa fa-circle' style='color: "+color+"'></i>&nbsp;"
+            + status.text.toUpperCase()
+            + "</span>";
+         return $(template);
+      };
+
+      $("#xuc_user_status").select2({
+         width: '180px',
+         minimumResultsForSearch: -1,
+         formatResult: formatStatus,
+         formatSelection: formatStatus,
+         templateResult: formatStatus,
+         templateSelection: formatStatus
       });
 
       // set cti event on change select
-      $('#xuc_user_status').on('change', function (e) {
+      // double event watching (one for glpi9.3 and select2 v4, second for glpi9.2 and select2 v3.5)
+      $('#xuc_user_status').on('select2:select select2-selecting', function (e) {
          var optionSelected = $(this).find("option:selected").val();
+         // 9.2 compatibility
+         if ("val" in e) {
+            optionSelected = e.val;
+         }
          Cti.changeUserStatus(optionSelected);
       });
    };
@@ -226,7 +275,7 @@ var Xuc = function() {
    my_xuc.agentStateEventHandler = function(agentState) {
       var agent_num = agentState.phoneNb;
       if (agent_num.length) {
-         // console.log(agent_num, agentState.name);
+         console.debug(agent_num, agentState.name);
          agentsState[agent_num] = agentState.name;
          my_xuc.saveXivoSession();
          $('.xivo_callto_link')
@@ -236,6 +285,33 @@ var Xuc = function() {
                return (className.match (/\Agent\S+/g) || []).join(' ');
             })
             .addClass(agentState.name);
+      }
+   }
+
+   my_xuc.phoneHintsEvents = function(event) {
+      my_xuc.setPhonePresence(event.number, event.status);
+   }
+
+   my_xuc.directoryResultHandler = function(directory) {
+      if ("entries" in directory) {
+         $.each(directory.entries, function(index, entry) {
+            var phone_number = entry.entry[1];
+            my_xuc.setPhonePresence(phone_number, entry.status);
+         });
+      }
+   }
+
+   my_xuc.setPhonePresence = function(phone_num, phone_status) {
+      console.debug('receieve PHONEHINTSTATUSEVENT: ', phone_num, phone_status);
+      if (phone_status in Cti.PhoneStatusColors) {
+         var status_color = Cti.PhoneStatusColors[phone_status];
+         if (status_color == "#F2F2F2") {
+            status_color = "#B6B6B6";
+         }
+
+         $('.xivo_callto_link')
+            .filter('[data-phone="'+ phone_num +'"], [data-phone2="'+ phone_num +'"]')
+            .css('color', status_color);
       }
    }
 
@@ -263,9 +339,7 @@ var Xuc = function() {
          .css('color', current_status.color);
 
       if (event.status !== null) {
-         //$("#xuc_user_status").val(current_status.name);
-         // TODO 9.3 moved to select2 version 4, the following line could be broken
-         $("#xuc_user_status").select2("val", current_status.name);
+         $("#xuc_user_status").val(current_status.name).trigger('change');
       }
    };
 
@@ -274,7 +348,7 @@ var Xuc = function() {
     * @return bool
     */
    my_xuc.retrieveXivoSession = function() {
-      var xivo_data = xivo_store.get('xivo');
+      var xivo_data = my_xuc.xivo_store.get('xivo');
 
       if (xivo_data !== null
           && typeof xivo_data == "object") {
@@ -298,7 +372,7 @@ var Xuc = function() {
     * Clear Xivo data in LocalStorage
     */
    my_xuc.destroyXivoSession = function() {
-      xivo_store.remove('xivo');
+      my_xuc.xivo_store.remove('xivo');
    };
 
    /**
@@ -316,7 +390,7 @@ var Xuc = function() {
          'callerName':    callerName,
          'agentsState':   agentsState,
       }
-      xivo_store.set('xivo', xivo_data);
+      my_xuc.xivo_store.set('xivo', xivo_data);
    };
 
    /**
@@ -388,15 +462,16 @@ var Xuc = function() {
     * @return Ajax Promise
     */
    my_xuc.loginOnXuc = function() {
+      console.debug(my_xuc);
       return $.ajax({
          type: "POST",
-         url: xivo_config.xuc_url + "/xuc/api/2.0/auth/login",
+         url: my_xuc.xivo_config.xuc_url + "/xuc/api/2.0/auth/login",
          contentType: "application/json",
          data: JSON.stringify({
             'login': username,
             'password': password
          }),
-         dataType: 'json'
+      dataType: 'json'
       });
    };
 
@@ -408,10 +483,12 @@ var Xuc = function() {
       var elements = [],
           users_id = [];
 
-      users_cache = xivo_store.get('users_cache') || {};
+      console.debug("init click2Call");
+
+      users_cache = my_xuc.xivo_store.get('users_cache') || {};
 
       // found all dropdowns tooltips icons
-      $("#page a[id^=comment_link_users_id]:not(.callto_link_added)").each(function(index) {
+      $("#page a[id^=comment_link_users_id]:not(.callto_link_added)").each(function() {
          var that    = $(this);
          var user_id = that.parent().children('input[type=hidden]').val();
 
@@ -423,7 +500,7 @@ var Xuc = function() {
       });
 
       // found all user links (like in ticket form page)
-      $("#page a[id^=tooltiplink]:not(.callto_link_added)").each(function(index) {
+      $("#page a[id^=tooltiplink]:not(.callto_link_added)").each(function() {
          var that    = $(this);
          var matches = that.attr('href').match(/user.form.php\?id=(\d+)/);
          if (matches !== null && matches.length > 1) {
@@ -439,14 +516,41 @@ var Xuc = function() {
       // deferred ajax calls to retrieve users informations (phone, title, etc)
       // and when done, append 'callto:' links
       $.when.apply($, my_xuc.getUsers(users_id)).then(function() {
-         xivo_store.set('users_cache', users_cache);
+         console.debug("users for this page retrieved:", users_cache);
+
+         my_xuc.xivo_store.set('users_cache', users_cache);
          my_xuc.appendCalltoIcons(elements);
+
+         // add phone numbers for phone hints subscribe
+         Object.keys(users_cache).map(function(user_id) {
+            if (users_cache[user_id].phone !== null
+                && users_cache[user_id].phone !== ""
+                && users_cache[user_id].phone !== undefined) {
+               pageNumbers.push(users_cache[user_id].phone);
+            }
+
+            if (users_cache[user_id].phone2 !== null
+                 && users_cache[user_id].phone2 !== ""
+                 && users_cache[user_id].phone2 !== undefined) {
+               pageNumbers.push(users_cache[user_id].phone2);
+            }
+         });
       });
 
       // event for callto icons
+      var clicked = false;
       $(document)
          .on("click", "#page .xivo_callto_link", function() {
-            my_xuc.dial($(this).data('phone'));
+            // only fire dial event if not already fired a short time ago
+            if (!clicked) {
+               my_xuc.dial($(this).data('phone'));
+               clicked = true;
+            }
+
+            // after a short time, indicate we can reclick on a callto link
+            setTimeout(function() {
+               clicked = false;
+            }, 5000);
          });
    };
 
@@ -471,6 +575,8 @@ var Xuc = function() {
                .addClass("callto_link_added")
                .after("<span"
                   + " data-phone='" + data.phone + "'"
+                  + " data-mobile='" + data.mobile + "'"
+                  + " data-phone2='" + data.phone2 + "'"
                   + " class='xivo_callto_link " + agentState + "'"
                   + " title='" + data.title+ "'></a>");
          }
@@ -481,6 +587,10 @@ var Xuc = function() {
     * Restore last state of UI saved in local storage (after a redirection for example)
     */
    my_xuc.restoreLastState = function() {
+      if (lastStateDate === null) {
+         return false;
+      }
+
       var now = new Date;
       if (Math.abs(now.getTime() - lastStateDate.getTime()) > (60 *  60 * 1000)) {
          return false;
@@ -512,7 +622,6 @@ var Xuc = function() {
          lastStateDate = new Date();
       }
 
-      console.log("Event: " + event.eventType);
       switch (event.eventType) {
          case "EventRinging":
             my_xuc.phoneRinging();
@@ -558,10 +667,10 @@ var Xuc = function() {
       my_xuc.enableTransferAction();
       my_xuc.getCallerInformations();
 
-      if (xivo_config.enable_auto_open
+      if (my_xuc.xivo_config.enable_auto_open
           && do_auto_open
           && redirectTo !== false) {
-         if (xivo_config.auto_open_blank) {
+         if (my_xuc.xivo_config.auto_open_blank) {
             var child = window.open(redirectTo, '_blank');
 
             // stop auto_open in current instance to avoid multiple window opening
@@ -570,12 +679,15 @@ var Xuc = function() {
             // monitor child closing event to re-start auto-open if needed
             var child_timer = setInterval(function() {
                if (child.closed) {
-                 clearInterval(child_timer);
-                 do_auto_open = true;
+                  clearInterval(child_timer);
+                  do_auto_open = true;
                }
             }, 1000);
          } else {
-            window.location = redirectTo;
+            // only if window is visible (curent tab of browser)
+            if (!document.hidden) {
+               window.location = redirectTo;
+            }
          }
       }
    };
@@ -682,6 +794,16 @@ var Xuc = function() {
     */
    my_xuc.hangup = function() {
       Cti.hangup();
+
+      // if gui still in call mode, reset stuff after a while
+      setTimeout(function() {
+         if ($("#xuc_hangup").length) {
+            my_xuc.commReleased();
+            lastState     = null;
+            lastStateDate = null;
+            my_xuc.saveXivoSession();
+         }
+      }, 250);
    };
 
    /**

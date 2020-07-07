@@ -32,7 +32,7 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginXivoConfig extends Config {
 
-   static function getTypeName($nb=0) {
+   static function getTypeName($nb = 0) {
       return __('Xivo', 'xivo');
    }
 
@@ -45,7 +45,7 @@ class PluginXivoConfig extends Config {
       return Config::getConfigurationValues('plugin:xivo');
    }
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
       switch ($item->getType()) {
          case "Config":
             return self::createTabEntry(self::getTypeName());
@@ -53,9 +53,7 @@ class PluginXivoConfig extends Config {
       return '';
    }
 
-   static function displayTabContentForItem(CommonGLPI $item,
-                                            $tabnum=1,
-                                            $withtemplate=0) {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       switch ($item->getType()) {
          case "Config":
             return self::showForConfig($item, $withtemplate);
@@ -64,8 +62,7 @@ class PluginXivoConfig extends Config {
       return true;
    }
 
-   static function showForConfig(Config $config,
-                                     $withtemplate=0) {
+   static function showForConfig(Config $config, $withtemplate = 0) {
       global $CFG_GLPI;
 
       if (!self::canView()) {
@@ -79,7 +76,7 @@ class PluginXivoConfig extends Config {
          echo "<form name='form' action='".Toolbox::getItemTypeFormURL("Config")."' method='post'>";
       }
 
-      echo "<h1>".__("Configuration of XIVO integration")."</h1>";
+      echo "<h1>".__("Configuration of XIVO integration", 'xivo')."</h1>";
 
       echo "<h4>";
       echo self::showField([
@@ -107,6 +104,22 @@ class PluginXivoConfig extends Config {
             'placeholder'  => 'https://xup_ip:8090',
          ]
       ]);
+      echo self::showField([
+         'inputtype' => 'yesno',
+         'label'     => __("Secure connection to WebSocket", 'xivo'),
+         'attrs'     => [
+            'name'  => 'xuc_secure',
+            'value' => $current_config['xuc_secure'],
+         ]
+      ]);
+      echo self::showField([
+         'inputtype' => 'yesno',
+         'label'     => __("Enable for Self-service users", 'xivo'),
+         'attrs'     => [
+            'name'      => 'enable_xuc_selfservice',
+            'value'     => $current_config['enable_xuc_selfservice'],
+         ]
+      ]);
 
       echo "<div class='xivo_config_block inline_fields sub_config'>";
       echo "<h5>".__("Features")."</h5>";
@@ -120,25 +133,29 @@ class PluginXivoConfig extends Config {
          ]
       ]);
 
-      echo self::showField([
-         'inputtype' => 'yesno',
-         'width' => '80px',
-         'label'     => __("Presence", 'xivo'),
-         'attrs'     => [
-            'name'  => 'enable_presence',
-            'value' => $current_config['enable_presence'],
-         ]
-      ]);
+      if (PLUGIN_XIVO_ENABLE_PRESENCE) {
+         echo self::showField([
+            'inputtype' => 'yesno',
+            'width' => '80px',
+            'label'     => __("Presence", 'xivo'),
+            'attrs'     => [
+               'name'  => 'enable_presence',
+               'value' => $current_config['enable_presence'],
+            ]
+         ]);
+      }
 
-      echo self::showField([
-         'inputtype' => 'yesno',
-         'width' => '80px',
-         'label'     => __("Callcenter features", 'xivo'),
-         'attrs'     => [
-            'name'  => 'enable_callcenter',
-            'value' => $current_config['enable_callcenter'],
-         ]
-      ]);
+      if (PLUGIN_XIVO_ENABLE_CALLCENTER) {
+         echo self::showField([
+            'inputtype' => 'yesno',
+            'width' => '80px',
+            'label'     => __("Callcenter features", 'xivo'),
+            'attrs'     => [
+               'name'  => 'enable_callcenter',
+               'value' => $current_config['enable_callcenter'],
+            ]
+         ]);
+      }
 
       echo self::showField([
          'inputtype' => 'yesno',
@@ -289,7 +306,7 @@ class PluginXivoConfig extends Config {
       echo "</div>";
       echo "<div class='inline_fields_clear'></div>";
 
-       echo self::showField([
+      echo self::showField([
          'inputtype' => 'yesno',
          'label'     => __("Import lines", 'xivo'),
          'attrs'     => [
@@ -474,7 +491,7 @@ class PluginXivoConfig extends Config {
       if ($with_api) {
          $apiclient = new PluginXivoAPIClient;
          $apiclient->connect();
-         $statuses = $apiclient->status();
+         //$statuses = $apiclient->status();
          $valid_api = !in_array(false, $apiclient->status());
       }
 
@@ -504,26 +521,28 @@ class PluginXivoConfig extends Config {
       // fill config table with default values if missing
       foreach ([
          // api access
-         'import_assets'     => 0,
-         'import_phones'     => 0,
-         'import_lines'      => 0,
-         'import_phonelines' => 0,
-         'api_url'           => '',
-         'api_username'      => '',
-         'api_password'      => '',
-         'api_ssl_check'     => 1,
-         'import_empty_sn'   => 0,
-         'import_empty_mac'  => 0,
-         'import_notconfig'  => 0,
-         'default_entity'    => 0,
-         'enable_xuc'        => 0,
-         'xuc_url'           => '',
-         'enable_click2call' => 0,
-         'enable_presence'   => 0,
-         'enable_auto_open'  => 0,
-         'enable_callcenter' => 0,
-         'auto_open_blank'   => 1,
-         'xuc_local_store'   => 1,
+         'import_assets'          => 0,
+         'import_phones'          => 0,
+         'import_lines'           => 0,
+         'import_phonelines'      => 0,
+         'api_url'                => '',
+         'api_username'           => '',
+         'api_password'           => '',
+         'api_ssl_check'          => 1,
+         'import_empty_sn'        => 0,
+         'import_empty_mac'       => 0,
+         'import_notconfig'       => 0,
+         'default_entity'         => 0,
+         'enable_xuc'             => 0,
+         'enable_xuc_selfservice' => 0,
+         'xuc_url'                => '',
+         'xuc_secure'             => 0,
+         'enable_click2call'      => 0,
+         'enable_presence'        => 0,
+         'enable_auto_open'       => 0,
+         'enable_callcenter'      => 0,
+         'auto_open_blank'        => 1,
+         'xuc_local_store'        => 1,
       ] as $key => $value) {
          if (!isset($current_config[$key])) {
             Config::setConfigurationValues('plugin:xivo', [$key => $value]);

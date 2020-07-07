@@ -9,5 +9,8 @@ require_once 'vendor/autoload.php';
 
 class RoboFile extends Glpi\Tools\RoboFile
 {
-   //Own plugin's robo stuff
+   public function __construct() {
+      $this->csignore[] = '/js/store2.min.js';
+      $this->csignore[] = '/js/xivo/';
+   }
 }
