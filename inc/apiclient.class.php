@@ -22,7 +22,7 @@
  * You should have received a copy of the GNU General Public License
  * along with xivo. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
- * @copyright Copyright (C) 2017-2022 by xivo plugin team.
+ * @copyright Copyright (C) 2017-2024 by xivo plugin team.
  * @license   GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
  * @link      https://github.com/pluginsGLPI/xivo
  * -------------------------------------------------------------------------
@@ -32,8 +32,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-use GuzzleHttp\Psr7;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Message;
 
 class PluginXivoAPIClient extends CommonGLPI {
    private $api_config      = [];
@@ -417,10 +418,16 @@ class PluginXivoAPIClient extends CommonGLPI {
             'title'     => "XIVO API error",
             'exception' => $e->getMessage(),
             'params'    => $params,
-            'request'   => Psr7\str($e->getRequest()),
+            'request'   => '',
          ];
-         if ($e->hasResponse()) {
-            $this->last_error['response'] = Psr7\str($e->getResponse());
+
+         if ($e instanceof RequestException) {
+            $this->last_error['request'] = Message::toString($e->getRequest());
+
+            if ($e->hasResponse()) {
+               $response = $e->getResponse();
+               $this->last_error['response'] = Message::toString($response);
+            }
          }
          if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
             Toolbox::logDebug($this->last_error);
