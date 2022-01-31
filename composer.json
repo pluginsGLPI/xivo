@@ -4,7 +4,7 @@
         "guzzlehttp/guzzle": "^6.2"
     },
     "require-dev": {
-        "glpi-project/tools": "^0.1"
+        "glpi-project/tools": "^0.4"
     },
     "config": {
         "optimize-autoloader": true,
