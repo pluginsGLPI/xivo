@@ -58,10 +58,7 @@ function plugin_init_xivo() {
    include_once(PLUGINXIVO_DIR . "/vendor/autoload.php");
 
    // don't load hooks if plugin not enabled (or glpi not logged)
-   $plugin = new Plugin();
-   if (!$plugin->isInstalled('xivo')
-       || !$plugin->isActivated('xivo')
-       || !Session::getLoginUserID()) {
+   if (!Plugin::isPluginActive('xivo') || !Session::getLoginUserID()) {
       return true;
    }
 

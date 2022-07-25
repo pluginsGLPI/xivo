@@ -33,8 +33,7 @@ include ("../../../inc/includes.php");
 //change mimetype
 header("Content-type: application/javascript");
 
-if (!$plugin->isInstalled("xivo")
-    || !$plugin->isActivated("xivo")) {
+if (!Plugin::isPluginActive("xivo")) {
    exit;
 }
 
