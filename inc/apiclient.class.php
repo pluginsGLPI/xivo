@@ -32,8 +32,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-use GuzzleHttp\Psr7;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Message;
 
 class PluginXivoAPIClient extends CommonGLPI {
    private $api_config      = [];
@@ -417,10 +418,16 @@ class PluginXivoAPIClient extends CommonGLPI {
             'title'     => "XIVO API error",
             'exception' => $e->getMessage(),
             'params'    => $params,
-            'request'   => Psr7\str($e->getRequest()),
+            'request'   => '',
          ];
-         if ($e->hasResponse()) {
-            $this->last_error['response'] = Psr7\str($e->getResponse());
+
+         if ($e instanceof RequestException) {
+            $this->last_error['request'] = Message::toString($e->getRequest());
+
+            if ($e->hasResponse()) {
+               $response = $e->getResponse();
+               $this->last_error['response'] = Message::toString($response);
+            }
          }
          if ($_SESSION['glpi_use_mode'] == Session::DEBUG_MODE) {
             Toolbox::logDebug($this->last_error);

@@ -384,17 +384,21 @@ class PluginXivoPhone_Line extends CommonDBRelation {
    static function install(Migration $migration) {
       global $DB;
 
+      $default_charset = DBConnection::getDefaultCharset();
+      $default_collation = DBConnection::getDefaultCollation();
+      $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
+
       $table = self::getTable();
       if (!$DB->tableExists($table)) {
          $migration->displayMessage(sprintf(__("Installing %s"), $table));
 
          $query = "CREATE TABLE `$table` (
-                  `id`                   INT(11) NOT NULL auto_increment,
-                  `phones_id`            INT(11) NOT NULL DEFAULT 0,
-                  `lines_id` INT(11) NOT NULL DEFAULT 0,
+                  `id`                   INT {$default_key_sign} NOT NULL auto_increment,
+                  `phones_id`            INT {$default_key_sign} NOT NULL DEFAULT 0,
+                  `lines_id`             INT {$default_key_sign} NOT NULL DEFAULT 0,
                   PRIMARY KEY                 (`id`),
                   UNIQUE INDEX `unicity` (`phones_id`, `lines_id`)
-               ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
             $DB->query($query) or die ($DB->error());
       }
 
