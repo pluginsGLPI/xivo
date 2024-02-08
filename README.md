@@ -40,7 +40,7 @@ We need a webservices user with these minimal acl:
 
 ## Screenshots
 
-<img src="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_phones.png?raw=true" alt="inventory of phones"  style="width: 250px;"/>
-<img src="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_lines.png?raw=true" alt="inventory of lines"  style="width: 250px;"/>
-<img src="https://github.com/pluginsGLPI/xivo/blob/master/screenshots/xuc_integration.png?raw=true" alt="XUC integration"  style="width: 250px;"/>
-<img src="https://raw.githubusercontent.com/pluginsGLPI/xivo/master/screenshots/click2call.png" alt="Click2Call"  style="width: 250px;"/>
+<img src="https://github.com/pluginsGLPI/xivo/blob/main/screenshots/inventory_phones.png?raw=true" alt="inventory of phones"  style="width: 250px;"/>
+<img src="https://github.com/pluginsGLPI/xivo/blob/main/screenshots/inventory_lines.png?raw=true" alt="inventory of lines"  style="width: 250px;"/>
+<img src="https://github.com/pluginsGLPI/xivo/blob/main/screenshots/xuc_integration.png?raw=true" alt="XUC integration"  style="width: 250px;"/>
+<img src="https://raw.githubusercontent.com/pluginsGLPI/xivo/main/screenshots/click2call.png" alt="Click2Call"  style="width: 250px;"/>

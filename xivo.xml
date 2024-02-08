@@ -2,7 +2,7 @@
    <name>xivo</name>
    <key>xivo</key>
    <state>stable</state>
-   <logo>https://raw.githubusercontent.com/pluginsGLPI/xivo/master/xivo.png</logo>
+   <logo>https://raw.githubusercontent.com/pluginsGLPI/xivo/main/xivo.png</logo>
    <description>
       <short>
          <cs>Napojení GLPI na XIVO nebo WAZO</cs>
@@ -56,7 +56,7 @@ Merci de contacter Teclib par mail (info@glpi-project.org) ou par téléphone (0
    <homepage>https://github.com/pluginsGLPI/xivo</homepage>
    <download>https://github.com/pluginsGLPI/xivo/releases</download>
    <issues>https://github.com/pluginsGLPI/xivo/issues</issues>
-   <readme>https://github.com/pluginsGLPI/xivo/blob/master/README.md</readme>
+   <readme>https://github.com/pluginsGLPI/xivo/blob/main/README.md</readme>
    <authors>
       <author>Teclib'</author>
       <author>Alexandre Delaunay</author>
@@ -116,7 +116,7 @@ Merci de contacter Teclib par mail (info@glpi-project.org) ou par téléphone (0
       </fr>
    </tags>
    <screenshots>
-      <screenshot>https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_lines.png?raw=true</screenshot>
-      <screenshot>https://github.com/pluginsGLPI/xivo/blob/master/screenshots/inventory_phones.png?raw=true</screenshot>
+      <screenshot>https://github.com/pluginsGLPI/xivo/blob/main/screenshots/inventory_lines.png?raw=true</screenshot>
+      <screenshot>https://github.com/pluginsGLPI/xivo/blob/main/screenshots/inventory_phones.png?raw=true</screenshot>
    </screenshots>
 </root>
