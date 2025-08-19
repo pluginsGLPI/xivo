@@ -14,7 +14,7 @@ Here is the list of currently working/planned features:
 - [ ] Call logs
 - [ ] Directory
 
-Please contact [Teclib'](http://www.teclib-group.com) by [mail](http://www.teclib-group.com/contact/) or phone (+33 1 79 97 02 78) if you want informations for developing futures one.
+Please [contact us](https://glpi-project.org) if you want to fund the development of new features.
 
 ## Configuration
 
