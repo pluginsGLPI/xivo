@@ -22,7 +22,7 @@
  * You should have received a copy of the GNU General Public License
  * along with xivo. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
- * @copyright Copyright (C) 2017-2022 by xivo plugin team.
+ * @copyright Copyright (C) 2017-2024 by xivo plugin team.
  * @license   GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
  * @link      https://github.com/pluginsGLPI/xivo
  * -------------------------------------------------------------------------
@@ -31,9 +31,9 @@
 define('PLUGIN_XIVO_VERSION', '1.0.0');
 
 // Minimal GLPI version, inclusive
-define('PLUGIN_XIVO_MIN_GLPI', '9.5');
+define('PLUGIN_XIVO_MIN_GLPI', '10.0.0');
 // Maximum GLPI version, exclusive
-define('PLUGIN_XIVO_MAX_GLPI', '9.6');
+define('PLUGIN_XIVO_MAX_GLPI', '10.0.99');
 
 // disable some feature as they are considered as experimental or deprecated by the editor
 define('PLUGIN_XIVO_ENABLE_PRESENCE', '1');
@@ -53,9 +53,6 @@ function plugin_init_xivo() {
    global $PLUGIN_HOOKS;
 
    $PLUGIN_HOOKS['csrf_compliant']['xivo'] = true;
-
-   // add autoload for vendor
-   include_once(PLUGINXIVO_DIR . "/vendor/autoload.php");
 
    // don't load hooks if plugin not enabled (or glpi not logged)
    if (!Plugin::isPluginActive('xivo') || !Session::getLoginUserID()) {
