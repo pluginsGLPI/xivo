@@ -22,7 +22,7 @@
  * You should have received a copy of the GNU General Public License
  * along with xivo. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
- * @copyright Copyright (C) 2017-2022 by xivo plugin team.
+ * @copyright Copyright (C) 2017-2024 by xivo plugin team.
  * @license   GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
  * @link      https://github.com/pluginsGLPI/xivo
  * -------------------------------------------------------------------------
@@ -384,17 +384,21 @@ class PluginXivoPhone_Line extends CommonDBRelation {
    static function install(Migration $migration) {
       global $DB;
 
+      $default_charset = DBConnection::getDefaultCharset();
+      $default_collation = DBConnection::getDefaultCollation();
+      $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
+
       $table = self::getTable();
       if (!$DB->tableExists($table)) {
          $migration->displayMessage(sprintf(__("Installing %s"), $table));
 
          $query = "CREATE TABLE `$table` (
-                  `id`                   INT(11) NOT NULL auto_increment,
-                  `phones_id`            INT(11) NOT NULL DEFAULT 0,
-                  `lines_id` INT(11) NOT NULL DEFAULT 0,
+                  `id`                   INT {$default_key_sign} NOT NULL auto_increment,
+                  `phones_id`            INT {$default_key_sign} NOT NULL DEFAULT 0,
+                  `lines_id`             INT {$default_key_sign} NOT NULL DEFAULT 0,
                   PRIMARY KEY                 (`id`),
                   UNIQUE INDEX `unicity` (`phones_id`, `lines_id`)
-               ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
             $DB->query($query) or die ($DB->error());
       }
 

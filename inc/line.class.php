@@ -22,7 +22,7 @@
  * You should have received a copy of the GNU General Public License
  * along with xivo. If not, see <http://www.gnu.org/licenses/>.
  * -------------------------------------------------------------------------
- * @copyright Copyright (C) 2017-2022 by xivo plugin team.
+ * @copyright Copyright (C) 2017-2024 by xivo plugin team.
  * @license   GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
  * @link      https://github.com/pluginsGLPI/xivo
  * -------------------------------------------------------------------------
@@ -282,24 +282,28 @@ class PluginXivoLine extends CommonDBTM {
    static function install(Migration $migration) {
       global $DB;
 
+      $default_charset = DBConnection::getDefaultCharset();
+      $default_collation = DBConnection::getDefaultCollation();
+      $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
+
       $table = self::getTable();
       if (!$DB->tableExists($table)) {
          $migration->displayMessage(sprintf(__("Installing %s"), $table));
 
          $query = "CREATE TABLE `$table` (
-                  `id`                     INT(11) NOT NULL auto_increment,
-                  `lines_id`               INT(11) NOT NULL DEFAULT 0,
+                  `id`                     INT {$default_key_sign} NOT NULL auto_increment,
+                  `lines_id`               INT {$default_key_sign} NOT NULL DEFAULT 0,
                   `protocol`               VARCHAR(25) NOT NULL DEFAULT '',
                   `provisioning_extension` VARCHAR(25) NOT NULL DEFAULT '',
                   `provisioning_code`      VARCHAR(25) NOT NULL DEFAULT '',
-                  `device_slot`            INT(11) NOT NULL DEFAULT 0,
+                  `device_slot`            INT NOT NULL DEFAULT 0,
                   `contect`                VARCHAR(25) NOT NULL DEFAULT '',
-                  `position`               INT(11) NOT NULL DEFAULT 0,
+                  `position`               INT NOT NULL DEFAULT 0,
                   `registrar`              VARCHAR(50) NOT NULL DEFAULT '',
                   `xivo_line_id`           VARCHAR(255) NOT NULL DEFAULT '',
                   PRIMARY KEY        (`id`),
                   KEY `lines_id`     (`lines_id`)
-               ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+               ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
             $DB->query($query) or die ($DB->error());
       }
 
@@ -333,12 +337,12 @@ class PluginXivoLine extends CommonDBTM {
          $migration->dropField('glpi_plugin_xivo_lines', 'users_id');
          $migration->dropField('glpi_plugin_xivo_lines', 'comment');
          $migration->dropField('glpi_plugin_xivo_lines', 'date_mod');
-         $migration->addField('glpi_plugin_xivo_lines', 'lines_id', 'integer', ['after' => 'id']);
+         $migration->addField('glpi_plugin_xivo_lines', 'lines_id', "INT {$default_key_sign} NOT NULL DEFAULT 0", ['after' => 'id']);
          $migration->changeField('glpi_plugin_xivo_lines', 'line_id', 'xivo_line_id', 'string');
          $migration->migrationOneTable('glpi_plugin_xivo_lines');
 
          // migrate phone_lines
-         $migration->addField('glpi_plugin_xivo_phones_lines', 'lines_id', 'integer',
+         $migration->addField('glpi_plugin_xivo_phones_lines', 'lines_id', "INT {$default_key_sign} NOT NULL DEFAULT 0",
                               ['after' => 'plugin_xivo_lines_id']);
          $migration->dropKey('glpi_plugin_xivo_phones_lines', 'unicity');
          $migration->addKey('glpi_plugin_xivo_phones_lines', ['phones_id', 'lines_id'], 'unicity', 'UNIQUE');
